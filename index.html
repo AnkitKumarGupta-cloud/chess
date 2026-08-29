@@ -3,841 +3,656 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Castling Club — Online Chess Academy for Kids</title>
+<title>Gupta Chess Academy — Bangalore &amp; Mughalsarai</title>
+<link rel="icon" type="image/png" href="favicon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --teal: #0D9488;
-    --teal-deep: #0B6B62;
-    --coral: #E11D48;
-    --coral-soft: #F4738A;
-    --ink: #0F172A;
-    --paper: #F8FAFC;
-    --gold: #A9863A;
-    --ink-60: rgba(15,23,42,0.62);
-    --ink-40: rgba(15,23,42,0.4);
-    --line: rgba(15,23,42,0.10);
-    --shadow-lg: 0 20px 40px -15px rgba(15,23,42,0.15);
-    --shadow-soft: 0 10px 30px -12px rgba(15,23,42,0.18);
-    --display: "Fraunces", serif;
-    --body: "Inter", sans-serif;
-    --mono: "Space Mono", monospace;
-  }
-
-  *{ margin:0; padding:0; box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
-
-  body{
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--body);
-    line-height: 1.5;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
-  }
-
-  img, svg{ display:block; max-width:100%; }
-  a{ color:inherit; text-decoration:none; }
-  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
-
-  :focus-visible{ outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
-
-  .wrap{
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: 0 clamp(20px, 5vw, 64px);
-    position: relative;
-  }
-
-  .eyebrow{
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--teal-deep);
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .eyebrow::before{
-    content: "";
-    width: 22px; height: 1px;
-    background: var(--gold);
-    display:inline-block;
-  }
-
-  h1,h2,h3{ font-family: var(--display); color: var(--ink); font-weight: 600; letter-spacing: -0.01em; }
-
-  /* ===================== BACKDROP BLOBS ===================== */
-  .blob{ position:absolute; border-radius:50%; filter: blur(2px); z-index:0; pointer-events:none; }
-  .blob-teal{ background: radial-gradient(circle at 30% 30%, rgba(13,148,136,0.16), rgba(13,148,136,0.03) 70%); }
-  .blob-coral{ background: radial-gradient(circle at 60% 40%, rgba(225,29,72,0.14), rgba(225,29,72,0.02) 70%); }
-  .blob-gold{ background: radial-gradient(circle at 50% 50%, rgba(169,134,58,0.14), rgba(169,134,58,0.01) 70%); }
-
-  /* ===================== HEADER ===================== */
-  header{
-    position: relative;
-    z-index: 20;
-    padding: clamp(20px, 3vw, 34px) 0 0;
-  }
-  .nav-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap: 20px;
-  }
-  .logo{
-    display:flex;
-    align-items:center;
-    gap: 10px;
-    font-family: var(--display);
-    font-weight: 700;
-    font-size: 1.3rem;
-    color: var(--ink);
-    white-space: nowrap;
-  }
-  .logo .mark{ width:30px; height:30px; flex-shrink:0; }
-
-  nav.links{
-    display:flex;
-    gap: clamp(18px, 3vw, 34px);
-    font-size: 0.92rem;
-    font-weight: 500;
-    color: var(--ink-60);
-  }
-  nav.links a{ position:relative; padding: 4px 0; transition: color .2s ease; }
-  nav.links a:hover{ color: var(--ink); }
-  nav.links a::after{
-    content:""; position:absolute; left:0; bottom:-2px; width:0; height:2px;
-    background: var(--coral); transition: width .25s ease;
-  }
-  nav.links a:hover::after{ width:100%; }
-
-  .ghost-cta{
-    border: 1.5px solid var(--ink);
-    padding: 10px 20px;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    white-space: nowrap;
-    transition: all .2s ease;
-  }
-  .ghost-cta:hover{ background: var(--ink); color: var(--paper); }
-
-  .nav-toggle{ display:none; }
-
-  /* ===================== HERO ===================== */
-  .hero{
-    position: relative;
-    padding: clamp(48px, 8vw, 90px) 0 0;
-    text-align:center;
-    z-index: 5;
-  }
-  .hero-headline{
-    font-size: clamp(2.1rem, 4.6vw, 3.6rem);
-    line-height: 1.08;
-    max-width: 900px;
-    margin: 22px auto 0;
-  }
-  .hero-headline em{
-    font-style: italic;
-    color: var(--teal-deep);
-  }
-  .hero-sub{
-    max-width: 560px;
-    margin: 22px auto 0;
-    color: var(--ink-60);
-    font-size: clamp(1rem, 1.4vw, 1.1rem);
-  }
-
-  .hero-actions{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap: 18px;
-    margin-top: 34px;
-    flex-wrap: wrap;
-  }
-  .btn-primary{
-    background: var(--teal);
-    color: #fff;
-    padding: 15px 30px;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 0.98rem;
-    box-shadow: 0 14px 26px -10px rgba(13,148,136,0.55);
-    transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
-    display:inline-flex; align-items:center; gap:10px;
-  }
-  .btn-primary:hover{ transform: translateY(-2px); background: var(--teal-deep); box-shadow: 0 18px 30px -10px rgba(13,148,136,0.6); }
-  .btn-text{
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--ink);
-    border-bottom: 1.5px solid var(--ink);
-    padding-bottom: 2px;
-  }
-
-  /* ---------- The Upstep Oval ---------- */
-  .oval-stage{
-    position: relative;
-    margin: clamp(50px, 7vw, 76px) auto 0;
-    width: 100%;
-    display:flex;
-    justify-content:center;
-  }
-  .oval{
-    position: relative;
-    width: 85%;
-    max-width: 650px;
-    aspect-ratio: 650 / 380;
-    height: auto;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 20px 40px -15px rgba(15,23,42,0.15), 0 4px 10px -4px rgba(15,23,42,0.12);
-    background: var(--ink);
-    z-index: 3;
-  }
-  .oval img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-  .oval::after{
-    content:"";
-    position:absolute; inset:0;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
-    border-radius: 50%;
-    pointer-events:none;
-  }
-
-  .oval-badge{
-    position:absolute;
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: var(--shadow-soft);
-    padding: 12px 16px;
-    z-index: 6;
-    display:flex;
-    align-items:center;
-    gap: 10px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    max-width: 190px;
-    text-align:left;
-  }
-  .oval-badge .num{
-    font-family: var(--display);
-    font-size: 1.4rem;
-    color: var(--coral);
-    line-height:1;
-  }
-  .oval-badge.b1{ top: -6%; left: 2%; transform: rotate(-6deg); }
-  .oval-badge.b2{ bottom: 4%; right: -2%; transform: rotate(4deg); }
-
-  @media (max-width: 640px){
-    .oval-stage{ flex-direction: column; align-items: center; gap: 14px; }
-    .oval{ width: 92%; }
-    .oval-badge{ position: static; transform:none !important; margin: 0 auto; max-width: 280px; width: 92%; justify-content:center; order: 3; }
-  }
-
-  .hero-accent{
-    margin-top: clamp(40px, 6vw, 56px);
-  }
-  .hero-accent h2{
-    color: var(--teal-deep);
-    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
-    font-style: italic;
-  }
-  .hero-accent p{
-    color: var(--ink-60);
-    max-width: 480px;
-    margin: 12px auto 0;
-    font-size: 0.98rem;
-  }
-
-  /* ===================== SIGNATURE SECTION: Board & Mentor (asymmetric) ===================== */
-  .board-section{
-    position: relative;
-    padding: clamp(90px, 12vw, 150px) 0 clamp(60px, 8vw, 90px);
-    z-index: 2;
-  }
-  .board-layout{
-    position: relative;
-    display:flex;
-    align-items:center;
-    gap: 0;
-  }
-  .board-illustration{
-    position: relative;
-    width: 56%;
-    flex-shrink: 0;
-    z-index: 2;
-  }
-  .board-illustration svg{ width:100%; height:auto; }
-
-  .board-copy{
-    position: relative;
-    width: 52%;
-    margin-left: -8%;
-    background: #fff;
-    border-radius: 28px;
-    padding: clamp(28px, 3.4vw, 46px);
-    box-shadow: var(--shadow-lg);
-    z-index: 4;
-  }
-  .board-copy h3{ font-size: clamp(1.5rem, 2.6vw, 2rem); line-height:1.15; }
-  .board-copy p{ color: var(--ink-60); margin-top: 14px; font-size: 0.98rem; max-width: 420px; }
-
-  .callout{
-    display:flex;
-    gap: 12px;
-    margin-top: 22px;
-    padding-top: 18px;
-    border-top: 1px solid var(--line);
-    align-items:flex-start;
-  }
-  .callout:first-of-type{ border-top: none; padding-top: 0; }
-  .callout .dot{
-    width: 8px; height: 8px; border-radius:50%; background: var(--coral);
-    margin-top: 7px; flex-shrink:0;
-  }
-  .callout strong{ display:block; font-size: 0.95rem; color: var(--ink); }
-  .callout span{ font-size: 0.87rem; color: var(--ink-60); }
-
-  /* floating decorative elements */
-  .floaters{ position:absolute; inset:0; pointer-events:none; z-index:1; }
-  .float-el{ position:absolute; }
-  .float-glow{
-    width: 220px; height:220px; border-radius:50%;
-    background: radial-gradient(circle, rgba(13,148,136,0.22), transparent 70%);
-    filter: blur(6px);
-  }
-  .float-glow.coral{ background: radial-gradient(circle, rgba(225,29,72,0.18), transparent 70%); }
-
-  @keyframes drift{
-    0%,100%{ transform: translateY(0) rotate(0deg); }
-    50%{ transform: translateY(-16px) rotate(4deg); }
-  }
-  @keyframes drift-rev{
-    0%,100%{ transform: translateY(0) rotate(0deg); }
-    50%{ transform: translateY(14px) rotate(-5deg); }
-  }
-  .anim-drift{ animation: drift 7s ease-in-out infinite; }
-  .anim-drift-rev{ animation: drift-rev 8.5s ease-in-out infinite; }
-
-  .knight-float{ top: 4%; right: 10%; width: 70px; opacity:0.9; }
-  .cap-float{ bottom: 8%; left: 2%; width: 64px; opacity: 0.85; }
-  .glow-1{ top: -6%; left: 20%; }
-  .glow-2{ bottom: -10%; right: 6%; }
-
-  @media (max-width: 860px){
-    .board-layout{ flex-direction: column; }
-    .board-illustration{ width: 100%; }
-    .board-copy{
-      width: 90%;
-      margin-left: 0;
-      margin-top: -40px;
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          board:   '#1B3A2F',
+          boarddark:'#122820',
+          ivory:   '#FBF6EC',
+          gold:    '#C9A24B',
+          amber:   '#E8A33D',
+          ink:     '#14201A',
+        },
+        fontFamily: {
+          display: ['"Fraunces"', 'serif'],
+          body: ['"Inter"', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+      }
     }
-    .knight-float{ right: 4%; top: 2%; width: 54px; }
-    .cap-float{ left: 4%; width: 48px; }
   }
+</script>
+<style>
+  :root { --gold: #C9A24B; --board: #1B3A2F; }
+  html { scroll-behavior: smooth; }
+  body { background: #FBF6EC; }
 
-  /* ===================== PROGRAM PHASES (Opening / Middlegame / Endgame) ===================== */
-  .phases-section{
-    position: relative;
-    padding: clamp(70px, 9vw, 110px) 0 clamp(20px, 3vw, 40px);
-    z-index: 2;
-  }
-  .phases-head{ max-width: 560px; }
-  .phases-head h2{ font-size: clamp(1.8rem, 3.4vw, 2.6rem); margin-top: 14px; }
-  .phases-head p{ color: var(--ink-60); margin-top: 14px; font-size: 1rem; }
+  /* Fluid type helpers */
+  .fs-hero   { font-size: clamp(2.5rem, 5vw + 1rem, 5rem); line-height: 1.02; }
+  .fs-h2     { font-size: clamp(1.9rem, 3vw + 1rem, 3.2rem); line-height: 1.06; }
+  .fs-h3     { font-size: clamp(1.3rem, 1.4vw + 1rem, 1.9rem); line-height: 1.15; }
+  .fs-lead   { font-size: clamp(1.05rem, .5vw + 1rem, 1.25rem); }
 
-  .phases-row{
-    display:flex;
-    gap: clamp(18px, 2.6vw, 30px);
-    margin-top: clamp(48px, 6vw, 70px);
-    flex-wrap: wrap;
-  }
-  .phase-card{
-    flex: 1 1 260px;
-    background: #fff;
-    border-radius: 22px;
-    padding: 30px 26px 34px;
-    box-shadow: var(--shadow-soft);
-    position: relative;
-    border-top: 4px solid var(--teal);
-  }
-  .phase-card:nth-child(2){ transform: translateY(-22px); border-top-color: var(--gold); }
-  .phase-card:nth-child(3){ transform: translateY(10px); border-top-color: var(--coral); }
-  @media (max-width: 780px){
-    .phase-card, .phase-card:nth-child(2), .phase-card:nth-child(3){ transform:none; }
-  }
-
-  .phase-notation{
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    color: var(--ink-40);
-    letter-spacing: 0.04em;
-  }
-  .phase-card h3{ font-size: 1.3rem; margin-top: 10px; }
-  .phase-card .age{
-    display:inline-block;
-    margin-top: 8px;
-    font-size: 0.78rem;
+  /* notation eyebrow */
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: .18em;
+    text-transform: uppercase;
     font-weight: 700;
-    color: var(--teal-deep);
-    background: rgba(13,148,136,0.1);
-    padding: 4px 10px;
-    border-radius: 999px;
   }
-  .phase-card p{ margin-top: 14px; color: var(--ink-60); font-size: 0.92rem; }
 
-  /* ===================== TESTIMONIAL ===================== */
-  .testimonial-section{
-    position: relative;
-    padding: clamp(30px, 4vw, 60px) 0 clamp(70px, 9vw, 120px);
-    z-index: 2;
-    display:flex;
-    justify-content:center;
-  }
-  .testimonial-section::before{
-    content:"";
-    position:absolute; inset: 0 0 0 0;
-    background-image:
-      linear-gradient(rgba(15,23,42,0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(15,23,42,0.05) 1px, transparent 1px);
-    background-size: 42px 42px;
-    -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 50%, black 40%, transparent 80%);
-    mask-image: radial-gradient(ellipse 60% 70% at 50% 50%, black 40%, transparent 80%);
-    z-index: -1;
-  }
-  .quote-card{
-    max-width: 640px;
-    background: #fff;
-    border-radius: 20px;
-    padding: clamp(30px, 4vw, 50px);
-    box-shadow: var(--shadow-lg);
-    transform: rotate(-1.4deg);
-    position: relative;
-  }
-  .quote-card::before{
-    content: """;
-    font-family: var(--display);
-    font-size: 5.5rem;
-    color: var(--coral);
-    position:absolute;
-    top: -18px; left: 24px;
-    line-height:1;
-    opacity: 0.5;
-  }
-  .quote-card p{
-    font-family: var(--display);
-    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
-    line-height: 1.5;
-    color: var(--ink);
-  }
-  .quote-meta{
-    margin-top: 22px;
-    display:flex;
-    align-items:center;
-    gap: 12px;
-  }
-  .quote-avatar{
-    width: 42px; height:42px; border-radius:50%;
-    background: linear-gradient(135deg, var(--teal), var(--gold));
-    flex-shrink:0;
-  }
-  .quote-meta strong{ font-size: 0.92rem; }
-  .quote-meta span{ font-size: 0.82rem; color: var(--ink-60); display:block; }
-
-  /* ===================== FINAL CTA ===================== */
-  .final-cta{
-    position: relative;
-    margin: 0 auto clamp(60px, 8vw, 100px);
-    max-width: 1100px;
-    padding: clamp(50px, 7vw, 80px) clamp(24px, 5vw, 60px);
-    border-radius: 32px;
-    background: var(--ink);
-    color: #fff;
-    text-align:center;
+  /* the signature oval viewport */
+  .oval-mask {
+    border-radius: 50%;
     overflow: hidden;
-    z-index: 2;
+    box-shadow: 0 25px 50px -12px rgba(20,32,26,0.35), 0 0 0 1px rgba(201,162,75,0.15);
   }
-  .final-cta::before, .final-cta::after{
-    content:"";
-    position:absolute;
-    border-radius:50%;
-  }
-  .final-cta::before{
-    width: 320px; height:320px;
-    background: radial-gradient(circle, rgba(13,148,136,0.4), transparent 70%);
-    top: -140px; left: -80px;
-  }
-  .final-cta::after{
-    width: 280px; height:280px;
-    background: radial-gradient(circle, rgba(225,29,72,0.32), transparent 70%);
-    bottom: -120px; right: -60px;
-  }
-  .final-cta h2{
-    color: #fff;
-    font-size: clamp(1.8rem, 3.6vw, 2.8rem);
-    position: relative; z-index: 2;
-  }
-  .final-cta p{
-    color: rgba(248,250,252,0.7);
-    max-width: 480px;
-    margin: 16px auto 0;
-    position: relative; z-index: 2;
-  }
-  .final-cta .btn-primary{ margin-top: 30px; position: relative; z-index: 2; }
+  .oval-mask img { width: 100%; height: 100%; object-fit: cover; object-position: center; display:block; }
 
-  /* ===================== FOOTER ===================== */
-  footer{
-    background: var(--ink);
-    color: rgba(248,250,252,0.6);
-    padding: 40px 0 30px;
-    font-size: 0.85rem;
-  }
-  .footer-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  .footer-row .logo{ color: #fff; font-size: 1.05rem; }
-  .footer-links{ display:flex; gap: 22px; }
-  .footer-links a:hover{ color: #fff; }
-
-  /* ===================== STICKY CONVERSION BAR ===================== */
-  .sticky-bar{
-    position: fixed;
-    left: 50%;
-    bottom: 22px;
-    transform: translate(-50%, 140%);
-    z-index: 100;
-    background: rgba(15,23,42,0.72);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 999px;
-    padding: 10px 10px 10px 22px;
-    display:flex;
-    align-items:center;
-    gap: 18px;
-    box-shadow: 0 20px 50px -18px rgba(0,0,0,0.5);
-    transition: transform .45s cubic-bezier(.2,.9,.3,1.2);
-    max-width: calc(100% - 32px);
-  }
-  .sticky-bar.show{ transform: translate(-50%, 0); }
-  .sticky-bar span{
-    color: #fff;
-    font-size: 0.86rem;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  .sticky-bar span b{ color: #6EE7DD; font-weight: 700; }
-  .sticky-bar .btn-primary{
-    padding: 12px 22px;
-    font-size: 0.88rem;
-    box-shadow: none;
-    white-space: nowrap;
-  }
-  @media (max-width: 560px){
-    .sticky-bar span{ display:none; }
-    .sticky-bar{ padding: 8px; }
+  /* page panels: JS toggles [hidden] */
+  .page-panel { animation: fadeUp .5s ease both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* mobile nav */
-  @media (max-width: 780px){
-    nav.links{ display:none; }
-    .ghost-cta{ display:none; }
+  /* floating decorative knight etc */
+  .float-slow { animation: floaty 7s ease-in-out infinite; }
+  .float-slower { animation: floaty 11s ease-in-out infinite; }
+  @keyframes floaty {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    50%     { transform: translateY(-16px) rotate(3deg); }
+  }
+  .glow-circle {
+    background: radial-gradient(circle at 30% 30%, rgba(232,163,61,0.55), rgba(232,163,61,0) 70%);
+    filter: blur(2px);
+  }
+
+  /* nav underline active state */
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: ''; position: absolute; left:0; right:0; bottom:-6px; height:2px;
+    background: var(--gold); transform: scaleX(0); transform-origin: left;
+    transition: transform .25s ease;
+  }
+  .nav-link.active::after, .nav-link:hover::after { transform: scaleX(1); }
+  .nav-link.active { color: var(--gold); }
+
+  /* sticky footer glass */
+  .glass-bar {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.78);
+    border-top: 1px solid rgba(201,162,75,0.35);
+  }
+
+  /* modal */
+  .modal-backdrop { backdrop-filter: blur(6px); background: rgba(18,40,32,0.55); }
+  .modal-panel { animation: modalIn .35s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes modalIn {
+    from { opacity:0; transform: translateY(18px) scale(.97); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+  }
+
+  /* card hover lift */
+  .lift { transition: transform .3s ease, box-shadow .3s ease; }
+  .lift:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -18px rgba(20,32,26,0.35); }
+
+  /* asymmetric program stack offsets on desktop */
+  @media (min-width: 1024px) {
+    .stack-1 { margin-top: 0; }
+    .stack-2 { margin-top: 3.5rem; }
+    .stack-3 { margin-top: 7rem; }
+  }
+
+  /* success toast */
+  #toast { transition: transform .4s cubic-bezier(.2,.8,.2,1), opacity .4s ease; }
+
+  ::selection { background: var(--gold); color: #14201A; }
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--gold); outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .float-slow, .float-slower, .page-panel, .modal-panel { animation: none !important; }
+    html { scroll-behavior: auto; }
   }
 </style>
 </head>
-<body>
+<body class="font-body text-ink antialiased pb-24">
 
-<!-- ambient background blobs -->
-<div class="blob blob-teal" style="width:560px; height:560px; top:-220px; left:-180px;"></div>
-<div class="blob blob-coral" style="width:420px; height:420px; top:120px; right:-160px;"></div>
-<div class="blob blob-gold" style="width:340px; height:340px; top:900px; left:-120px;"></div>
-<div class="blob blob-teal" style="width:480px; height:480px; bottom:400px; right:-200px;"></div>
-
-<header>
-  <div class="wrap nav-row">
-    <a href="#top" class="logo">
-      <svg class="mark" viewBox="0 0 40 40" fill="none">
-        <path d="M20 4c-5 3-6 8-3 11-2 1-4 3-4 6h14c0-3-2-5-4-6 3-3 2-8-3-11z" fill="#0D9488"/>
-        <rect x="12" y="30" width="16" height="4" rx="1.5" fill="#0F172A"/>
-        <rect x="9" y="34" width="22" height="3" rx="1.5" fill="#E11D48"/>
-      </svg>
-      Castling Club
-    </a>
-    <nav class="links">
-      <a href="#programs">Programs</a>
-      <a href="#method">Method</a>
-      <a href="#stories">Stories</a>
-      <a href="#faq">FAQ</a>
+<!-- ============ NAV ============ -->
+<header class="sticky top-0 z-40 bg-ivory/90 backdrop-blur border-b border-board/10">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between h-18 py-3">
+    <button onclick="navigate('home')" class="flex items-center gap-2 group">
+      <span class="font-display font-semibold text-xl tracking-tight text-board">Gupta Chess Academy</span>
+    </button>
+    <nav class="hidden md:flex items-center gap-8 eyebrow text-[13px] text-ink/70">
+      <button onclick="navigate('home')" data-nav="home" class="nav-link active pb-1">Home</button>
+      <button onclick="navigate('about')" data-nav="about" class="nav-link pb-1">About Us</button>
+      <button onclick="navigate('blog')" data-nav="blog" class="nav-link pb-1">Blog</button>
+      <button onclick="navigate('contact')" data-nav="contact" class="nav-link pb-1">Contact</button>
     </nav>
-    <a href="#demo" class="ghost-cta">Book a demo</a>
+    <button onclick="openModal()" class="hidden sm:inline-flex items-center gap-2 bg-board text-ivory px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-boarddark transition-colors">
+      Free Demo <span class="font-mono text-amber">→</span>
+    </button>
+    <!-- mobile nav toggle -->
+    <button onclick="document.getElementById('mnav').classList.toggle('hidden')" class="md:hidden text-board" aria-label="Toggle menu">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+  <div id="mnav" class="hidden md:hidden border-t border-board/10 px-5 py-4 flex flex-col gap-4 eyebrow text-sm bg-ivory">
+    <button onclick="navigate('home')" class="text-left">Home</button>
+    <button onclick="navigate('about')" class="text-left">About Us</button>
+    <button onclick="navigate('blog')" class="text-left">Blog</button>
+    <button onclick="navigate('contact')" class="text-left">Contact</button>
+    <button onclick="openModal()" class="mt-2 bg-board text-ivory px-5 py-2.5 rounded-full font-semibold text-center">Book Free Demo</button>
   </div>
 </header>
 
-<main id="top">
+<!-- ============ HOME ============ -->
+<main id="page-home" class="page-panel">
 
-  <!-- ===================== HERO ===================== -->
-  <section class="hero">
-    <div class="wrap">
-      <span class="eyebrow">1. e4 — your move</span>
-      <h1 class="hero-headline">
-        Why <em>Castling&nbsp;Club</em> is a leading online chess academy for kids?
-      </h1>
-      <p class="hero-sub">
-        Live 1:1 coaching from titled players, a curriculum built around real tournament thinking,
-        and a classroom your child actually looks forward to.
-      </p>
-      <div class="hero-actions">
-        <a href="#demo" class="btn-primary">
-          Secure a free demo seat
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <a href="#method" class="btn-text">See how lessons work</a>
-      </div>
+  <!-- HERO -->
+  <section class="relative max-w-6xl mx-auto px-5 sm:px-8 pt-14 sm:pt-20 pb-16 overflow-hidden">
 
-      <div class="oval-stage">
-        <div class="oval">
-          <img alt="A coach and a young student smiling over a chessboard during an online lesson" src="data:image/svg+xml;utf8,
-            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 650 500'>
-              <rect width='650' height='500' fill='%23FDF3E7'/>
-              <circle cx='140' cy='120' r='140' fill='%230D9488' opacity='0.14'/>
-              <circle cx='560' cy='420' r='180' fill='%23E11D48' opacity='0.10'/>
-              <rect x='190' y='300' width='270' height='150' rx='10' fill='%23F8FAFC' stroke='%230F172A' stroke-opacity='0.15'/>
-              <g>
-                <rect x='210' y='320' width='230' height='110' fill='%23fff'/>
-                <g fill='%230F172A' opacity='0.85'>
-                  <rect x='210' y='320' width='23' height='22'/><rect x='256' y='320' width='23' height='22'/><rect x='302' y='320' width='23' height='22'/><rect x='348' y='320' width='23' height='22'/><rect x='394' y='320' width='23' height='22'/>
-                  <rect x='233' y='342' width='23' height='22'/><rect x='279' y='342' width='23' height='22'/><rect x='325' y='342' width='23' height='22'/><rect x='371' y='342' width='23' height='22'/><rect x='417' y='342' width='23' height='22'/>
-                  <rect x='210' y='364' width='23' height='22'/><rect x='256' y='364' width='23' height='22'/><rect x='302' y='364' width='23' height='22'/><rect x='348' y='364' width='23' height='22'/><rect x='394' y='364' width='23' height='22'/>
-                  <rect x='233' y='386' width='23' height='22'/><rect x='279' y='386' width='23' height='22'/><rect x='325' y='386' width='23' height='22'/><rect x='371' y='386' width='23' height='22'/><rect x='417' y='386' width='23' height='22'/>
-                  <rect x='210' y='408' width='23' height='22'/><rect x='256' y='408' width='23' height='22'/><rect x='302' y='408' width='23' height='22'/><rect x='348' y='408' width='23' height='22'/><rect x='394' y='408' width='23' height='22'/>
-                </g>
-              </g>
-              <g transform='translate(150,110)'>
-                <circle cx='0' cy='0' r='60' fill='%23F4C89A'/>
-                <path d='M-60 10 a60 60 0 0 0 120 0 v70 h-120z' fill='%230D9488'/>
-                <circle cx='-20' cy='-8' r='7' fill='%230F172A'/><circle cx='20' cy='-8' r='7' fill='%230F172A'/>
-                <path d='M-18 20 q18 16 36 0' stroke='%230F172A' stroke-width='4' fill='none' stroke-linecap='round'/>
-                <path d='M-55 -30 q55 -55 110 0' fill='%230F172A'/>
-              </g>
-              <g transform='translate(430,150)'>
-                <circle cx='0' cy='0' r='72' fill='%23E8B48A'/>
-                <path d='M-72 12 a72 72 0 0 0 144 0 v90 h-144z' fill='%23E11D48'/>
-                <circle cx='-24' cy='-6' r='8' fill='%230F172A'/><circle cx='24' cy='-6' r='8' fill='%230F172A'/>
-                <path d='M-20 26 q20 18 40 0' stroke='%230F172A' stroke-width='4' fill='none' stroke-linecap='round'/>
-                <path d='M-70 -36 q70 -60 140 0 q-14 -18 -140 0' fill='%23A9863A'/>
-              </g>
-            </svg>">
-        </div>
-        <div class="oval-badge b1">
-          <span class="num">4.9</span>
-          <span>★ average rating from 2,300+ parents</span>
-        </div>
-        <div class="oval-badge b2">
-          <span class="num">120+</span>
-          <span>national & international titled coaches</span>
+    <!-- floating decorative elements -->
+    <svg class="hidden lg:block absolute -left-6 top-8 w-24 h-24 text-board/15 float-slow" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M19 21H5v-2h14v2zM17.5 12.5c.5-1 .8-2 .5-3-.4-1.3-1.6-2-2.2-3.2-.5-1 .3-1.8-.3-2.6C15 3 13.7 3 13 3.5c-.4.3-.4.9-.1 1.3.4.5 0 1-.5 1.1-1 .3-1.4 1.3-1 2.2.3.6-.1 1-.6 1.3-1.5.8-2.3 2.4-2 4.1.2 1 .8 1.7.8 1.7H8l-1 4h10l-1-4h1.5s.3-1.2 0-2.7z"/>
+    </svg>
+    <div class="hidden lg:block absolute right-2 top-4 w-16 h-16 rounded-full glow-circle float-slower" aria-hidden="true"></div>
+    <div class="hidden lg:block absolute left-1/3 bottom-0 w-10 h-10 rounded-full glow-circle float-slow" aria-hidden="true"></div>
+
+    <div class="grid lg:grid-cols-12 gap-10 items-center">
+      <div class="lg:col-span-6 relative z-10">
+        <span class="eyebrow text-amber text-xs">e4 — the strongest opening move</span>
+        <h1 class="fs-hero font-display font-semibold text-board mt-4">
+          Think<br>Independently.<br>
+          <span class="italic text-amber">Move</span> Strategically.<br>
+          Be A Champion.
+        </h1>
+        <p class="fs-lead text-ink/70 mt-6 max-w-md">
+          Structured chess coaching for young minds across Bangalore and Mughalsarai — built by FIDE-rated players who teach the game like it's meant to be played: with patience, pattern, and purpose.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <button onclick="openModal()" class="bg-amber text-boarddark px-7 py-3.5 rounded-full font-semibold hover:brightness-105 transition shadow-lg shadow-amber/20">
+            Reserve a Free Demo Seat
+          </button>
+          <button onclick="navigate('about')" class="border border-board/25 text-board px-7 py-3.5 rounded-full font-semibold hover:bg-board hover:text-ivory transition">
+            Our Story
+          </button>
         </div>
       </div>
 
-      <div class="hero-accent">
-        <h2>Checkmate boredom. Build brilliance.</h2>
-        <p>Every lesson is live, every coach is vetted, and every child leaves the board thinking sharper than they arrived.</p>
+      <!-- signature oval -->
+      <div class="lg:col-span-6 relative flex justify-center lg:justify-end">
+        <div class="oval-mask w-[85%] max-w-[680px] h-[260px] sm:h-[320px] lg:h-[350px] relative">
+          <img src="images/hero-showcase-top.jpg" alt="Students competing at the National Amateur Chess Championships 2026" loading="eager">
+        </div>
+        <!-- overlapping stat card -->
+        <div class="absolute -bottom-6 left-2 sm:left-6 bg-ivory border border-board/10 rounded-2xl shadow-xl px-5 py-4 lift">
+          <p class="font-display text-2xl font-semibold text-board">15+</p>
+          <p class="eyebrow text-[10px] text-ink/60">Tournaments Entered</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="eyebrow text-teal-800 text-center mt-16 text-sm" style="color:#0F6B5C">
+      Coaching by FIDE-Rated International Players
+    </p>
+  </section>
+
+  <!-- PROGRAMS — asymmetric stack -->
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-16 relative">
+    <div class="text-center max-w-xl mx-auto mb-14">
+      <span class="eyebrow text-amber text-xs">Nf3 — develop with purpose</span>
+      <h2 class="fs-h2 font-display font-semibold text-board mt-3">Our Programs</h2>
+      <p class="text-ink/60 mt-4">Every student moves through the board at their own pace — from first steps to rated play.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6 lg:gap-8">
+      <!-- card 1 -->
+      <div class="stack-1 lift bg-white rounded-3xl p-8 border border-board/10 relative overflow-hidden">
+        <span class="eyebrow text-[11px] text-amber">Level 01</span>
+        <h3 class="fs-h3 font-display font-semibold text-board mt-2">Beginner Foundation</h3>
+        <p class="text-ink/60 mt-3 text-sm leading-relaxed">Rules, notation, and the first 10 tactical patterns every player needs — taught through play, not lectures.</p>
+        <div class="mt-6 w-12 h-12 rounded-full bg-board/5 flex items-center justify-center font-mono text-board">e4</div>
+      </div>
+      <!-- card 2 -->
+      <div class="stack-2 lift bg-board text-ivory rounded-3xl p-8 relative overflow-hidden">
+        <span class="eyebrow text-[11px] text-amber">Level 02</span>
+        <h3 class="fs-h3 font-display font-semibold mt-2">Intermediate Mastery</h3>
+        <p class="text-ivory/70 mt-3 text-sm leading-relaxed">Opening repertoires, middlegame planning, and endgame technique — the toolkit for consistent tournament wins.</p>
+        <div class="mt-6 w-12 h-12 rounded-full bg-ivory/10 flex items-center justify-center font-mono text-amber">Nf3</div>
+      </div>
+      <!-- card 3 -->
+      <div class="stack-3 lift bg-white rounded-3xl p-8 border border-board/10 relative overflow-hidden">
+        <span class="eyebrow text-[11px] text-amber">Level 03</span>
+        <h3 class="fs-h3 font-display font-semibold text-board mt-2">Advanced Pro &amp; Rated</h3>
+        <p class="text-ink/60 mt-3 text-sm leading-relaxed">FIDE-rated tournament preparation, deep opening theory, and one-on-one game analysis for competitive players.</p>
+        <div class="mt-6 w-12 h-12 rounded-full bg-board/5 flex items-center justify-center font-mono text-board">O-O</div>
       </div>
     </div>
   </section>
 
-  <!-- ===================== SIGNATURE / ASYMMETRIC SECTION ===================== -->
-  <section class="board-section" id="method">
-    <div class="wrap">
-      <div class="floaters">
-        <div class="float-el knight-float anim-drift">
-          <svg viewBox="0 0 60 60" fill="none">
-            <path d="M14 52h32l-2-8H16l-2 8z" fill="#0F172A"/>
-            <path d="M18 44c-2-10 2-16 6-20-4-2-6-6-4-10 2 2 4 3 6 2-1-3 1-6 4-6 6 0 10 6 10 14 0 8-2 14-2 20H18z" fill="#0D9488"/>
-            <circle cx="30" cy="16" r="2" fill="#0F172A"/>
-          </svg>
+  <!-- second oval band -->
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-16">
+    <div class="grid lg:grid-cols-12 gap-10 items-center">
+      <div class="lg:col-span-5 order-2 lg:order-1 relative flex justify-center">
+        <div class="oval-mask w-[85%] max-w-[520px] h-[240px] sm:h-[300px] relative">
+          <img src="images/hero-showcase-bottom.jpg" alt="Chess coaching session with focused young students" loading="lazy">
         </div>
-        <div class="float-el cap-float anim-drift-rev">
-          <svg viewBox="0 0 64 48" fill="none">
-            <path d="M32 4L4 16l28 12 28-12z" stroke="#A9863A" stroke-width="2.4" fill="none" stroke-linejoin="round"/>
-            <path d="M16 22v10c0 4 8 8 16 8s16-4 16-8V22" stroke="#A9863A" stroke-width="2.4" fill="none"/>
-            <line x1="58" y1="16" x2="58" y2="32" stroke="#A9863A" stroke-width="2.4"/>
-          </svg>
-        </div>
-        <div class="float-el float-glow glow-1"></div>
-        <div class="float-el float-glow coral glow-2"></div>
       </div>
-
-      <div class="board-layout">
-        <div class="board-illustration">
-          <svg viewBox="0 0 600 460" fill="none">
-            <rect x="60" y="120" width="480" height="300" rx="18" fill="#fff" stroke="#0F172A" stroke-opacity="0.08"/>
-            <g transform="translate(100,150)">
-              <g fill="#0F172A" opacity="0.9">
-                <rect x="0" y="0" width="50" height="50"/><rect x="100" y="0" width="50" height="50"/><rect x="200" y="0" width="50" height="50"/><rect x="300" y="0" width="50" height="50"/>
-                <rect x="50" y="50" width="50" height="50"/><rect x="150" y="50" width="50" height="50"/><rect x="250" y="50" width="50" height="50"/><rect x="350" y="50" width="50" height="50"/>
-                <rect x="0" y="100" width="50" height="50"/><rect x="100" y="100" width="50" height="50"/><rect x="200" y="100" width="50" height="50"/><rect x="300" y="100" width="50" height="50"/>
-                <rect x="50" y="150" width="50" height="50"/><rect x="150" y="150" width="50" height="50"/><rect x="250" y="150" width="50" height="50"/><rect x="350" y="150" width="50" height="50"/>
-              </g>
-              <rect x="0" y="0" width="400" height="200" fill="none" stroke="#0F172A" stroke-opacity="0.1"/>
-              <circle cx="75" cy="75" r="16" fill="#E11D48"/>
-              <circle cx="325" cy="125" r="18" fill="#0D9488"/>
-              <rect x="215" y="15" width="30" height="30" fill="#A9863A"/>
-            </g>
-            <g transform="translate(150,300)">
-              <circle cx="0" cy="0" r="46" fill="#F4C89A"/>
-              <path d="M-46 8 a46 46 0 0 0 92 0 v60 h-92z" fill="#0D9488"/>
-              <circle cx="-15" cy="-6" r="5" fill="#0F172A"/><circle cx="15" cy="-6" r="5" fill="#0F172A"/>
-              <path d="M-46 -22 q46 -42 92 0" fill="#0F172A"/>
-            </g>
-            <g transform="translate(420,290)">
-              <circle cx="0" cy="0" r="56" fill="#E8B48A"/>
-              <path d="M-56 10 a56 56 0 0 0 112 0 v70 h-112z" fill="#0F172A"/>
-              <circle cx="-18" cy="-6" r="6" fill="#0F172A"/><circle cx="18" cy="-6" r="6" fill="#0F172A"/>
-              <path d="M-56 -28 q56 -52 112 0 q-10 -14 -112 0" fill="#A9863A"/>
-            </g>
-          </svg>
-        </div>
-
-        <div class="board-copy">
-          <span class="eyebrow">Nf3 — developing your child</span>
-          <h3>Real coaching, not a chatbot with a chessboard skin</h3>
-
-          <div class="callout">
-            <span class="dot"></span>
-            <div>
-              <strong>A dedicated human coach</strong>
-              <span>Your child keeps the same coach across the term, so feedback compounds instead of resetting every class.</span>
-            </div>
+      <div class="lg:col-span-7 order-1 lg:order-2">
+        <span class="eyebrow text-amber text-xs">O-O — castle before you attack</span>
+        <h2 class="fs-h2 font-display font-semibold text-board mt-3">Small batches. Real attention.</h2>
+        <p class="text-ink/70 mt-5 fs-lead max-w-lg">Every session is built around the student in front of us — not a syllabus on autopilot. That's how eight-year-olds end up outplaying adults at open tournaments.</p>
+        <div class="mt-8 grid grid-cols-2 gap-6 max-w-sm">
+          <div>
+            <p class="font-display text-3xl font-semibold text-board">50+</p>
+            <p class="eyebrow text-[11px] text-ink/50 mt-1">Students Trained</p>
           </div>
-          <div class="callout">
-            <span class="dot" style="background:var(--teal)"></span>
-            <div>
-              <strong>Puzzles that fit the player</strong>
-              <span>Difficulty adapts lesson to lesson based on the games your child actually plays, not a fixed workbook.</span>
-            </div>
-          </div>
-          <div class="callout">
-            <span class="dot" style="background:var(--gold)"></span>
-            <div>
-              <strong>A parent report after every class</strong>
-              <span>Two lines on what was learned and what to try before the next session — no jargon required.</span>
-            </div>
+          <div>
+            <p class="font-display text-3xl font-semibold text-board">8+</p>
+            <p class="eyebrow text-[11px] text-ink/50 mt-1">Years Experience</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===================== PROGRAM PHASES ===================== -->
-  <section class="phases-section" id="programs">
-    <div class="wrap">
-      <div class="phases-head">
-        <span class="eyebrow">The curriculum</span>
-        <h2>Structured like a real game — opening, middlegame, endgame</h2>
-        <p>We map skill level to the actual phases of a chess game, so the path forward always makes sense, even to a seven-year-old.</p>
-      </div>
-
-      <div class="phases-row">
-        <div class="phase-card">
-          <span class="phase-notation">Phase 01 — Opening</span>
-          <h3>First Moves</h3>
-          <span class="age">Ages 5–7</span>
-          <p>Piece movement, board vision, and why every square matters. Games are short, silly, and full of small wins.</p>
-        </div>
-        <div class="phase-card">
-          <span class="phase-notation">Phase 02 — Middlegame</span>
-          <h3>Tactics Lab</h3>
-          <span class="age">Ages 8–11</span>
-          <p>Forks, pins, and combinations. Kids start reading three moves ahead and defending their plans out loud.</p>
-        </div>
-        <div class="phase-card">
-          <span class="phase-notation">Phase 03 — Endgame</span>
-          <h3>Tournament Track</h3>
-          <span class="age">Ages 12–16</span>
-          <p>Rated play, opening repertoires, and endgame technique for players heading toward real tournament halls.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== TESTIMONIAL ===================== -->
-  <section class="testimonial-section" id="stories">
-    <div class="quote-card">
-      <p>My son used to fold the moment he was losing. Six months in, he asked to replay a lost game just to find where it went wrong. That shift is worth more than the rating points.</p>
-      <div class="quote-meta">
-        <div class="quote-avatar"></div>
-        <div>
-          <strong>Priya N.</strong>
-          <span>Parent, student age 9</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== FINAL CTA ===================== -->
-  <section class="wrap">
-    <div class="final-cta" id="demo">
-      <span class="eyebrow" style="color:#6EE7DD;">O-O — castle into position</span>
-      <h2>Your child's next brilliant move starts here</h2>
-      <p>Book a free 30-minute demo class. No homework, no pressure — just a coach, a board, and one good hour.</p>
-      <a href="#" class="btn-primary">Secure a free demo seat</a>
-    </div>
-  </section>
-
+  <!-- CONTACT (shared section, also part of home flow) -->
+  <div id="contact-section"></div>
 </main>
 
-<footer>
-  <div class="wrap footer-row">
-    <span class="logo">Castling Club</span>
-    <div class="footer-links">
-      <a href="#programs">Programs</a>
-      <a href="#method">Method</a>
-      <a href="#faq">FAQ</a>
-      <a href="#demo">Book a demo</a>
-    </div>
-    <span>© 2026 Castling Club</span>
-  </div>
-</footer>
+<!-- ============ ABOUT ============ -->
+<main id="page-about" class="page-panel" hidden>
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-6 relative overflow-hidden">
+    <svg class="hidden lg:block absolute right-0 top-10 w-20 h-20 text-amber/25 float-slower" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2L4 6v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6l-8-4zm0 4a2 2 0 110 4 2 2 0 010-4z"/>
+    </svg>
+    <span class="eyebrow text-amber text-xs">Our record on the board</span>
+    <h1 class="fs-h2 font-display font-semibold text-board mt-3 max-w-2xl">Eight years of turning first moves into tournament wins.</h1>
 
-<div class="sticky-bar" id="stickyBar">
-  <span>Free demo · 30 minutes · <b>no pressure</b></span>
-  <a href="#demo" class="btn-primary">Secure a free demo seat</a>
+    <!-- achievement strip -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mt-12">
+      <div class="bg-white border border-board/10 rounded-2xl p-6 text-center lift">
+        <p class="font-display text-3xl font-semibold text-board">50+</p>
+        <p class="eyebrow text-[10px] text-ink/50 mt-2">Students Trained</p>
+      </div>
+      <div class="bg-white border border-board/10 rounded-2xl p-6 text-center lift">
+        <p class="font-display text-3xl font-semibold text-board">8+</p>
+        <p class="eyebrow text-[10px] text-ink/50 mt-2">Years Experience</p>
+      </div>
+      <div class="bg-white border border-board/10 rounded-2xl p-6 text-center lift">
+        <p class="font-display text-3xl font-semibold text-board">2</p>
+        <p class="eyebrow text-[10px] text-ink/50 mt-2">Expert Coaches</p>
+      </div>
+      <div class="bg-white border border-board/10 rounded-2xl p-6 text-center lift">
+        <p class="font-display text-3xl font-semibold text-board">15+</p>
+        <p class="eyebrow text-[10px] text-ink/50 mt-2">Tournaments Entered</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- founders -->
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-16">
+    <span class="eyebrow text-amber text-xs">Leadership</span>
+    <h2 class="fs-h2 font-display font-semibold text-board mt-3">Founders</h2>
+    <div class="grid sm:grid-cols-2 gap-8 mt-10">
+      <div class="bg-white rounded-3xl border border-board/10 overflow-hidden lift">
+        <div class="oval-mask w-32 h-32 mt-8 mx-auto">
+          <img src="images/founder-minu.jpg" alt="Minu Gupta, Founder of Gupta Chess Academy" loading="lazy">
+        </div>
+        <div class="p-8 text-center">
+          <h3 class="font-display text-xl font-semibold text-board">Minu Gupta</h3>
+          <p class="eyebrow text-[11px] text-amber mt-1">Founder</p>
+          <p class="text-ink/60 text-sm mt-4 leading-relaxed">The vision behind the academy — building a home for structured, patient chess coaching across two cities.</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-3xl border border-board/10 overflow-hidden lift">
+        <div class="oval-mask w-32 h-32 mt-8 mx-auto">
+          <img src="images/coach-sindhu.jpg" alt="Dr. Neetu Singh, Co-Founder of Gupta Chess Academy" loading="lazy">
+        </div>
+        <div class="p-8 text-center">
+          <h3 class="font-display text-xl font-semibold text-board">Dr. Neetu Singh</h3>
+          <p class="eyebrow text-[11px] text-amber mt-1">Co-Founder</p>
+          <p class="text-ink/60 text-sm mt-4 leading-relaxed">Bringing academic rigor to the curriculum, ensuring every student's progress is measured and real.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- coaches -->
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-8">
+    <span class="eyebrow text-amber text-xs">On the bench</span>
+    <h2 class="fs-h2 font-display font-semibold text-board mt-3">Coaches</h2>
+    <div class="grid sm:grid-cols-2 gap-8 mt-10">
+      <div class="bg-white rounded-3xl border border-board/10 overflow-hidden lift flex items-center gap-5 p-6">
+        <div class="oval-mask w-20 h-20 flex-shrink-0">
+          <img src="images/coach-ankit.jpg" alt="Coach Ankit" loading="lazy">
+        </div>
+        <div>
+          <h3 class="font-display text-lg font-semibold text-board">Coach Ankit</h3>
+          <p class="eyebrow text-[10px] text-amber mt-1">FIDE-Rated Coach</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-3xl border border-board/10 overflow-hidden lift flex items-center gap-5 p-6">
+        <div class="oval-mask w-20 h-20 flex-shrink-0">
+          <img src="images/coach-satyam.jpg" alt="Coach Satyam" loading="lazy">
+        </div>
+        <div>
+          <h3 class="font-display text-lg font-semibold text-board">Coach Satyam</h3>
+          <p class="eyebrow text-[10px] text-amber mt-1">Tournament Trainer</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- locations -->
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-16">
+    <span class="eyebrow text-amber text-xs">On the map</span>
+    <h2 class="fs-h2 font-display font-semibold text-board mt-3">Our Centres</h2>
+    <div class="grid md:grid-cols-3 gap-6 mt-10">
+      <div class="bg-board text-ivory rounded-3xl p-7 lift">
+        <p class="eyebrow text-[10px] text-amber">Bangalore · Batch A</p>
+        <h3 class="font-display text-lg font-semibold mt-2">Cambridge Montessori School</h3>
+        <p class="text-ivory/60 text-sm mt-2">Singasandra, Bangalore</p>
+      </div>
+      <div class="bg-board text-ivory rounded-3xl p-7 lift">
+        <p class="eyebrow text-[10px] text-amber">Bangalore · Batch B</p>
+        <h3 class="font-display text-lg font-semibold mt-2">Cambridge School</h3>
+        <p class="text-ivory/60 text-sm mt-2">Kudlu, Bangalore</p>
+      </div>
+      <div class="bg-gold/90 text-boarddark rounded-3xl p-7 lift">
+        <p class="eyebrow text-[10px] text-boarddark/70">Uttar Pradesh · Home Centre</p>
+        <h3 class="font-display text-lg font-semibold mt-2">Mughalsarai Centre</h3>
+        <p class="text-boarddark/70 text-sm mt-2">Chandauli, Uttar Pradesh</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- gallery -->
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-8 pb-16">
+    <span class="eyebrow text-amber text-xs">Recent wins</span>
+    <h2 class="fs-h2 font-display font-semibold text-board mt-3">From the Trophy Cabinet</h2>
+    <div class="grid sm:grid-cols-2 gap-6 mt-10">
+      <div class="rounded-3xl overflow-hidden lift h-64">
+        <img src="images/gallery/trophy-award-2026.jpg" alt="Student receiving a trophy at a 2026 chess tournament" class="w-full h-full object-cover">
+      </div>
+      <div class="rounded-3xl overflow-hidden lift h-64">
+        <img src="images/gallery/tournament-award-galleria-yelahanka.jpg" alt="Award ceremony at Galleria Yelahanka chess tournament" class="w-full h-full object-cover">
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ BLOG ============ -->
+<main id="page-blog" class="page-panel" hidden>
+  <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-16">
+    <span class="eyebrow text-amber text-xs">From the coaching desk</span>
+    <h1 class="fs-h2 font-display font-semibold text-board mt-3 max-w-xl">Tactics, strategy, and notes from the classroom.</h1>
+    <p class="text-ink/60 mt-4 max-w-lg">Expert chess tips, opening strategies, tournament advice, and coaching insights from our Bangalore centres.</p>
+
+    <div class="grid md:grid-cols-3 gap-7 mt-14">
+      <article class="bg-white rounded-3xl border border-board/10 overflow-hidden lift">
+        <div class="h-44 overflow-hidden">
+          <img src="images/blog/blog1-openings.jpg" alt="Opening theory illustration for young chess players" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <span class="eyebrow text-[10px] text-amber">e4 · Openings</span>
+          <h3 class="font-display text-lg font-semibold text-board mt-2">Five Opening Traps Every Beginner Should Know</h3>
+          <p class="text-ink/60 text-sm mt-3">Simple, memorable patterns that turn a shaky first ten moves into a real advantage.</p>
+        </div>
+      </article>
+      <article class="bg-white rounded-3xl border border-board/10 overflow-hidden lift">
+        <div class="h-44 overflow-hidden">
+          <img src="images/blog/blog2-tactics.jpg" alt="Tactical puzzle illustration" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <span class="eyebrow text-[10px] text-amber">Nxf7 · Tactics</span>
+          <h3 class="font-display text-lg font-semibold text-board mt-2">Reading the Board: A Tactics Framework for Kids</h3>
+          <p class="text-ink/60 text-sm mt-3">The three-question checklist we teach every student before they touch a piece.</p>
+        </div>
+      </article>
+      <article class="bg-white rounded-3xl border border-board/10 overflow-hidden lift">
+        <div class="h-44 overflow-hidden">
+          <img src="images/blog/blog3-psychology.jpg" alt="Chess psychology and focus illustration" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <span class="eyebrow text-[10px] text-amber">O-O-O · Mindset</span>
+          <h3 class="font-display text-lg font-semibold text-board mt-2">The Psychology of a Calm Tournament Mind</h3>
+          <p class="text-ink/60 text-sm mt-3">How we help young players stay composed two moves after a blunder.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<!-- ============ CONTACT PAGE (also linked from nav) ============ -->
+<main id="page-contact" class="page-panel" hidden>
+  <section class="max-w-4xl mx-auto px-5 sm:px-8 pt-14 pb-24">
+    <span class="eyebrow text-amber text-xs">Let's talk chess</span>
+    <h1 class="fs-h2 font-display font-semibold text-board mt-3">Get in Touch</h1>
+    <p class="text-ink/60 mt-4 max-w-md">Tell us about your child and we'll match them to the right batch — online, Bangalore, or Mughalsarai.</p>
+
+    <form id="contact-form" class="mt-10 bg-white border border-board/10 rounded-3xl p-6 sm:p-10 grid sm:grid-cols-2 gap-6" novalidate>
+      <div class="sm:col-span-1">
+        <label for="studentName" class="eyebrow text-[11px] text-ink/60">Student Name</label>
+        <input id="studentName" name="studentName" type="text" required
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-ivory focus:border-gold outline-none transition">
+        <p class="err text-xs text-red-600 mt-1 hidden">Please enter the student's name.</p>
+      </div>
+      <div class="sm:col-span-1">
+        <label for="parentName" class="eyebrow text-[11px] text-ink/60">Parent Name</label>
+        <input id="parentName" name="parentName" type="text" required
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-ivory focus:border-gold outline-none transition">
+        <p class="err text-xs text-red-600 mt-1 hidden">Please enter the parent's name.</p>
+      </div>
+      <div class="sm:col-span-1">
+        <label for="age" class="eyebrow text-[11px] text-ink/60">Age</label>
+        <input id="age" name="age" type="number" min="3" max="18" required
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-ivory focus:border-gold outline-none transition">
+        <p class="err text-xs text-red-600 mt-1 hidden">Please enter a valid age (3–18).</p>
+      </div>
+      <div class="sm:col-span-1">
+        <label for="phone" class="eyebrow text-[11px] text-ink/60">Phone Number</label>
+        <input id="phone" name="phone" type="tel" required pattern="[0-9+\-\s]{7,15}"
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-ivory focus:border-gold outline-none transition">
+        <p class="err text-xs text-red-600 mt-1 hidden">Please enter a valid phone number.</p>
+      </div>
+      <div class="sm:col-span-2">
+        <label for="batch" class="eyebrow text-[11px] text-ink/60">Selected Batch</label>
+        <select id="batch" name="batch" required
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-ivory focus:border-gold outline-none transition">
+          <option value="">Choose a batch</option>
+          <option>Online</option>
+          <option>Bangalore Offline</option>
+          <option>Mughalsarai Offline</option>
+        </select>
+        <p class="err text-xs text-red-600 mt-1 hidden">Please select a batch.</p>
+      </div>
+      <div class="sm:col-span-2">
+        <label for="message" class="eyebrow text-[11px] text-ink/60">Message</label>
+        <textarea id="message" name="message" rows="4"
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-ivory focus:border-gold outline-none transition resize-none"
+          placeholder="Anything we should know before the first session?"></textarea>
+      </div>
+      <div class="sm:col-span-2">
+        <button type="submit" class="bg-board text-ivory px-8 py-3.5 rounded-full font-semibold hover:bg-boarddark transition w-full sm:w-auto">
+          Send Message
+        </button>
+      </div>
+    </form>
+  </section>
+</main>
+
+<!-- ============ FREE DEMO MODAL ============ -->
+<div id="modal" class="fixed inset-0 z-[60] hidden items-center justify-center px-4">
+  <div class="modal-backdrop absolute inset-0" onclick="closeModal()"></div>
+  <div class="modal-panel relative bg-ivory rounded-3xl max-w-md w-full p-7 sm:p-9 shadow-2xl">
+    <button onclick="closeModal()" aria-label="Close" class="absolute top-5 right-5 w-9 h-9 rounded-full flex items-center justify-center hover:bg-board/5 transition">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <span class="eyebrow text-amber text-xs">Limited seats · Founding batch</span>
+    <h2 class="fs-h3 font-display font-semibold text-board mt-2">Reserve Your Free Demo Seat</h2>
+    <p class="text-ink/60 text-sm mt-2">₹2,600 for 8 sessions once the founding batch opens.</p>
+
+    <form id="demo-form" class="mt-6 space-y-4" novalidate>
+      <div>
+        <label for="d-name" class="eyebrow text-[11px] text-ink/60">Student Name</label>
+        <input id="d-name" name="d-name" type="text" required
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-white focus:border-gold outline-none transition">
+        <p class="err text-xs text-red-600 mt-1 hidden">Please enter the student's name.</p>
+      </div>
+      <div>
+        <label for="d-phone" class="eyebrow text-[11px] text-ink/60">Phone Number</label>
+        <input id="d-phone" name="d-phone" type="tel" required pattern="[0-9+\-\s]{7,15}"
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-white focus:border-gold outline-none transition">
+        <p class="err text-xs text-red-600 mt-1 hidden">Please enter a valid phone number.</p>
+      </div>
+      <div>
+        <label for="d-batch" class="eyebrow text-[11px] text-ink/60">Preferred Batch</label>
+        <select id="d-batch" name="d-batch" required
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-white focus:border-gold outline-none transition">
+          <option value="">Choose a batch</option>
+          <option>Online</option>
+          <option>Bangalore Offline (Singasandra)</option>
+          <option>Bangalore Offline (Kudlu)</option>
+          <option>Mughalsarai Offline</option>
+        </select>
+        <p class="err text-xs text-red-600 mt-1 hidden">Please select a batch.</p>
+      </div>
+      <button type="submit" class="w-full bg-amber text-boarddark px-6 py-3.5 rounded-full font-semibold hover:brightness-105 transition">
+        Confirm My Free Seat
+      </button>
+    </form>
+  </div>
 </div>
 
+<!-- ============ TOAST ============ -->
+<div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-[70] opacity-0 pointer-events-none translate-y-[-12px]">
+  <div class="bg-board text-ivory px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8A33D" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+    <span id="toast-msg" class="font-medium text-sm">Thank you! We'll be in touch shortly.</span>
+  </div>
+</div>
+
+<!-- ============ STICKY FOOTER BAR ============ -->
+<div class="fixed bottom-0 left-0 right-0 z-30 glass-bar">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
+    <p class="text-xs sm:text-sm text-ink/70 text-center sm:text-left">
+      <span class="font-semibold text-board">Founding Batch:</span> ₹2,600 for 8 sessions &nbsp;|&nbsp; Call
+      <a href="tel:+918660813472" class="text-board font-semibold hover:text-amber transition">+91 86608 13472</a>
+    </p>
+    <button onclick="openModal()" class="flex-shrink-0 bg-board text-ivory px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-boarddark transition whitespace-nowrap">
+      Book a FREE Demo Class at Singasandra / Kudlu
+    </button>
+  </div>
+</div>
+
+<footer class="max-w-6xl mx-auto px-5 sm:px-8 py-10 text-center text-ink/40 text-xs">
+  © 2026 Gupta Chess Academy. Singasandra · Kudlu · Mughalsarai.
+</footer>
+
 <script>
-  const bar = document.getElementById('stickyBar');
-  let lastY = window.scrollY;
-  const showAfter = 420;
-
-  function onScroll(){
-    const y = window.scrollY;
-    if(y > showAfter){
-      bar.classList.add('show');
-    } else {
-      bar.classList.remove('show');
-    }
-    lastY = y;
+  // ---------- ROUTING ----------
+  const pages = ['home','about','blog','contact'];
+  function navigate(page) {
+    pages.forEach(p => {
+      const el = document.getElementById('page-' + p);
+      if (!el) return;
+      if (p === page) { el.hidden = false; el.classList.remove('page-panel'); void el.offsetWidth; el.classList.add('page-panel'); }
+      else el.hidden = true;
+    });
+    document.querySelectorAll('.nav-link').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.nav === page);
+    });
+    document.getElementById('mnav').classList.add('hidden');
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
   }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-</script>
 
+  // ---------- MODAL ----------
+  function openModal() {
+    const m = document.getElementById('modal');
+    m.classList.remove('hidden');
+    m.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    const m = document.getElementById('modal');
+    m.classList.add('hidden');
+    m.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ---------- TOAST ----------
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.remove('opacity-0','translate-y-[-12px]');
+    t.classList.add('opacity-100','translate-y-0');
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(() => {
+      t.classList.remove('opacity-100','translate-y-0');
+      t.classList.add('opacity-0','translate-y-[-12px]');
+    }, 3600);
+  }
+
+  // ---------- VALIDATION HELPERS ----------
+  function validateForm(form) {
+    let valid = true;
+    form.querySelectorAll('[required]').forEach(field => {
+      const errEl = field.closest('div').querySelector('.err');
+      const isValid = field.checkValidity() && field.value.trim() !== '';
+      if (!isValid) {
+        valid = false;
+        field.classList.add('border-red-400');
+        if (errEl) errEl.classList.remove('hidden');
+      } else {
+        field.classList.remove('border-red-400');
+        if (errEl) errEl.classList.add('hidden');
+      }
+    });
+    return valid;
+  }
+  // live-clear error state on input
+  document.querySelectorAll('input, select, textarea').forEach(f => {
+    f.addEventListener('input', () => {
+      if (f.checkValidity() && f.value.trim() !== '') {
+        f.classList.remove('border-red-400');
+        const errEl = f.closest('div').querySelector('.err');
+        if (errEl) errEl.classList.add('hidden');
+      }
+    });
+  });
+
+  // ---------- CONTACT FORM ----------
+  document.getElementById('contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!validateForm(this)) return;
+    showToast('Thank you! Your enquiry has been received — we\'ll call you soon.');
+    this.reset();
+  });
+
+  // ---------- DEMO MODAL FORM ----------
+  document.getElementById('demo-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!validateForm(this)) return;
+    showToast('Seat reserved! We\'ll confirm your free demo class shortly.');
+    this.reset();
+    setTimeout(closeModal, 900);
+  });
+</script>
 </body>
 </html>
