@@ -13,12 +13,12 @@
     theme: {
       extend: {
         colors: {
-          board:   '#1B3A2F',
-          boarddark:'#122820',
-          ivory:   '#FBF6EC',
-          gold:    '#C9A24B',
-          amber:   '#E8A33D',
-          ink:     '#14201A',
+          royal:   '#1F3A8F',
+          royaldk: '#152a6b',
+          ink:     '#1C1D22',
+          bone:    '#FAF8F4',
+          bonedim: '#F0ECE3',
+          gold:    '#BFA05C',
         },
         fontFamily: {
           display: ['"Fraunces"', 'serif'],
@@ -30,465 +30,467 @@
   }
 </script>
 <style>
-  :root { --gold: #C9A24B; --board: #1B3A2F; }
+  :root { --royal: #1F3A8F; --gold: #BFA05C; --ink: #1C1D22; }
   html { scroll-behavior: smooth; }
-  body { background: #FBF6EC; }
+  body { background: #FAF8F4; }
 
-  /* Fluid type helpers */
-  .fs-hero   { font-size: clamp(2.5rem, 5vw + 1rem, 5rem); line-height: 1.02; }
-  .fs-h2     { font-size: clamp(1.9rem, 3vw + 1rem, 3.2rem); line-height: 1.06; }
-  .fs-h3     { font-size: clamp(1.3rem, 1.4vw + 1rem, 1.9rem); line-height: 1.15; }
-  .fs-lead   { font-size: clamp(1.05rem, .5vw + 1rem, 1.25rem); }
+  .fs-hero  { font-size: clamp(2.4rem, 5vw + 1rem, 5.4rem); line-height: 1.02; }
+  .fs-h2    { font-size: clamp(1.9rem, 3vw + 1rem, 3.4rem); line-height: 1.05; }
+  .fs-h3    { font-size: clamp(1.3rem, 1.4vw + 1rem, 1.9rem); line-height: 1.15; }
+  .fs-lead  { font-size: clamp(1.05rem, .5vw + 1rem, 1.3rem); }
+  .fs-num   { font-size: clamp(6rem, 14vw, 13rem); }
 
-  /* notation eyebrow */
   .eyebrow {
     font-family: 'JetBrains Mono', monospace;
-    letter-spacing: .18em;
+    letter-spacing: .2em;
     text-transform: uppercase;
     font-weight: 700;
   }
 
-  /* the signature oval viewport */
-  .oval-mask {
+  /* ===== signature oval — organic layered shadow, not a flat box shadow ===== */
+  .oval-hero {
     border-radius: 50%;
     overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(20,32,26,0.35), 0 0 0 1px rgba(201,162,75,0.15);
+    position: relative;
+    box-shadow:
+      0 10px 20px -5px rgba(28,29,34,0.12),
+      0 40px 70px -20px rgba(28,29,34,0.28),
+      0 80px 120px -40px rgba(31,58,143,0.18);
   }
-  .oval-mask img { width: 100%; height: 100%; object-fit: cover; object-position: center; display:block; }
-
-  /* page panels: JS toggles [hidden] */
-  .page-panel { animation: fadeUp .5s ease both; }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* floating decorative knight etc */
-  .float-slow { animation: floaty 7s ease-in-out infinite; }
-  .float-slower { animation: floaty 11s ease-in-out infinite; }
-  @keyframes floaty {
-    0%,100% { transform: translateY(0) rotate(0deg); }
-    50%     { transform: translateY(-16px) rotate(3deg); }
-  }
-  .glow-circle {
-    background: radial-gradient(circle at 30% 30%, rgba(232,163,61,0.55), rgba(232,163,61,0) 70%);
-    filter: blur(2px);
+  .oval-hero img { width:100%; height:100%; object-fit: cover; object-position: center; display:block; }
+  .oval-blob {
+    position:absolute; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, rgba(191,160,92,0.35), rgba(31,58,143,0.12) 60%, transparent 75%);
+    filter: blur(30px);
   }
 
-  /* nav underline active state */
+  .page-panel { animation: fadeUp .55s ease both; }
+  @keyframes fadeUp { from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
+
   .nav-link { position: relative; }
   .nav-link::after {
-    content: ''; position: absolute; left:0; right:0; bottom:-6px; height:2px;
-    background: var(--gold); transform: scaleX(0); transform-origin: left;
+    content:''; position:absolute; left:0; right:0; bottom:-6px; height:2px;
+    background: var(--gold); transform: scaleX(0); transform-origin:left;
     transition: transform .25s ease;
   }
   .nav-link.active::after, .nav-link:hover::after { transform: scaleX(1); }
-  .nav-link.active { color: var(--gold); }
+  .nav-link.active { color: var(--royal); }
 
-  /* sticky footer glass */
   .glass-bar {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    background: rgba(255,255,255,0.78);
-    border-top: 1px solid rgba(201,162,75,0.35);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    background: rgba(250,248,244,0.86);
+    border-top: 1px solid rgba(191,160,92,0.4);
   }
 
-  /* modal */
-  .modal-backdrop { backdrop-filter: blur(6px); background: rgba(18,40,32,0.55); }
+  .modal-backdrop { backdrop-filter: blur(8px); background: rgba(28,29,34,0.62); }
   .modal-panel { animation: modalIn .35s cubic-bezier(.2,.8,.2,1) both; }
-  @keyframes modalIn {
-    from { opacity:0; transform: translateY(18px) scale(.97); }
-    to   { opacity:1; transform: translateY(0) scale(1); }
+  @keyframes modalIn { from{opacity:0; transform:translateY(22px) scale(.96);} to{opacity:1; transform:translateY(0) scale(1);} }
+
+  ::selection { background: var(--gold); color: #FAF8F4; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--royal); outline-offset: 3px;
   }
 
-  /* card hover lift */
-  .lift { transition: transform .3s ease, box-shadow .3s ease; }
-  .lift:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -18px rgba(20,32,26,0.35); }
-
-  /* asymmetric program stack offsets on desktop */
-  @media (min-width: 1024px) {
-    .stack-1 { margin-top: 0; }
-    .stack-2 { margin-top: 3.5rem; }
-    .stack-3 { margin-top: 7rem; }
-  }
-
-  /* success toast */
   #toast { transition: transform .4s cubic-bezier(.2,.8,.2,1), opacity .4s ease; }
 
-  ::selection { background: var(--gold); color: #14201A; }
+  /* ===== PROGRAMS: organic staggered panels with bleeding numerals ===== */
+  .prog-wrap { position: relative; }
+  .prog-blob {
+    position: absolute; border-radius: 50% 45% 55% 50% / 55% 50% 50% 45%;
+    filter: blur(2px);
+  }
+  .prog-num {
+    position: absolute;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(31,58,143,0.14);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+  .prog-panel { position: relative; z-index: 1; }
 
-  /* focus visibility */
-  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-    outline: 2px solid var(--gold); outline-offset: 3px;
+  /* ===== FOUNDERS: text overlaps photo via negative margin ===== */
+  .founder-photo {
+    border-radius: 1.75rem;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -20px rgba(28,29,34,0.3);
+  }
+  .founder-photo img { width:100%; height:100%; object-fit:cover; display:block; }
+  .founder-card-text {
+    position: relative;
+    z-index: 2;
+    background: #FAF8F4;
+    box-shadow: 0 20px 40px -20px rgba(28,29,34,0.18);
   }
 
+  .lift { transition: transform .35s ease, box-shadow .35s ease; }
+  .lift:hover { transform: translateY(-6px); }
+
   @media (prefers-reduced-motion: reduce) {
-    .float-slow, .float-slower, .page-panel, .modal-panel { animation: none !important; }
+    .page-panel, .modal-panel { animation: none !important; }
     html { scroll-behavior: auto; }
   }
 </style>
 </head>
-<body class="font-body text-ink antialiased pb-24">
+<body class="font-body text-ink antialiased pb-24 overflow-x-hidden">
 
 <!-- ============ NAV ============ -->
-<header class="sticky top-0 z-40 bg-ivory/90 backdrop-blur border-b border-board/10">
+<header class="sticky top-0 z-40 bg-bone/92 backdrop-blur border-b border-ink/8">
   <div class="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between h-18 py-3">
-    <button onclick="navigate('home')" class="flex items-center gap-2 group">
-      <span class="font-display font-semibold text-xl tracking-tight text-board">Gupta Chess Academy</span>
+    <button onclick="navigate('home')" class="flex items-center gap-2">
+      <span class="font-display font-semibold text-xl tracking-tight text-ink">Gupta Chess Academy</span>
     </button>
-    <nav class="hidden md:flex items-center gap-8 eyebrow text-[13px] text-ink/70">
+    <nav class="hidden md:flex items-center gap-8 eyebrow text-[12px] text-ink/60">
       <button onclick="navigate('home')" data-nav="home" class="nav-link active pb-1">Home</button>
       <button onclick="navigate('about')" data-nav="about" class="nav-link pb-1">About Us</button>
       <button onclick="navigate('blog')" data-nav="blog" class="nav-link pb-1">Blog</button>
       <button onclick="navigate('contact')" data-nav="contact" class="nav-link pb-1">Contact</button>
     </nav>
-    <button onclick="openModal()" class="hidden sm:inline-flex items-center gap-2 bg-board text-ivory px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-boarddark transition-colors">
-      Free Demo <span class="font-mono text-amber">→</span>
+    <button onclick="openModal()" class="hidden sm:inline-flex items-center gap-2 bg-ink text-bone px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-royal transition-colors">
+      Free Demo <span class="font-mono text-gold">→</span>
     </button>
-    <!-- mobile nav toggle -->
-    <button onclick="document.getElementById('mnav').classList.toggle('hidden')" class="md:hidden text-board" aria-label="Toggle menu">
+    <button onclick="document.getElementById('mnav').classList.toggle('hidden')" class="md:hidden text-ink" aria-label="Toggle menu">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
   </div>
-  <div id="mnav" class="hidden md:hidden border-t border-board/10 px-5 py-4 flex flex-col gap-4 eyebrow text-sm bg-ivory">
+  <div id="mnav" class="hidden md:hidden border-t border-ink/8 px-5 py-4 flex flex-col gap-4 eyebrow text-sm bg-bone">
     <button onclick="navigate('home')" class="text-left">Home</button>
     <button onclick="navigate('about')" class="text-left">About Us</button>
     <button onclick="navigate('blog')" class="text-left">Blog</button>
     <button onclick="navigate('contact')" class="text-left">Contact</button>
-    <button onclick="openModal()" class="mt-2 bg-board text-ivory px-5 py-2.5 rounded-full font-semibold text-center">Book Free Demo</button>
+    <button onclick="openModal()" class="mt-2 bg-ink text-bone px-5 py-2.5 rounded-full font-semibold text-center">Book Free Demo</button>
   </div>
 </header>
 
 <!-- ============ HOME ============ -->
 <main id="page-home" class="page-panel">
 
-  <!-- HERO -->
-  <section class="relative max-w-6xl mx-auto px-5 sm:px-8 pt-14 sm:pt-20 pb-16 overflow-hidden">
+  <!-- ===== HERO: fully centered, oval directly beneath headline ===== -->
+  <section class="relative max-w-4xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-10 text-center">
 
-    <!-- floating decorative elements -->
-    <svg class="hidden lg:block absolute -left-6 top-8 w-24 h-24 text-board/15 float-slow" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M19 21H5v-2h14v2zM17.5 12.5c.5-1 .8-2 .5-3-.4-1.3-1.6-2-2.2-3.2-.5-1 .3-1.8-.3-2.6C15 3 13.7 3 13 3.5c-.4.3-.4.9-.1 1.3.4.5 0 1-.5 1.1-1 .3-1.4 1.3-1 2.2.3.6-.1 1-.6 1.3-1.5.8-2.3 2.4-2 4.1.2 1 .8 1.7.8 1.7H8l-1 4h10l-1-4h1.5s.3-1.2 0-2.7z"/>
-    </svg>
-    <div class="hidden lg:block absolute right-2 top-4 w-16 h-16 rounded-full glow-circle float-slower" aria-hidden="true"></div>
-    <div class="hidden lg:block absolute left-1/3 bottom-0 w-10 h-10 rounded-full glow-circle float-slow" aria-hidden="true"></div>
+    <span class="eyebrow text-gold text-xs">e4 — the strongest opening move</span>
+    <h1 class="fs-hero font-display font-semibold text-ink mt-5">
+      Think Independently.<br>
+      <span class="italic text-royal">Move</span> Strategically.<br>
+      Be A Champion.
+    </h1>
 
-    <div class="grid lg:grid-cols-12 gap-10 items-center">
-      <div class="lg:col-span-6 relative z-10">
-        <span class="eyebrow text-amber text-xs">e4 — the strongest opening move</span>
-        <h1 class="fs-hero font-display font-semibold text-board mt-4">
-          Think<br>Independently.<br>
-          <span class="italic text-amber">Move</span> Strategically.<br>
-          Be A Champion.
-        </h1>
-        <p class="fs-lead text-ink/70 mt-6 max-w-md">
-          Structured chess coaching for young minds across Bangalore and Mughalsarai — built by FIDE-rated players who teach the game like it's meant to be played: with patience, pattern, and purpose.
-        </p>
-        <div class="mt-8 flex flex-wrap gap-4">
-          <button onclick="openModal()" class="bg-amber text-boarddark px-7 py-3.5 rounded-full font-semibold hover:brightness-105 transition shadow-lg shadow-amber/20">
-            Reserve a Free Demo Seat
-          </button>
-          <button onclick="navigate('about')" class="border border-board/25 text-board px-7 py-3.5 rounded-full font-semibold hover:bg-board hover:text-ivory transition">
-            Our Story
-          </button>
-        </div>
-      </div>
-
-      <!-- signature oval -->
-      <div class="lg:col-span-6 relative flex justify-center lg:justify-end">
-        <div class="oval-mask w-[85%] max-w-[680px] h-[260px] sm:h-[320px] lg:h-[350px] relative">
-          <img src="images/hero-showcase-top.jpg" alt="Students competing at the National Amateur Chess Championships 2026" loading="eager">
-        </div>
-        <!-- overlapping stat card -->
-        <div class="absolute -bottom-6 left-2 sm:left-6 bg-ivory border border-board/10 rounded-2xl shadow-xl px-5 py-4 lift">
-          <p class="font-display text-2xl font-semibold text-board">15+</p>
-          <p class="eyebrow text-[10px] text-ink/60">Tournaments Entered</p>
-        </div>
+    <!-- oval sits centered directly under headline -->
+    <div class="relative mt-14 flex justify-center">
+      <div class="oval-blob w-[70%] h-[70%] top-[15%] left-[15%]" aria-hidden="true"></div>
+      <div class="oval-hero w-[90%] max-w-[760px] h-[240px] sm:h-[330px] lg:h-[400px] relative z-10">
+        <img src="images/hero-oval-chess.jpg" alt="Students competing at the National Amateur Chess Championships 2026" loading="eager">
       </div>
     </div>
 
-    <p class="eyebrow text-teal-800 text-center mt-16 text-sm" style="color:#0F6B5C">
+    <p class="eyebrow text-royal mt-10 text-sm sm:text-base">
       Coaching by FIDE-Rated International Players
     </p>
+
+    <p class="fs-lead text-ink/60 mt-6 max-w-lg mx-auto">
+      Structured chess coaching for young minds across Bangalore and Mughalsarai — taught by players who treat the game like a discipline, not a hobby.
+    </p>
+
+    <button onclick="openModal()" class="mt-9 inline-flex bg-royal text-bone px-8 py-4 rounded-full font-semibold hover:bg-royaldk transition shadow-xl shadow-royal/20">
+      Reserve a Free Demo Seat
+    </button>
   </section>
 
-  <!-- PROGRAMS — asymmetric stack -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-16 relative">
-    <div class="text-center max-w-xl mx-auto mb-14">
-      <span class="eyebrow text-amber text-xs">Nf3 — develop with purpose</span>
-      <h2 class="fs-h2 font-display font-semibold text-board mt-3">Our Programs</h2>
-      <p class="text-ink/60 mt-4">Every student moves through the board at their own pace — from first steps to rated play.</p>
+  <!-- ===== PROGRAMS: organic staggered panels, no grid ===== -->
+  <section class="prog-wrap max-w-5xl mx-auto px-5 sm:px-8 py-24 sm:py-32">
+    <div class="text-center max-w-lg mx-auto mb-20">
+      <span class="eyebrow text-gold text-xs">Nf3 — develop with purpose</span>
+      <h2 class="fs-h2 font-display font-semibold text-ink mt-3">Our Programs</h2>
     </div>
 
-    <div class="grid lg:grid-cols-3 gap-6 lg:gap-8">
-      <!-- card 1 -->
-      <div class="stack-1 lift bg-white rounded-3xl p-8 border border-board/10 relative overflow-hidden">
-        <span class="eyebrow text-[11px] text-amber">Level 01</span>
-        <h3 class="fs-h3 font-display font-semibold text-board mt-2">Beginner Foundation</h3>
-        <p class="text-ink/60 mt-3 text-sm leading-relaxed">Rules, notation, and the first 10 tactical patterns every player needs — taught through play, not lectures.</p>
-        <div class="mt-6 w-12 h-12 rounded-full bg-board/5 flex items-center justify-center font-mono text-board">e4</div>
+    <!-- Level 1: leans left, organic blob behind -->
+    <div class="relative mb-4 lg:mb-[-2rem]">
+      <div class="prog-blob w-64 h-64 bg-gold/10 top-[-2rem] left-[-3rem] hidden sm:block" aria-hidden="true"></div>
+      <span class="prog-num fs-num" style="top:-2.5rem; left:-1rem;">01</span>
+      <div class="prog-panel max-w-md">
+        <span class="eyebrow text-[11px] text-gold">Level 01 · e4</span>
+        <h3 class="fs-h3 font-display font-semibold text-ink mt-2">Beginner Foundation</h3>
+        <p class="text-ink/60 mt-3 text-sm leading-relaxed">Rules, notation, and the first ten tactical patterns every player needs — taught through play, not lectures.</p>
       </div>
-      <!-- card 2 -->
-      <div class="stack-2 lift bg-board text-ivory rounded-3xl p-8 relative overflow-hidden">
-        <span class="eyebrow text-[11px] text-amber">Level 02</span>
-        <h3 class="fs-h3 font-display font-semibold mt-2">Intermediate Mastery</h3>
-        <p class="text-ivory/70 mt-3 text-sm leading-relaxed">Opening repertoires, middlegame planning, and endgame technique — the toolkit for consistent tournament wins.</p>
-        <div class="mt-6 w-12 h-12 rounded-full bg-ivory/10 flex items-center justify-center font-mono text-amber">Nf3</div>
+    </div>
+
+    <!-- Level 2: overlaps, shifts far right -->
+    <div class="relative mb-4 lg:mb-[-2rem] lg:ml-auto lg:mr-0" style="max-width: 34rem;">
+      <div class="prog-blob w-72 h-72 bg-royal/10 top-[-3rem] right-[-4rem] hidden sm:block" aria-hidden="true"></div>
+      <span class="prog-num fs-num" style="top:-3rem; right:-1rem;">02</span>
+      <div class="prog-panel max-w-md ml-auto text-right lg:text-right">
+        <span class="eyebrow text-[11px] text-gold">Level 02 · Nf3</span>
+        <h3 class="fs-h3 font-display font-semibold text-ink mt-2">Intermediate Mastery</h3>
+        <p class="text-ink/60 mt-3 text-sm leading-relaxed ml-auto">Opening repertoires, middlegame planning, and endgame technique — the toolkit for consistent tournament wins.</p>
       </div>
-      <!-- card 3 -->
-      <div class="stack-3 lift bg-white rounded-3xl p-8 border border-board/10 relative overflow-hidden">
-        <span class="eyebrow text-[11px] text-amber">Level 03</span>
-        <h3 class="fs-h3 font-display font-semibold text-board mt-2">Advanced Pro &amp; Rated</h3>
+    </div>
+
+    <!-- Level 3: staggers back center-left -->
+    <div class="relative lg:ml-[8%]">
+      <div class="prog-blob w-60 h-60 bg-gold/10 top-[-2rem] left-[-2rem] hidden sm:block" aria-hidden="true"></div>
+      <span class="prog-num fs-num" style="top:-2.5rem; left:-1rem;">03</span>
+      <div class="prog-panel max-w-md">
+        <span class="eyebrow text-[11px] text-gold">Level 03 · O-O</span>
+        <h3 class="fs-h3 font-display font-semibold text-ink mt-2">Advanced Pro &amp; Rated</h3>
         <p class="text-ink/60 mt-3 text-sm leading-relaxed">FIDE-rated tournament preparation, deep opening theory, and one-on-one game analysis for competitive players.</p>
-        <div class="mt-6 w-12 h-12 rounded-full bg-board/5 flex items-center justify-center font-mono text-board">O-O</div>
       </div>
     </div>
   </section>
 
-  <!-- second oval band -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-16">
-    <div class="grid lg:grid-cols-12 gap-10 items-center">
-      <div class="lg:col-span-5 order-2 lg:order-1 relative flex justify-center">
-        <div class="oval-mask w-[85%] max-w-[520px] h-[240px] sm:h-[300px] relative">
-          <img src="images/hero-showcase-bottom.jpg" alt="Chess coaching session with focused young students" loading="lazy">
-        </div>
+  <!-- secondary band -->
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 pb-24">
+    <div class="relative">
+      <div class="rounded-[2.5rem] overflow-hidden max-w-xl ml-auto h-64 sm:h-80 shadow-2xl shadow-ink/10 lift">
+        <img src="images/session-showcase.jpg" alt="Chess coaching session with focused young students" class="w-full h-full object-cover">
       </div>
-      <div class="lg:col-span-7 order-1 lg:order-2">
-        <span class="eyebrow text-amber text-xs">O-O — castle before you attack</span>
-        <h2 class="fs-h2 font-display font-semibold text-board mt-3">Small batches. Real attention.</h2>
-        <p class="text-ink/70 mt-5 fs-lead max-w-lg">Every session is built around the student in front of us — not a syllabus on autopilot. That's how eight-year-olds end up outplaying adults at open tournaments.</p>
-        <div class="mt-8 grid grid-cols-2 gap-6 max-w-sm">
+      <div class="relative lg:absolute lg:top-12 lg:left-0 bg-bone lg:shadow-2xl lg:shadow-ink/10 rounded-3xl p-8 max-w-xs mt-[-2rem] lg:mt-0 border border-ink/8">
+        <span class="eyebrow text-gold text-xs">O-O — castle before you attack</span>
+        <h2 class="fs-h3 font-display font-semibold text-ink mt-3">Small batches. Real attention.</h2>
+        <div class="grid grid-cols-2 gap-6 mt-6">
           <div>
-            <p class="font-display text-3xl font-semibold text-board">50+</p>
-            <p class="eyebrow text-[11px] text-ink/50 mt-1">Students Trained</p>
+            <p class="font-display text-2xl font-semibold text-royal">50+</p>
+            <p class="eyebrow text-[10px] text-ink/40 mt-1">Students</p>
           </div>
           <div>
-            <p class="font-display text-3xl font-semibold text-board">8+</p>
-            <p class="eyebrow text-[11px] text-ink/50 mt-1">Years Experience</p>
+            <p class="font-display text-2xl font-semibold text-royal">8+</p>
+            <p class="eyebrow text-[10px] text-ink/40 mt-1">Years</p>
           </div>
         </div>
       </div>
     </div>
   </section>
-
-  <!-- CONTACT (shared section, also part of home flow) -->
-  <div id="contact-section"></div>
 </main>
 
 <!-- ============ ABOUT ============ -->
 <main id="page-about" class="page-panel" hidden>
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-6 relative overflow-hidden">
-    <svg class="hidden lg:block absolute right-0 top-10 w-20 h-20 text-amber/25 float-slower" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 2L4 6v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6l-8-4zm0 4a2 2 0 110 4 2 2 0 010-4z"/>
-    </svg>
-    <span class="eyebrow text-amber text-xs">Our record on the board</span>
-    <h1 class="fs-h2 font-display font-semibold text-board mt-3 max-w-2xl">Eight years of turning first moves into tournament wins.</h1>
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 pt-16 pb-10 text-center">
+    <span class="eyebrow text-gold text-xs">Our record on the board</span>
+    <h1 class="fs-h2 font-display font-semibold text-ink mt-3 max-w-2xl mx-auto">Eight years of turning first moves into tournament wins.</h1>
 
-    <!-- achievement strip -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mt-12">
-      <div class="bg-white border border-board/10 rounded-2xl p-6 text-center lift">
-        <p class="font-display text-3xl font-semibold text-board">50+</p>
-        <p class="eyebrow text-[10px] text-ink/50 mt-2">Students Trained</p>
+    <div class="flex flex-wrap justify-center gap-5 mt-16">
+      <div class="bg-white border border-ink/8 rounded-2xl px-8 py-7 text-center lift">
+        <p class="font-display text-3xl font-semibold text-royal">50+</p>
+        <p class="eyebrow text-[10px] text-ink/40 mt-2">Students Trained</p>
       </div>
-      <div class="bg-white border border-board/10 rounded-2xl p-6 text-center lift">
-        <p class="font-display text-3xl font-semibold text-board">8+</p>
-        <p class="eyebrow text-[10px] text-ink/50 mt-2">Years Experience</p>
+      <div class="bg-ink text-bone rounded-2xl px-8 py-7 text-center lift lg:mt-6">
+        <p class="font-display text-3xl font-semibold text-gold">8+</p>
+        <p class="eyebrow text-[10px] text-bone/60 mt-2">Years Experience</p>
       </div>
-      <div class="bg-white border border-board/10 rounded-2xl p-6 text-center lift">
-        <p class="font-display text-3xl font-semibold text-board">2</p>
-        <p class="eyebrow text-[10px] text-ink/50 mt-2">Expert Coaches</p>
+      <div class="bg-white border border-ink/8 rounded-2xl px-8 py-7 text-center lift">
+        <p class="font-display text-3xl font-semibold text-royal">2</p>
+        <p class="eyebrow text-[10px] text-ink/40 mt-2">Expert Coaches</p>
       </div>
-      <div class="bg-white border border-board/10 rounded-2xl p-6 text-center lift">
-        <p class="font-display text-3xl font-semibold text-board">15+</p>
-        <p class="eyebrow text-[10px] text-ink/50 mt-2">Tournaments Entered</p>
+      <div class="bg-royal text-bone rounded-2xl px-8 py-7 text-center lift lg:mt-10">
+        <p class="font-display text-3xl font-semibold text-gold">15+</p>
+        <p class="eyebrow text-[10px] text-bone/60 mt-2">Tournaments Entered</p>
       </div>
     </div>
   </section>
 
-  <!-- founders -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-16">
-    <span class="eyebrow text-amber text-xs">Leadership</span>
-    <h2 class="fs-h2 font-display font-semibold text-board mt-3">Founders</h2>
-    <div class="grid sm:grid-cols-2 gap-8 mt-10">
-      <div class="bg-white rounded-3xl border border-board/10 overflow-hidden lift">
-        <div class="oval-mask w-32 h-32 mt-8 mx-auto">
-          <img src="images/founder-minu.jpg" alt="Minu Gupta, Founder of Gupta Chess Academy" loading="lazy">
+  <!-- ===== FOUNDERS: text overlaps photo, no staff-directory look ===== -->
+  <section class="max-w-4xl mx-auto px-5 sm:px-8 py-24">
+    <div class="text-center mb-16">
+      <span class="eyebrow text-gold text-xs">Leadership</span>
+      <h2 class="fs-h2 font-display font-semibold text-ink mt-3">Founders</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-x-10 gap-y-16 sm:gap-y-0">
+      <!-- Minu Gupta -->
+      <div class="relative">
+        <div class="founder-photo h-72 transform rotate-[-2deg]">
+          <img src="images/founder-minu-gupta.jpg" alt="Minu Gupta, Founder of Gupta Chess Academy">
         </div>
-        <div class="p-8 text-center">
-          <h3 class="font-display text-xl font-semibold text-board">Minu Gupta</h3>
-          <p class="eyebrow text-[11px] text-amber mt-1">Founder</p>
-          <p class="text-ink/60 text-sm mt-4 leading-relaxed">The vision behind the academy — building a home for structured, patient chess coaching across two cities.</p>
+        <div class="founder-card-text rounded-2xl p-6 mx-6 -mt-10 transform rotate-[1deg]">
+          <h3 class="font-display text-xl font-semibold text-ink">Minu Gupta</h3>
+          <p class="eyebrow text-[10px] text-gold mt-1">Founder</p>
+          <p class="text-ink/55 text-sm mt-3 leading-relaxed">The vision behind the academy — building a home for structured, patient chess coaching across two cities.</p>
         </div>
       </div>
-      <div class="bg-white rounded-3xl border border-board/10 overflow-hidden lift">
-        <div class="oval-mask w-32 h-32 mt-8 mx-auto">
-          <img src="images/coach-sindhu.jpg" alt="Dr. Neetu Singh, Co-Founder of Gupta Chess Academy" loading="lazy">
+      <!-- Dr. Neetu Singh -->
+      <div class="relative sm:mt-16">
+        <div class="founder-photo h-72 transform rotate-[2deg]">
+          <img src="images/founder-neetu-singh.jpg" alt="Dr. Neetu Singh, Co-Founder of Gupta Chess Academy">
         </div>
-        <div class="p-8 text-center">
-          <h3 class="font-display text-xl font-semibold text-board">Dr. Neetu Singh</h3>
-          <p class="eyebrow text-[11px] text-amber mt-1">Co-Founder</p>
-          <p class="text-ink/60 text-sm mt-4 leading-relaxed">Bringing academic rigor to the curriculum, ensuring every student's progress is measured and real.</p>
+        <div class="founder-card-text rounded-2xl p-6 mx-6 -mt-10 transform rotate-[-1deg]">
+          <h3 class="font-display text-xl font-semibold text-ink">Dr. Neetu Singh</h3>
+          <p class="eyebrow text-[10px] text-gold mt-1">Co-Founder</p>
+          <p class="text-ink/55 text-sm mt-3 leading-relaxed">Bringing academic rigor to the curriculum, ensuring every student's progress is measured and real.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- coaches -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-8">
-    <span class="eyebrow text-amber text-xs">On the bench</span>
-    <h2 class="fs-h2 font-display font-semibold text-board mt-3">Coaches</h2>
-    <div class="grid sm:grid-cols-2 gap-8 mt-10">
-      <div class="bg-white rounded-3xl border border-board/10 overflow-hidden lift flex items-center gap-5 p-6">
-        <div class="oval-mask w-20 h-20 flex-shrink-0">
-          <img src="images/coach-ankit.jpg" alt="Coach Ankit" loading="lazy">
+  <section class="max-w-4xl mx-auto px-5 sm:px-8 py-8">
+    <div class="text-center mb-12">
+      <span class="eyebrow text-gold text-xs">On the bench</span>
+      <h2 class="fs-h2 font-display font-semibold text-ink mt-3">Coaches</h2>
+    </div>
+    <div class="flex flex-wrap justify-center gap-6">
+      <div class="bg-white rounded-3xl border border-ink/8 lift flex items-center gap-5 p-6 max-w-xs">
+        <div class="founder-photo w-16 h-16 flex-shrink-0 rounded-full">
+          <img src="images/coach-ankit.jpg" alt="Coach Ankit">
         </div>
         <div>
-          <h3 class="font-display text-lg font-semibold text-board">Coach Ankit</h3>
-          <p class="eyebrow text-[10px] text-amber mt-1">FIDE-Rated Coach</p>
+          <h3 class="font-display text-base font-semibold text-ink">Coach Ankit</h3>
+          <p class="eyebrow text-[10px] text-gold mt-1">FIDE-Rated Coach</p>
         </div>
       </div>
-      <div class="bg-white rounded-3xl border border-board/10 overflow-hidden lift flex items-center gap-5 p-6">
-        <div class="oval-mask w-20 h-20 flex-shrink-0">
-          <img src="images/coach-satyam.jpg" alt="Coach Satyam" loading="lazy">
+      <div class="bg-white rounded-3xl border border-ink/8 lift flex items-center gap-5 p-6 max-w-xs sm:mt-8">
+        <div class="founder-photo w-16 h-16 flex-shrink-0 rounded-full">
+          <img src="images/coach-satyam.jpg" alt="Coach Satyam">
         </div>
         <div>
-          <h3 class="font-display text-lg font-semibold text-board">Coach Satyam</h3>
-          <p class="eyebrow text-[10px] text-amber mt-1">Tournament Trainer</p>
+          <h3 class="font-display text-base font-semibold text-ink">Coach Satyam</h3>
+          <p class="eyebrow text-[10px] text-gold mt-1">Tournament Trainer</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- locations -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-16">
-    <span class="eyebrow text-amber text-xs">On the map</span>
-    <h2 class="fs-h2 font-display font-semibold text-board mt-3">Our Centres</h2>
-    <div class="grid md:grid-cols-3 gap-6 mt-10">
-      <div class="bg-board text-ivory rounded-3xl p-7 lift">
-        <p class="eyebrow text-[10px] text-amber">Bangalore · Batch A</p>
+  <section class="max-w-4xl mx-auto px-5 sm:px-8 py-24">
+    <div class="text-center mb-12">
+      <span class="eyebrow text-gold text-xs">On the map</span>
+      <h2 class="fs-h2 font-display font-semibold text-ink mt-3">Our Centres</h2>
+    </div>
+    <div class="flex flex-wrap justify-center gap-6">
+      <div class="bg-ink text-bone rounded-3xl p-7 lift max-w-xs">
+        <p class="eyebrow text-[10px] text-gold">Bangalore · Batch A</p>
         <h3 class="font-display text-lg font-semibold mt-2">Cambridge Montessori School</h3>
-        <p class="text-ivory/60 text-sm mt-2">Singasandra, Bangalore</p>
+        <p class="text-bone/55 text-sm mt-2">Singasandra, Bangalore</p>
       </div>
-      <div class="bg-board text-ivory rounded-3xl p-7 lift">
-        <p class="eyebrow text-[10px] text-amber">Bangalore · Batch B</p>
+      <div class="bg-ink text-bone rounded-3xl p-7 lift max-w-xs sm:mt-8">
+        <p class="eyebrow text-[10px] text-gold">Bangalore · Batch B</p>
         <h3 class="font-display text-lg font-semibold mt-2">Cambridge School</h3>
-        <p class="text-ivory/60 text-sm mt-2">Kudlu, Bangalore</p>
+        <p class="text-bone/55 text-sm mt-2">Kudlu, Bangalore</p>
       </div>
-      <div class="bg-gold/90 text-boarddark rounded-3xl p-7 lift">
-        <p class="eyebrow text-[10px] text-boarddark/70">Uttar Pradesh · Home Centre</p>
+      <div class="bg-royal text-bone rounded-3xl p-7 lift max-w-xs sm:mt-16">
+        <p class="eyebrow text-[10px] text-gold">Uttar Pradesh · Home Centre</p>
         <h3 class="font-display text-lg font-semibold mt-2">Mughalsarai Centre</h3>
-        <p class="text-boarddark/70 text-sm mt-2">Chandauli, Uttar Pradesh</p>
+        <p class="text-bone/55 text-sm mt-2">Chandauli, Uttar Pradesh</p>
       </div>
     </div>
   </section>
 
   <!-- gallery -->
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 py-8 pb-16">
-    <span class="eyebrow text-amber text-xs">Recent wins</span>
-    <h2 class="fs-h2 font-display font-semibold text-board mt-3">From the Trophy Cabinet</h2>
-    <div class="grid sm:grid-cols-2 gap-6 mt-10">
-      <div class="rounded-3xl overflow-hidden lift h-64">
+  <section class="max-w-4xl mx-auto px-5 sm:px-8 pb-24">
+    <div class="text-center mb-12">
+      <span class="eyebrow text-gold text-xs">Recent wins</span>
+      <h2 class="fs-h2 font-display font-semibold text-ink mt-3">From the Trophy Cabinet</h2>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-6">
+      <div class="rounded-3xl overflow-hidden lift h-64 sm:w-2/3 shadow-xl shadow-ink/10">
         <img src="images/gallery/trophy-award-2026.jpg" alt="Student receiving a trophy at a 2026 chess tournament" class="w-full h-full object-cover">
       </div>
-      <div class="rounded-3xl overflow-hidden lift h-64">
+      <div class="rounded-3xl overflow-hidden lift h-64 sm:w-1/3 sm:mt-10 shadow-xl shadow-ink/10">
         <img src="images/gallery/tournament-award-galleria-yelahanka.jpg" alt="Award ceremony at Galleria Yelahanka chess tournament" class="w-full h-full object-cover">
       </div>
     </div>
   </section>
 </main>
 
-<!-- ============ BLOG ============ -->
+<!-- ============ BLOG — editorial: 60% feature + stacked offset sidebar ============ -->
 <main id="page-blog" class="page-panel" hidden>
-  <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-14 pb-16">
-    <span class="eyebrow text-amber text-xs">From the coaching desk</span>
-    <h1 class="fs-h2 font-display font-semibold text-board mt-3 max-w-xl">Tactics, strategy, and notes from the classroom.</h1>
-    <p class="text-ink/60 mt-4 max-w-lg">Expert chess tips, opening strategies, tournament advice, and coaching insights from our Bangalore centres.</p>
+  <section class="max-w-5xl mx-auto px-5 sm:px-8 pt-16 pb-24">
+    <div class="text-center max-w-lg mx-auto mb-16">
+      <span class="eyebrow text-gold text-xs">From the coaching desk</span>
+      <h1 class="fs-h2 font-display font-semibold text-ink mt-3">Tactics, strategy, and notes from the classroom.</h1>
+    </div>
 
-    <div class="grid md:grid-cols-3 gap-7 mt-14">
-      <article class="bg-white rounded-3xl border border-board/10 overflow-hidden lift">
-        <div class="h-44 overflow-hidden">
-          <img src="images/blog/blog1-openings.jpg" alt="Opening theory illustration for young chess players" class="w-full h-full object-cover">
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- feature article — 60% width -->
+      <article class="lg:w-[60%] bg-white rounded-3xl border border-ink/8 overflow-hidden lift shadow-xl shadow-ink/5">
+        <div class="h-64 sm:h-80 overflow-hidden">
+          <img src="images/blog-chess-tactics.jpg" alt="Tactical puzzle illustration for young chess players" class="w-full h-full object-cover">
         </div>
-        <div class="p-6">
-          <span class="eyebrow text-[10px] text-amber">e4 · Openings</span>
-          <h3 class="font-display text-lg font-semibold text-board mt-2">Five Opening Traps Every Beginner Should Know</h3>
-          <p class="text-ink/60 text-sm mt-3">Simple, memorable patterns that turn a shaky first ten moves into a real advantage.</p>
-        </div>
-      </article>
-      <article class="bg-white rounded-3xl border border-board/10 overflow-hidden lift">
-        <div class="h-44 overflow-hidden">
-          <img src="images/blog/blog2-tactics.jpg" alt="Tactical puzzle illustration" class="w-full h-full object-cover">
-        </div>
-        <div class="p-6">
-          <span class="eyebrow text-[10px] text-amber">Nxf7 · Tactics</span>
-          <h3 class="font-display text-lg font-semibold text-board mt-2">Reading the Board: A Tactics Framework for Kids</h3>
-          <p class="text-ink/60 text-sm mt-3">The three-question checklist we teach every student before they touch a piece.</p>
+        <div class="p-8">
+          <span class="eyebrow text-[10px] text-gold">Nxf7 · Featured</span>
+          <h3 class="fs-h3 font-display font-semibold text-ink mt-3">Reading the Board: A Tactics Framework for Kids</h3>
+          <p class="text-ink/55 text-sm mt-4 leading-relaxed max-w-md">The three-question checklist we teach every student before they touch a piece — and why it works better than memorizing openings at age eight.</p>
         </div>
       </article>
-      <article class="bg-white rounded-3xl border border-board/10 overflow-hidden lift">
-        <div class="h-44 overflow-hidden">
-          <img src="images/blog/blog3-psychology.jpg" alt="Chess psychology and focus illustration" class="w-full h-full object-cover">
-        </div>
-        <div class="p-6">
-          <span class="eyebrow text-[10px] text-amber">O-O-O · Mindset</span>
-          <h3 class="font-display text-lg font-semibold text-board mt-2">The Psychology of a Calm Tournament Mind</h3>
-          <p class="text-ink/60 text-sm mt-3">How we help young players stay composed two moves after a blunder.</p>
-        </div>
-      </article>
+
+      <!-- side stack — offset on Y axis -->
+      <div class="lg:w-[40%] flex flex-col gap-8">
+        <article class="bg-ink text-bone rounded-3xl overflow-hidden lift">
+          <div class="h-36 overflow-hidden">
+            <img src="images/blog-opening-traps.jpg" alt="Opening theory illustration" class="w-full h-full object-cover">
+          </div>
+          <div class="p-6">
+            <span class="eyebrow text-[10px] text-gold">e4 · Openings</span>
+            <h3 class="font-display text-lg font-semibold mt-2">Five Opening Traps Every Beginner Should Know</h3>
+          </div>
+        </article>
+        <article class="bg-white rounded-3xl border border-ink/8 overflow-hidden lift lg:ml-10">
+          <div class="h-36 overflow-hidden">
+            <img src="images/blog-tournament-mindset.jpg" alt="Chess psychology and focus illustration" class="w-full h-full object-cover">
+          </div>
+          <div class="p-6">
+            <span class="eyebrow text-[10px] text-gold">O-O-O · Mindset</span>
+            <h3 class="font-display text-lg font-semibold text-ink mt-2">The Psychology of a Calm Tournament Mind</h3>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 </main>
 
-<!-- ============ CONTACT PAGE (also linked from nav) ============ -->
+<!-- ============ CONTACT PAGE ============ -->
 <main id="page-contact" class="page-panel" hidden>
-  <section class="max-w-4xl mx-auto px-5 sm:px-8 pt-14 pb-24">
-    <span class="eyebrow text-amber text-xs">Let's talk chess</span>
-    <h1 class="fs-h2 font-display font-semibold text-board mt-3">Get in Touch</h1>
-    <p class="text-ink/60 mt-4 max-w-md">Tell us about your child and we'll match them to the right batch — online, Bangalore, or Mughalsarai.</p>
+  <section class="max-w-3xl mx-auto px-5 sm:px-8 pt-16 pb-24 text-center">
+    <span class="eyebrow text-gold text-xs">Let's talk chess</span>
+    <h1 class="fs-h2 font-display font-semibold text-ink mt-3">Get in Touch</h1>
+    <p class="text-ink/55 mt-4 max-w-md mx-auto">Tell us about your child and we'll match them to the right batch — online, Bangalore, or Mughalsarai.</p>
 
-    <form id="contact-form" class="mt-10 bg-white border border-board/10 rounded-3xl p-6 sm:p-10 grid sm:grid-cols-2 gap-6" novalidate>
+    <form id="contact-form" class="mt-10 bg-white border border-ink/8 rounded-3xl p-6 sm:p-10 grid sm:grid-cols-2 gap-6 text-left shadow-xl shadow-ink/5" novalidate>
       <div class="sm:col-span-1">
-        <label for="studentName" class="eyebrow text-[11px] text-ink/60">Student Name</label>
+        <label for="studentName" class="eyebrow text-[11px] text-ink/50">Student Name</label>
         <input id="studentName" name="studentName" type="text" required
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-ivory focus:border-gold outline-none transition">
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-bone focus:border-royal outline-none transition">
         <p class="err text-xs text-red-600 mt-1 hidden">Please enter the student's name.</p>
       </div>
       <div class="sm:col-span-1">
-        <label for="parentName" class="eyebrow text-[11px] text-ink/60">Parent Name</label>
+        <label for="parentName" class="eyebrow text-[11px] text-ink/50">Parent Name</label>
         <input id="parentName" name="parentName" type="text" required
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-ivory focus:border-gold outline-none transition">
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-bone focus:border-royal outline-none transition">
         <p class="err text-xs text-red-600 mt-1 hidden">Please enter the parent's name.</p>
       </div>
       <div class="sm:col-span-1">
-        <label for="age" class="eyebrow text-[11px] text-ink/60">Age</label>
+        <label for="age" class="eyebrow text-[11px] text-ink/50">Age</label>
         <input id="age" name="age" type="number" min="3" max="18" required
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-ivory focus:border-gold outline-none transition">
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-bone focus:border-royal outline-none transition">
         <p class="err text-xs text-red-600 mt-1 hidden">Please enter a valid age (3–18).</p>
       </div>
       <div class="sm:col-span-1">
-        <label for="phone" class="eyebrow text-[11px] text-ink/60">Phone Number</label>
+        <label for="phone" class="eyebrow text-[11px] text-ink/50">Phone Number</label>
         <input id="phone" name="phone" type="tel" required pattern="[0-9+\-\s]{7,15}"
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-ivory focus:border-gold outline-none transition">
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-bone focus:border-royal outline-none transition">
         <p class="err text-xs text-red-600 mt-1 hidden">Please enter a valid phone number.</p>
       </div>
       <div class="sm:col-span-2">
-        <label for="batch" class="eyebrow text-[11px] text-ink/60">Selected Batch</label>
+        <label for="batch" class="eyebrow text-[11px] text-ink/50">Selected Batch</label>
         <select id="batch" name="batch" required
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-ivory focus:border-gold outline-none transition">
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-bone focus:border-royal outline-none transition">
           <option value="">Choose a batch</option>
           <option>Online</option>
-          <option>Bangalore Offline</option>
-          <option>Mughalsarai Offline</option>
+          <option>Bangalore</option>
+          <option>Mughalsarai</option>
         </select>
         <p class="err text-xs text-red-600 mt-1 hidden">Please select a batch.</p>
       </div>
       <div class="sm:col-span-2">
-        <label for="message" class="eyebrow text-[11px] text-ink/60">Message</label>
+        <label for="message" class="eyebrow text-[11px] text-ink/50">Message</label>
         <textarea id="message" name="message" rows="4"
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-ivory focus:border-gold outline-none transition resize-none"
+          class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-bone focus:border-royal outline-none transition resize-none"
           placeholder="Anything we should know before the first session?"></textarea>
       </div>
-      <div class="sm:col-span-2">
-        <button type="submit" class="bg-board text-ivory px-8 py-3.5 rounded-full font-semibold hover:bg-boarddark transition w-full sm:w-auto">
+      <div class="sm:col-span-2 text-center">
+        <button type="submit" class="bg-ink text-bone px-8 py-3.5 rounded-full font-semibold hover:bg-royal transition w-full sm:w-auto">
           Send Message
         </button>
       </div>
@@ -496,53 +498,81 @@
   </section>
 </main>
 
-<!-- ============ FREE DEMO MODAL ============ -->
+<!-- ============ FREE DEMO MODAL (JS untouched, styling refined) ============ -->
 <div id="modal" class="fixed inset-0 z-[60] hidden items-center justify-center px-4">
   <div class="modal-backdrop absolute inset-0" onclick="closeModal()"></div>
-  <div class="modal-panel relative bg-ivory rounded-3xl max-w-md w-full p-7 sm:p-9 shadow-2xl">
-    <button onclick="closeModal()" aria-label="Close" class="absolute top-5 right-5 w-9 h-9 rounded-full flex items-center justify-center hover:bg-board/5 transition">
+  <div class="modal-panel relative bg-bone rounded-3xl max-w-md w-full p-7 sm:p-9 shadow-2xl">
+    <button onclick="closeModal()" aria-label="Close" class="absolute top-5 right-5 w-9 h-9 rounded-full flex items-center justify-center hover:bg-ink/5 transition">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
-    <span class="eyebrow text-amber text-xs">Limited seats · Founding batch</span>
-    <h2 class="fs-h3 font-display font-semibold text-board mt-2">Reserve Your Free Demo Seat</h2>
-    <p class="text-ink/60 text-sm mt-2">₹2,600 for 8 sessions once the founding batch opens.</p>
 
-    <form id="demo-form" class="mt-6 space-y-4" novalidate>
-      <div>
-        <label for="d-name" class="eyebrow text-[11px] text-ink/60">Student Name</label>
-        <input id="d-name" name="d-name" type="text" required
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-white focus:border-gold outline-none transition">
-        <p class="err text-xs text-red-600 mt-1 hidden">Please enter the student's name.</p>
+    <div id="modal-form-view">
+      <span class="eyebrow text-gold text-xs">Limited seats · Founding batch</span>
+      <h2 class="fs-h3 font-display font-semibold text-ink mt-2">Reserve Your Free Demo Seat</h2>
+      <p class="text-ink/55 text-sm mt-2">₹2,600 for 8 sessions once the founding batch opens.</p>
+
+      <form id="demo-form" class="mt-6 space-y-4" novalidate>
+        <div>
+          <label for="d-name" class="eyebrow text-[11px] text-ink/50">Student Name</label>
+          <input id="d-name" name="d-name" type="text" required
+            class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-white focus:border-royal outline-none transition">
+          <p class="err text-xs text-red-600 mt-1 hidden">Please enter the student's name.</p>
+        </div>
+        <div>
+          <label for="d-parent" class="eyebrow text-[11px] text-ink/50">Parent Name</label>
+          <input id="d-parent" name="d-parent" type="text" required
+            class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-white focus:border-royal outline-none transition">
+          <p class="err text-xs text-red-600 mt-1 hidden">Please enter the parent's name.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="d-age" class="eyebrow text-[11px] text-ink/50">Age</label>
+            <input id="d-age" name="d-age" type="number" min="3" max="18" required
+              class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-white focus:border-royal outline-none transition">
+            <p class="err text-xs text-red-600 mt-1 hidden">Valid age required.</p>
+          </div>
+          <div>
+            <label for="d-phone" class="eyebrow text-[11px] text-ink/50">Phone</label>
+            <input id="d-phone" name="d-phone" type="tel" required pattern="[0-9+\-\s]{7,15}"
+              class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-white focus:border-royal outline-none transition">
+            <p class="err text-xs text-red-600 mt-1 hidden">Valid phone required.</p>
+          </div>
+        </div>
+        <div>
+          <label for="d-batch" class="eyebrow text-[11px] text-ink/50">Preferred Batch</label>
+          <select id="d-batch" name="d-batch" required
+            class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-white focus:border-royal outline-none transition">
+            <option value="">Choose a batch</option>
+            <option>Online</option>
+            <option>Bangalore Offline (Singasandra)</option>
+            <option>Bangalore Offline (Kudlu)</option>
+            <option>Mughalsarai Offline</option>
+          </select>
+          <p class="err text-xs text-red-600 mt-1 hidden">Please select a batch.</p>
+        </div>
+        <button type="submit" class="w-full bg-royal text-bone px-6 py-3.5 rounded-full font-semibold hover:bg-royaldk transition">
+          Confirm My Free Seat
+        </button>
+      </form>
+    </div>
+
+    <div id="modal-success-view" class="hidden text-center py-6">
+      <div class="mx-auto w-16 h-16 rounded-full bg-royal/10 flex items-center justify-center">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1F3A8F" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg>
       </div>
-      <div>
-        <label for="d-phone" class="eyebrow text-[11px] text-ink/60">Phone Number</label>
-        <input id="d-phone" name="d-phone" type="tel" required pattern="[0-9+\-\s]{7,15}"
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-white focus:border-gold outline-none transition">
-        <p class="err text-xs text-red-600 mt-1 hidden">Please enter a valid phone number.</p>
-      </div>
-      <div>
-        <label for="d-batch" class="eyebrow text-[11px] text-ink/60">Preferred Batch</label>
-        <select id="d-batch" name="d-batch" required
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-board/15 bg-white focus:border-gold outline-none transition">
-          <option value="">Choose a batch</option>
-          <option>Online</option>
-          <option>Bangalore Offline (Singasandra)</option>
-          <option>Bangalore Offline (Kudlu)</option>
-          <option>Mughalsarai Offline</option>
-        </select>
-        <p class="err text-xs text-red-600 mt-1 hidden">Please select a batch.</p>
-      </div>
-      <button type="submit" class="w-full bg-amber text-boarddark px-6 py-3.5 rounded-full font-semibold hover:brightness-105 transition">
-        Confirm My Free Seat
+      <h2 class="fs-h3 font-display font-semibold text-ink mt-5">Seat Reserved!</h2>
+      <p class="text-ink/55 text-sm mt-3 max-w-xs mx-auto">We'll call you shortly to confirm the schedule for your free demo class.</p>
+      <button onclick="resetModal()" class="mt-7 bg-ink text-bone px-6 py-3 rounded-full font-semibold hover:bg-royal transition text-sm">
+        Done
       </button>
-    </form>
+    </div>
   </div>
 </div>
 
 <!-- ============ TOAST ============ -->
 <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-[70] opacity-0 pointer-events-none translate-y-[-12px]">
-  <div class="bg-board text-ivory px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8A33D" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+  <div class="bg-ink text-bone px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#BFA05C" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
     <span id="toast-msg" class="font-medium text-sm">Thank you! We'll be in touch shortly.</span>
   </div>
 </div>
@@ -551,16 +581,16 @@
 <div class="fixed bottom-0 left-0 right-0 z-30 glass-bar">
   <div class="max-w-6xl mx-auto px-5 sm:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
     <p class="text-xs sm:text-sm text-ink/70 text-center sm:text-left">
-      <span class="font-semibold text-board">Founding Batch:</span> ₹2,600 for 8 sessions &nbsp;|&nbsp; Call
-      <a href="tel:+918660813472" class="text-board font-semibold hover:text-amber transition">+91 86608 13472</a>
+      <span class="font-semibold text-ink">Founding Batch:</span> ₹2,600 for 8 sessions &nbsp;|&nbsp; Call
+      <a href="tel:+918660813472" class="text-royal font-semibold hover:text-gold transition">+91 86608 13472</a>
     </p>
-    <button onclick="openModal()" class="flex-shrink-0 bg-board text-ivory px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-boarddark transition whitespace-nowrap">
+    <button onclick="openModal()" class="flex-shrink-0 bg-royal text-bone px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-royaldk transition whitespace-nowrap">
       Book a FREE Demo Class at Singasandra / Kudlu
     </button>
   </div>
 </div>
 
-<footer class="max-w-6xl mx-auto px-5 sm:px-8 py-10 text-center text-ink/40 text-xs">
+<footer class="max-w-6xl mx-auto px-5 sm:px-8 py-10 text-center text-ink/35 text-xs">
   © 2026 Gupta Chess Academy. Singasandra · Kudlu · Mughalsarai.
 </footer>
 
@@ -578,11 +608,12 @@
       btn.classList.toggle('active', btn.dataset.nav === page);
     });
     document.getElementById('mnav').classList.add('hidden');
-    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+    window.scrollTo({ top: 0 });
   }
 
-  // ---------- MODAL ----------
+  // ---------- MODAL (unchanged mechanism) ----------
   function openModal() {
+    resetModal();
     const m = document.getElementById('modal');
     m.classList.remove('hidden');
     m.classList.add('flex');
@@ -593,6 +624,10 @@
     m.classList.add('hidden');
     m.classList.remove('flex');
     document.body.style.overflow = '';
+  }
+  function resetModal() {
+    document.getElementById('modal-form-view').classList.remove('hidden');
+    document.getElementById('modal-success-view').classList.add('hidden');
   }
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
@@ -609,7 +644,7 @@
     }, 3600);
   }
 
-  // ---------- VALIDATION HELPERS ----------
+  // ---------- VALIDATION ----------
   function validateForm(form) {
     let valid = true;
     form.querySelectorAll('[required]').forEach(field => {
@@ -626,7 +661,6 @@
     });
     return valid;
   }
-  // live-clear error state on input
   document.querySelectorAll('input, select, textarea').forEach(f => {
     f.addEventListener('input', () => {
       if (f.checkValidity() && f.value.trim() !== '') {
@@ -645,13 +679,13 @@
     this.reset();
   });
 
-  // ---------- DEMO MODAL FORM ----------
+  // ---------- DEMO MODAL FORM → SUCCESS STATE ----------
   document.getElementById('demo-form').addEventListener('submit', function(e) {
     e.preventDefault();
     if (!validateForm(this)) return;
-    showToast('Seat reserved! We\'ll confirm your free demo class shortly.');
+    document.getElementById('modal-form-view').classList.add('hidden');
+    document.getElementById('modal-success-view').classList.remove('hidden');
     this.reset();
-    setTimeout(closeModal, 900);
   });
 </script>
 </body>
