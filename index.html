@@ -298,7 +298,7 @@
       <h2 class="fs-h2 font-display font-semibold text-ink mt-3">Founders</h2>
     </div>
 
-    <div class="grid sm:grid-cols-2 gap-x-10 gap-y-16 sm:gap-y-0">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16 sm:gap-y-0">
       <!-- Minu Gupta -->
       <div class="relative">
         <div class="founder-photo h-72 transform rotate-[-2deg]">
@@ -312,13 +312,24 @@
       </div>
       <!-- Ankit -->
       <div class="relative sm:mt-16">
-        <div class="founder-photo h-72 transform rotate-[2deg]">
-          <img src="images/founder-neetu-singh.jpg" alt="Ankit, Founder of Gupta Chess Academy">
+        <div class="founder-photo h-72 transform rotate-[2deg] bg-gradient-to-br from-royal/10 to-gold/10 flex items-center justify-center">
+          <span class="text-7xl" aria-hidden="true">♞</span>
         </div>
         <div class="founder-card-text rounded-2xl p-6 mx-6 -mt-10 transform rotate-[-1deg]">
           <h3 class="font-display text-xl font-semibold text-ink">Ankit</h3>
           <p class="eyebrow text-[10px] text-gold mt-1">Founder</p>
           <p class="text-ink/55 text-sm mt-3 leading-relaxed">District championship finalist with 10+ years of competitive play. Co-founded the academy with a vision to bring world-class chess coaching to Bangalore.</p>
+        </div>
+      </div>
+      <!-- Sanskar Agrawal -->
+      <div class="relative lg:mt-8">
+        <div class="founder-photo h-72 transform rotate-[-1.5deg] bg-gradient-to-br from-gold/10 to-royal/10 flex items-center justify-center">
+          <span class="text-7xl" aria-hidden="true">♚</span>
+        </div>
+        <div class="founder-card-text rounded-2xl p-6 mx-6 -mt-10 transform rotate-[1.5deg]">
+          <h3 class="font-display text-xl font-semibold text-ink">Sanskar Agrawal</h3>
+          <p class="eyebrow text-[10px] text-gold mt-1">Co-Founder</p>
+          <p class="text-ink/55 text-sm mt-3 leading-relaxed">Rapid and Blitz specialist, rated 1800+ on Chess.com. Co-built the academy's curriculum and structure, ensuring every student gets a world-class learning experience.</p>
         </div>
       </div>
     </div>
@@ -341,12 +352,30 @@
         </div>
       </div>
       <div class="bg-white rounded-3xl border border-ink/8 lift flex items-center gap-5 p-6 max-w-xs sm:mt-8">
+        <div class="founder-photo w-16 h-16 flex-shrink-0 rounded-full bg-gradient-to-br from-royal/10 to-gold/10 flex items-center justify-center">
+          <span class="text-2xl" aria-hidden="true">♚</span>
+        </div>
+        <div>
+          <h3 class="font-display text-base font-semibold text-ink">Sanskar Agrawal</h3>
+          <p class="eyebrow text-[10px] text-gold mt-1">Chess Coach &amp; Co-Founder</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-3xl border border-ink/8 lift flex items-center gap-5 p-6 max-w-xs">
         <div class="founder-photo w-16 h-16 flex-shrink-0 rounded-full">
           <img src="images/coach-satyam.jpg" alt="Coach Satyam Prakash">
         </div>
         <div>
           <h3 class="font-display text-base font-semibold text-ink">Satyam Prakash</h3>
           <p class="eyebrow text-[10px] text-gold mt-1">FIDE Rated Coach · 1847</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-3xl border border-ink/8 lift flex items-center gap-5 p-6 max-w-xs sm:mt-8">
+        <div class="founder-photo w-16 h-16 flex-shrink-0 rounded-full">
+          <img src="images/coach-sindhu.jpg" alt="Sindhu Vegi, Business Coordinator">
+        </div>
+        <div>
+          <h3 class="font-display text-base font-semibold text-ink">Sindhu Vegi</h3>
+          <p class="eyebrow text-[10px] text-gold mt-1">Business Coordinator</p>
         </div>
       </div>
     </div>
@@ -406,12 +435,12 @@
       <!-- feature article — 60% width -->
       <article class="lg:w-[60%] bg-white rounded-3xl border border-ink/8 overflow-hidden lift shadow-xl shadow-ink/5">
         <div class="h-64 sm:h-80 overflow-hidden">
-          <img src="images/blog-chess-tactics.jpg" alt="Pins, forks and skewers tactics illustration for young chess players" class="w-full h-full object-cover">
+          <img src="images/blog-chess-parent.jpg" alt="A parent and coach talking with a young chess student" class="w-full h-full object-cover">
         </div>
         <div class="p-8">
-          <span class="eyebrow text-[10px] text-gold">Nxf7 · Featured · Minu Gupta</span>
-          <h3 class="fs-h3 font-display font-semibold text-ink mt-3">Pins, Forks &amp; Skewers — The 3 Tactics That Win Most Games</h3>
-          <p class="text-ink/55 text-sm mt-4 leading-relaxed max-w-md">Over 60% of beginner games are decided by these three patterns. Master them and you'll immediately start winning games you used to lose.</p>
+          <span class="eyebrow text-[10px] text-gold">Kids &amp; Parents · Featured · Ankit · May 20, 2026</span>
+          <h3 class="fs-h3 font-display font-semibold text-ink mt-3">Dear Chess Parent: Let Your Child Play</h3>
+          <p class="text-ink/55 text-sm mt-4 leading-relaxed max-w-md">A child crying on the way out — not because they lost, but because of what their parent said. An honest letter every chess parent needs to read.</p>
         </div>
       </article>
 
@@ -419,23 +448,54 @@
       <div class="lg:w-[40%] flex flex-col gap-8">
         <article class="bg-ink text-bone rounded-3xl overflow-hidden lift">
           <div class="h-36 overflow-hidden">
-            <img src="images/blog-opening-traps.jpg" alt="Opening theory illustration" class="w-full h-full object-cover">
+            <img src="images/blog-openings.jpg" alt="Chess opening theory illustration" class="w-full h-full object-cover">
           </div>
           <div class="p-6">
-            <span class="eyebrow text-[10px] text-gold">e4 · Openings · Ankit</span>
+            <span class="eyebrow text-[10px] text-gold">e4 · Openings · Ankit · Apr 10, 2026</span>
             <h3 class="font-display text-lg font-semibold mt-2">5 Openings Every Beginner Must Learn First</h3>
           </div>
         </article>
         <article class="bg-white rounded-3xl border border-ink/8 overflow-hidden lift lg:ml-10">
           <div class="h-36 overflow-hidden">
-            <img src="images/blog-tournament-mindset.jpg" alt="Chess psychology and focus illustration" class="w-full h-full object-cover">
+            <img src="images/blog-chess-tactics.jpg" alt="Pins, forks and skewers tactics illustration for young chess players" class="w-full h-full object-cover">
           </div>
           <div class="p-6">
-            <span class="eyebrow text-[10px] text-gold">O-O-O · Mindset · Sanskar Agrawal</span>
-            <h3 class="font-display text-lg font-semibold text-ink mt-2">How to Stay Calm in a Losing Position — Tournament Tips</h3>
+            <span class="eyebrow text-[10px] text-gold">Nxf7 · Tactics · Minu Gupta · Mar 22, 2026</span>
+            <h3 class="font-display text-lg font-semibold text-ink mt-2">Pins, Forks &amp; Skewers — The 3 Tactics That Win Most Games</h3>
           </div>
         </article>
       </div>
+    </div>
+
+    <!-- more from the blog -->
+    <div class="grid sm:grid-cols-3 gap-6 mt-8">
+      <article class="bg-white rounded-3xl border border-ink/8 overflow-hidden lift">
+        <div class="h-36 overflow-hidden">
+          <img src="images/blog-tournament-mindset.jpg" alt="Chess psychology and focus illustration" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <span class="eyebrow text-[10px] text-gold">O-O-O · Psychology · Sanskar Agrawal · Feb 14, 2026</span>
+          <h3 class="font-display text-base font-semibold text-ink mt-2">How to Stay Calm in a Losing Position — Tournament Tips</h3>
+        </div>
+      </article>
+      <article class="bg-white rounded-3xl border border-ink/8 overflow-hidden lift">
+        <div class="h-36 overflow-hidden">
+          <img src="images/blog-kids-age.jpg" alt="Young child learning chess with a coach" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <span class="eyebrow text-[10px] text-gold">Kids &amp; Parents · Ankit · Jan 28, 2026</span>
+          <h3 class="font-display text-base font-semibold text-ink mt-2">What Age Should Your Child Start Learning Chess?</h3>
+        </div>
+      </article>
+      <article class="bg-white rounded-3xl border border-ink/8 overflow-hidden lift">
+        <div class="h-36 overflow-hidden">
+          <img src="images/blog-mistakes.jpg" alt="Common chess beginner mistakes illustration" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6">
+          <span class="eyebrow text-[10px] text-gold">Beginners · Sanskar Agrawal · Jan 5, 2026</span>
+          <h3 class="font-display text-base font-semibold text-ink mt-2">7 Common Mistakes Every Chess Beginner Makes</h3>
+        </div>
+      </article>
     </div>
   </section>
 </main>
