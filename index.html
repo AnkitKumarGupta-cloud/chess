@@ -6,747 +6,1124 @@
 <title>Gupta Chess Academy — Bangalore &amp; Mughalsarai</title>
 <link rel="icon" type="image/png" href="favicon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          royal:   '#1F3A8F',
-          royaldk: '#152a6b',
-          ink:     '#1C1D22',
-          bone:    '#FAF8F4',
-          bonedim: '#F0ECE3',
-          gold:    '#BFA05C',
-        },
-        fontFamily: {
-          display: ['"Fraunces"', 'serif'],
-          body: ['"Inter"', 'sans-serif'],
-          mono: ['"JetBrains Mono"', 'monospace'],
-        },
-      }
-    }
-  }
-</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --royal: #1F3A8F; --gold: #BFA05C; --ink: #1C1D22; }
-  html { scroll-behavior: smooth; }
-  body { background: #FAF8F4; }
+/* =========================================================================
+   GUPTA CHESS ACADEMY — signature system
+   Void slate ground · champagne gold for stakes won · signal cyan for
+   calculation · a serif that speaks like a plaque, a mono that speaks
+   like a scoresheet.
+   ========================================================================= */
 
-  .fs-hero  { font-size: clamp(2.4rem, 5vw + 1rem, 5.4rem); line-height: 1.02; }
-  .fs-h2    { font-size: clamp(1.9rem, 3vw + 1rem, 3.4rem); line-height: 1.05; }
-  .fs-h3    { font-size: clamp(1.3rem, 1.4vw + 1rem, 1.9rem); line-height: 1.15; }
-  .fs-lead  { font-size: clamp(1.05rem, .5vw + 1rem, 1.3rem); }
-  .fs-num   { font-size: clamp(6rem, 14vw, 13rem); }
+:root{
+  --void:#070A13;
+  --slate:#0F1626;
+  --slate-2:#141D33;
+  --line:rgba(148,163,184,0.14);
+  --ivory:#F8FAFC;
+  --ash:#94A3B8;
+  --ash-dim:#5B6B85;
+  --gold:#D4AF37;
+  --gold-dim:#8A7325;
+  --cyan:#22D3EE;
+  --crimson:#7A2331;
+  --crimson-bright:#C4364A;
 
-  .eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    font-weight: 700;
+  --serif:'Playfair Display', serif;
+  --mono:'JetBrains Mono', monospace;
+  --sans:'Inter', sans-serif;
+
+  --nav-h: 76px;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--void);
+  color:var(--ivory);
+  font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  padding-bottom:64px;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;}
+button{font-family:inherit;cursor:pointer;}
+::selection{background:var(--gold);color:var(--void);}
+
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{
+  outline:2px solid var(--cyan);
+  outline-offset:3px;
+}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+.wrap-tight{max-width:880px;margin:0 auto;padding:0 24px;}
+
+.eyebrow{
+  font-family:var(--mono);
+  font-size:11.5px;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:var(--gold);
+  font-weight:600;
+}
+.eyebrow.cyan{color:var(--cyan);}
+
+.h-display{
+  font-family:var(--serif);
+  font-weight:600;
+  letter-spacing:-0.01em;
+  color:var(--ivory);
+  margin:0;
+}
+.fs-hero{font-size:clamp(2.4rem, 3.4vw + 1.6rem, 5rem); line-height:1.04;}
+.fs-h2{font-size:clamp(2rem, 1.8vw + 1.4rem, 3.1rem); line-height:1.08;}
+.fs-h3{font-size:clamp(1.35rem, 0.8vw + 1.1rem, 1.85rem); line-height:1.18;}
+
+.lede{color:var(--ash); line-height:1.7; font-size:1.02rem;}
+
+/* ---------- infinite notation ticker (ambient wallpaper) ---------- */
+.notation-ticker{
+  position:absolute; inset:0; overflow:hidden; pointer-events:none;
+  display:flex; align-items:center; white-space:nowrap;
+  z-index:0;
+}
+.notation-ticker span{
+  font-family:var(--mono);
+  font-size:clamp(3.5rem, 9vw, 8rem);
+  font-weight:700;
+  color:var(--ivory);
+  opacity:0.035;
+  padding-right:3rem;
+  display:inline-block;
+  animation:tickerScroll 48s linear infinite;
+}
+@keyframes tickerScroll{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
+
+/* ---------- nav ---------- */
+.site-header{
+  position:sticky; top:0; z-index:50;
+  background:rgba(7,10,19,0.72);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);
+}
+.nav-row{
+  height:var(--nav-h);
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+}
+.brand{
+  display:flex; align-items:center; gap:10px;
+  background:none; border:none; padding:0;
+}
+.brand-mark{
+  width:34px;height:34px; border-radius:50%;
+  border:1px solid var(--gold-dim);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold); font-size:16px;
+}
+.brand-name{font-family:var(--serif); font-weight:600; font-size:1.08rem; color:var(--ivory);}
+
+.primary-nav{display:flex; align-items:center; gap:26px;}
+.nav-btn{
+  background:none;border:none;color:var(--ash);
+  font-family:var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+  padding:6px 0; position:relative;
+}
+.nav-btn::after{
+  content:''; position:absolute; left:0; right:0; bottom:-2px; height:1px;
+  background:var(--gold); transform:scaleX(0); transform-origin:left;
+  transition:transform .28s ease;
+}
+.nav-btn:hover, .nav-btn.is-active{color:var(--ivory);}
+.nav-btn:hover::after, .nav-btn.is-active::after{transform:scaleX(1);}
+
+.nav-demo-btn{
+  background:var(--gold); color:var(--void); border:none;
+  font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
+  padding:11px 20px; border-radius:2px;
+  transition:background .2s ease, transform .2s ease;
+}
+.nav-demo-btn:hover{background:#e6c455; transform:translateY(-1px);}
+
+.mobile-toggle{display:none; background:none;border:none;color:var(--ivory);}
+.mobile-nav{display:none; flex-direction:column; gap:2px; border-top:1px solid var(--line); background:var(--void);}
+.mobile-nav button{
+  background:none;border:none;color:var(--ash); text-align:left;
+  font-family:var(--mono); font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+  padding:16px 24px; border-bottom:1px solid var(--line);
+}
+.mobile-nav button.is-active{color:var(--gold);}
+
+@media (max-width: 880px){
+  .primary-nav{display:none;}
+  .mobile-toggle{display:block;}
+  .nav-demo-btn.desktop-only{display:none;}
+}
+
+/* ---------- page shell ---------- */
+.page{animation:pageIn .5s ease both;}
+@keyframes pageIn{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);}}
+
+section{position:relative;}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;
+  padding:96px 0 64px;
+  text-align:center;
+  overflow:hidden;
+  border-bottom:1px solid var(--line);
+}
+.hero-inner{position:relative; z-index:2;}
+.hero h1{margin-top:22px;}
+.hero h1 em{font-style:italic; color:var(--gold);}
+.hero .lede{max-width:480px; margin:26px auto 0;}
+.hero-frame{
+  position:relative; z-index:2;
+  margin:56px auto 0;
+  max-width:760px;
+  border-radius:6px;
+  overflow:hidden;
+  border:1px solid rgba(212,175,55,0.28);
+  box-shadow:0 40px 90px -30px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.02) inset;
+}
+.hero-frame img{width:100%; height:340px; object-fit:cover; filter:saturate(0.92) contrast(1.04);}
+.hero-frame-cap{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 20px; background:var(--slate); border-top:1px solid var(--line);
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.1em; color:var(--ash-dim); text-transform:uppercase;
+}
+.cta-btn{
+  display:inline-flex; align-items:center; gap:10px;
+  background:var(--gold); color:var(--void);
+  font-weight:700; font-size:0.95rem;
+  padding:16px 32px; border:none; border-radius:2px;
+  transition:transform .22s ease, box-shadow .22s ease;
+  box-shadow:0 18px 40px -18px rgba(212,175,55,0.55);
+}
+.cta-btn:hover{transform:translateY(-2px); box-shadow:0 22px 46px -16px rgba(212,175,55,0.7);}
+.cta-btn.ghost{
+  background:transparent; color:var(--ivory); border:1px solid var(--line);
+  box-shadow:none;
+}
+.cta-btn.ghost:hover{border-color:var(--gold); color:var(--gold); transform:translateY(-2px);}
+
+/* ---------- stats strip ---------- */
+.stat-strip{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:0;
+  border-bottom:1px solid var(--line);
+}
+.stat-cell{
+  flex:1 1 150px; text-align:center; padding:34px 16px;
+  border-right:1px solid var(--line);
+}
+.stat-cell:last-child{border-right:none;}
+.stat-num{font-family:var(--serif); font-size:2.1rem; font-weight:700; color:var(--gold);}
+.stat-label{font-family:var(--mono); font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ash-dim); margin-top:6px;}
+
+/* ---------- sliding drawer portal (programs) ---------- */
+.drawer-section{padding:88px 0; border-bottom:1px solid var(--line);}
+.drawer-head{text-align:center; max-width:560px; margin:0 auto 48px;}
+.drawer-stack{
+  display:flex; gap:2px; height:460px; border:1px solid var(--line); border-radius:4px; overflow:hidden;
+}
+.drawer{
+  position:relative; flex:1; min-width:0;
+  background-size:cover; background-position:center;
+  cursor:pointer;
+  transition:flex .55s cubic-bezier(.22,.8,.24,1);
+  overflow:hidden;
+  display:flex; align-items:flex-end;
+}
+.drawer::before{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(7,10,19,0.94) 5%, rgba(7,10,19,0.55) 45%, rgba(7,10,19,0.25) 100%);
+  transition:background .5s ease;
+}
+.drawer.playground{background-color:#1c1408;}
+.drawer.strategy{background-color:#04141a;}
+.drawer.arena{background-color:#160608;}
+.drawer:hover, .drawer.is-open{flex:2.4;}
+.drawer-content{position:relative; z-index:2; padding:30px 26px; width:100%;}
+.drawer-tag{font-family:var(--mono); font-size:10px; letter-spacing:0.16em; text-transform:uppercase;}
+.drawer.playground .drawer-tag{color:#E8B36A;}
+.drawer.strategy .drawer-tag{color:var(--cyan);}
+.drawer.arena .drawer-tag{color:var(--crimson-bright);}
+.drawer-title{font-family:var(--serif); font-weight:700; font-size:1.5rem; margin:8px 0 0; white-space:normal;}
+.drawer-desc{
+  color:var(--ash); font-size:0.87rem; line-height:1.6; margin-top:10px; max-width:320px;
+  max-height:0; opacity:0; overflow:hidden; transition:max-height .45s ease, opacity .35s ease .1s;
+}
+.drawer:hover .drawer-desc, .drawer.is-open .drawer-desc{max-height:140px; opacity:1;}
+.drawer-link{
+  display:inline-flex; align-items:center; gap:8px; margin-top:16px;
+  font-family:var(--mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ivory);
+  border-bottom:1px solid var(--gold); padding-bottom:2px;
+  opacity:0; transform:translateY(6px); transition:opacity .35s ease .12s, transform .35s ease .12s;
+}
+.drawer:hover .drawer-link, .drawer.is-open .drawer-link{opacity:1; transform:translateY(0);}
+
+@media (max-width: 760px){
+  .drawer-stack{flex-direction:column; height:auto;}
+  .drawer{flex:none !important; height:96px; align-items:flex-end;}
+  .drawer.is-open{height:280px;}
+}
+
+/* ---------- pyramid stack carousel ---------- */
+.pyramid-section{padding:88px 0; border-bottom:1px solid var(--line); overflow:hidden;}
+.pyramid-head{text-align:center; max-width:560px; margin:0 auto 52px;}
+.pyramid-stage{
+  position:relative; height:400px; display:flex; align-items:center; justify-content:center;
+  perspective:1400px;
+}
+.pyramid-card{
+  position:absolute; width:min(560px, 78vw); border-radius:6px; overflow:hidden;
+  border:1px solid var(--line); background:var(--slate);
+  box-shadow:0 40px 80px -30px rgba(0,0,0,0.75);
+  transition:transform .6s cubic-bezier(.22,.8,.2,1), opacity .6s ease, filter .6s ease;
+  will-change:transform, opacity;
+}
+.pyramid-card img{width:100%; height:230px; object-fit:cover;}
+.pyramid-card .pc-body{padding:20px 24px 24px;}
+.pyramid-card .pc-tag{font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold);}
+.pyramid-card .pc-title{font-family:var(--serif); font-size:1.15rem; font-weight:600; margin-top:8px;}
+
+.pyramid-nav{display:flex; justify-content:center; gap:14px; margin-top:34px;}
+.pyramid-nav button{
+  width:38px;height:38px;border-radius:50%; border:1px solid var(--line); background:transparent; color:var(--ivory);
+  display:flex; align-items:center; justify-content:center; transition:border-color .2s ease, color .2s ease;
+}
+.pyramid-nav button:hover{border-color:var(--gold); color:var(--gold);}
+
+/* ---------- x-ray spotlight cards ---------- */
+.xray-card{
+  position:relative; border:1px solid var(--line); border-radius:4px; overflow:hidden;
+  background:var(--slate); padding:28px; isolation:isolate;
+}
+.xray-card::before{
+  content:''; position:absolute; inset:0; z-index:0; opacity:0; transition:opacity .3s ease;
+  background-image:
+    linear-gradient(rgba(34,211,238,0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,211,238,0.16) 1px, transparent 1px);
+  background-size:24px 24px;
+  -webkit-mask-image:radial-gradient(circle 140px at var(--mx,50%) var(--my,50%), black 40%, transparent 75%);
+  mask-image:radial-gradient(circle 140px at var(--mx,50%) var(--my,50%), black 40%, transparent 75%);
+}
+.xray-card:hover::before{opacity:1;}
+.xray-card > *{position:relative; z-index:1;}
+
+/* ---------- parallax timeline (path to mastery) ---------- */
+.timeline-section{padding:96px 0; border-bottom:1px solid var(--line);}
+.timeline-head{text-align:center; max-width:560px; margin:0 auto 60px;}
+.timeline{position:relative; max-width:760px; margin:0 auto;}
+.timeline::before{
+  content:''; position:absolute; left:50%; top:0; bottom:0; width:1.5px; transform:translateX(-50%);
+  background:linear-gradient(to bottom, transparent, var(--gold) 10%, var(--gold) 90%, transparent);
+  box-shadow:0 0 16px 1px rgba(212,175,55,0.5);
+}
+.tl-node{
+  position:relative; width:50%; padding:0 44px 84px; opacity:0.35; transform:translateY(18px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.tl-node.in-view{opacity:1; transform:translateY(0);}
+.tl-node:nth-child(odd){left:0; text-align:right;}
+.tl-node:nth-child(even){left:50%; text-align:left;}
+.tl-dot{
+  position:absolute; top:2px; width:11px;height:11px; border-radius:50%; background:var(--void);
+  border:2px solid var(--gold);
+}
+.tl-node:nth-child(odd) .tl-dot{right:-6px;}
+.tl-node:nth-child(even) .tl-dot{left:-6px;}
+.tl-num{font-family:var(--mono); font-size:11px; color:var(--gold); letter-spacing:0.14em;}
+.tl-title{font-family:var(--serif); font-size:1.3rem; font-weight:600; margin:8px 0 8px;}
+.tl-desc{color:var(--ash); font-size:0.9rem; line-height:1.6;}
+@media (max-width:700px){
+  .timeline::before{left:14px;}
+  .tl-node, .tl-node:nth-child(odd), .tl-node:nth-child(even){
+    width:100%; left:0; text-align:left; padding:0 0 56px 44px;
   }
+  .tl-node:nth-child(odd) .tl-dot, .tl-node:nth-child(even) .tl-dot{left:9px; right:auto;}
+}
 
-  /* ===== signature oval — organic layered shadow, not a flat box shadow ===== */
-  .oval-hero {
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
-    box-shadow:
-      0 10px 20px -5px rgba(28,29,34,0.12),
-      0 40px 70px -20px rgba(28,29,34,0.28),
-      0 80px 120px -40px rgba(31,58,143,0.18);
-  }
-  .oval-hero img { width:100%; height:100%; object-fit: cover; object-position: center; display:block; }
-  .oval-blob {
-    position:absolute; border-radius:50%;
-    background: radial-gradient(circle at 35% 30%, rgba(191,160,92,0.35), rgba(31,58,143,0.12) 60%, transparent 75%);
-    filter: blur(30px);
-  }
+/* ---------- program theme pages ---------- */
+.theme-hero{padding:88px 0 60px; text-align:center; position:relative; overflow:hidden; border-bottom:1px solid var(--line);}
+.theme-badge{
+  display:inline-flex; align-items:center; gap:10px; padding:8px 16px; border-radius:999px;
+  border:1px solid var(--line); margin-bottom:22px; font-family:var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+}
+.theme-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:22px; padding:72px 0;}
+@media (max-width:820px){.theme-grid{grid-template-columns:1fr;}}
+.theme-point{border:1px solid var(--line); border-radius:4px; padding:26px;}
+.theme-point .tp-num{font-family:var(--serif); font-size:1.6rem; color:var(--gold);}
+.theme-point h3{font-family:var(--serif); font-size:1.15rem; margin:10px 0 8px;}
+.theme-point p{color:var(--ash); font-size:0.88rem; line-height:1.6;}
 
-  .page-panel { animation: fadeUp .55s ease both; }
-  @keyframes fadeUp { from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
+/* Beginners — The Playground */
+.page-beginners .theme-hero{background:radial-gradient(ellipse at 50% -10%, rgba(232,179,106,0.16), transparent 60%);}
+.page-beginners .theme-badge{border-color:rgba(232,179,106,0.4); color:#E8B36A;}
+.page-beginners .h-display em{color:#E8B36A;}
+.page-beginners .cta-btn{background:#E8B36A; box-shadow:0 18px 40px -18px rgba(232,179,106,0.5);}
+.page-beginners .cta-btn:hover{background:#f0c589;}
+.page-beginners .theme-point{border-radius:22px 8px 22px 8px;}
+.page-beginners .theme-point .tp-num{color:#E8B36A;}
 
-  .nav-link { position: relative; }
-  .nav-link::after {
-    content:''; position:absolute; left:0; right:0; bottom:-6px; height:2px;
-    background: var(--gold); transform: scaleX(0); transform-origin:left;
-    transition: transform .25s ease;
-  }
-  .nav-link.active::after, .nav-link:hover::after { transform: scaleX(1); }
-  .nav-link.active { color: var(--royal); }
+/* Intermediate — The Strategy Lab */
+.page-intermediate .theme-hero{
+  background-image:
+    linear-gradient(rgba(34,211,238,0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,211,238,0.09) 1px, transparent 1px);
+  background-size:34px 34px;
+  background-color:#04141a;
+}
+.page-intermediate .theme-badge{border-color:rgba(34,211,238,0.4); color:var(--cyan);}
+.page-intermediate .h-display em{color:var(--cyan); font-style:normal;}
+.page-intermediate .cta-btn{background:var(--cyan); color:#04141a; box-shadow:0 18px 40px -18px rgba(34,211,238,0.5);}
+.page-intermediate .cta-btn:hover{background:#5fe4f7;}
+.page-intermediate .theme-point{border-radius:2px;}
+.page-intermediate .theme-point .tp-num{color:var(--cyan);}
 
-  .glass-bar {
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    background: rgba(250,248,244,0.86);
-    border-top: 1px solid rgba(191,160,92,0.4);
-  }
+/* Tournament Pro — The Elite Grandmaster Arena */
+.page-tournament .theme-hero{
+  background:radial-gradient(ellipse at 50% -10%, rgba(196,54,74,0.22), transparent 60%), #0d0407;
+}
+.page-tournament .theme-badge{border-color:var(--crimson-bright); color:var(--crimson-bright);}
+.page-tournament .h-display em{color:var(--gold); font-style:normal;}
+.page-tournament .cta-btn{background:var(--crimson-bright); color:var(--ivory); box-shadow:0 18px 40px -18px rgba(196,54,74,0.55);}
+.page-tournament .cta-btn:hover{background:#d94b60;}
+.page-tournament .theme-point{border:1px solid var(--gold-dim);}
+.page-tournament .theme-point .tp-num{color:var(--crimson-bright);}
 
-  .modal-backdrop { backdrop-filter: blur(8px); background: rgba(28,29,34,0.62); }
-  .modal-panel { animation: modalIn .35s cubic-bezier(.2,.8,.2,1) both; }
-  @keyframes modalIn { from{opacity:0; transform:translateY(22px) scale(.96);} to{opacity:1; transform:translateY(0) scale(1);} }
+/* ---------- generic section blocks ---------- */
+.section-pad{padding:88px 0;}
+.section-pad.bordered{border-bottom:1px solid var(--line);}
+.section-head{text-align:center; max-width:560px; margin:0 auto 52px;}
 
-  ::selection { background: var(--gold); color: #FAF8F4; }
-  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-    outline: 2px solid var(--royal); outline-offset: 3px;
-  }
+.founder-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:26px;}
+@media (max-width:820px){.founder-grid{grid-template-columns:1fr;}}
+.founder-card{border:1px solid var(--line); border-radius:4px; overflow:hidden; background:var(--slate);}
+.founder-photo{height:230px; overflow:hidden; background:linear-gradient(135deg, rgba(212,175,55,0.14), rgba(34,211,238,0.1));}
+.founder-photo img{width:100%;height:100%;object-fit:cover;}
+.founder-photo.icon{display:flex; align-items:center; justify-content:center; font-size:4rem;}
+.founder-body{padding:22px 24px 26px;}
+.founder-name{font-family:var(--serif); font-size:1.15rem; font-weight:600;}
+.founder-role{font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-top:6px; display:block;}
+.founder-bio{color:var(--ash); font-size:0.86rem; line-height:1.65; margin-top:12px;}
 
-  #toast { transition: transform .4s cubic-bezier(.2,.8,.2,1), opacity .4s ease; }
+.coach-row{display:flex; flex-wrap:wrap; gap:18px; justify-content:center;}
+.coach-chip{
+  display:flex; align-items:center; gap:14px; border:1px solid var(--line); border-radius:4px;
+  padding:16px 20px; min-width:260px; background:var(--slate);
+}
+.coach-avatar{width:52px;height:52px;border-radius:50%;overflow:hidden;flex-shrink:0; background:linear-gradient(135deg, rgba(212,175,55,0.18), rgba(34,211,238,0.12)); display:flex;align-items:center;justify-content:center; font-size:1.4rem;}
+.coach-avatar img{width:100%;height:100%;object-fit:cover;}
+.coach-name{font-family:var(--serif); font-size:0.98rem; font-weight:600;}
+.coach-role{font-family:var(--mono); font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-top:4px;}
 
-  /* ===== PROGRAMS: organic staggered panels with bleeding numerals ===== */
-  .prog-wrap { position: relative; }
-  .prog-blob {
-    position: absolute; border-radius: 50% 45% 55% 50% / 55% 50% 50% 45%;
-    filter: blur(2px);
-  }
-  .prog-num {
-    position: absolute;
-    font-family: 'Fraunces', serif;
-    font-weight: 700;
-    color: transparent;
-    -webkit-text-stroke: 1.5px rgba(31,58,143,0.14);
-    line-height: 1;
-    pointer-events: none;
-    user-select: none;
-    z-index: 0;
-  }
-  .prog-panel { position: relative; z-index: 1; }
+.centre-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+@media (max-width:820px){.centre-grid{grid-template-columns:1fr;}}
+.centre-card{border:1px solid var(--line); border-radius:4px; padding:24px; background:var(--slate);}
+.centre-tag{font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold);}
+.centre-name{font-family:var(--serif); font-size:1.1rem; margin-top:10px;}
+.centre-addr{color:var(--ash); font-size:0.85rem; margin-top:8px; line-height:1.6;}
 
-  /* ===== FOUNDERS: text overlaps photo via negative margin ===== */
-  .founder-photo {
-    border-radius: 1.75rem;
-    overflow: hidden;
-    box-shadow: 0 30px 60px -20px rgba(28,29,34,0.3);
-  }
-  .founder-photo img { width:100%; height:100%; object-fit:cover; display:block; }
-  .founder-card-text {
-    position: relative;
-    z-index: 2;
-    background: #FAF8F4;
-    box-shadow: 0 20px 40px -20px rgba(28,29,34,0.18);
-  }
+.gallery-duo{display:flex; gap:20px; flex-wrap:wrap;}
+.gallery-duo .g-big{flex:1 1 60%; height:300px; border-radius:4px; overflow:hidden; border:1px solid var(--line);}
+.gallery-duo .g-small{flex:1 1 32%; height:300px; border-radius:4px; overflow:hidden; border:1px solid var(--line);}
+.gallery-duo img{width:100%;height:100%;object-fit:cover;}
 
-  .lift { transition: transform .35s ease, box-shadow .35s ease; }
-  .lift:hover { transform: translateY(-6px); }
+/* ---------- blog ---------- */
+.blog-grid-archive{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:56px;}
+@media (max-width:820px){.blog-grid-archive{grid-template-columns:1fr;}}
+.blog-card{border:1px solid var(--line); border-radius:4px; overflow:hidden; background:var(--slate);}
+.blog-card img{width:100%; height:150px; object-fit:cover;}
+.blog-card-body{padding:20px;}
+.blog-tag{font-family:var(--mono); font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold);}
+.blog-title-sm{font-family:var(--serif); font-size:1rem; font-weight:600; margin-top:8px;}
 
-  @media (prefers-reduced-motion: reduce) {
-    .page-panel, .modal-panel { animation: none !important; }
-    html { scroll-behavior: auto; }
-  }
+/* ---------- forms ---------- */
+.form-panel{border:1px solid var(--line); border-radius:6px; padding:36px; background:var(--slate);}
+.field{margin-bottom:20px;}
+.field label{font-family:var(--mono); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ash);}
+.field input, .field select, .field textarea{
+  width:100%; margin-top:8px; padding:13px 14px; background:var(--void); color:var(--ivory);
+  border:1px solid var(--line); border-radius:2px; font-family:var(--sans); font-size:0.94rem;
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+.field input:focus, .field select:focus, .field textarea:focus{
+  border-color:var(--cyan); outline:none; box-shadow:0 0 0 3px rgba(34,211,238,0.14);
+}
+.field input.field-err, .field select.field-err{border-color:var(--crimson-bright);}
+.field-error{font-size:11.5px; color:var(--crimson-bright); margin-top:6px; display:none;}
+.field-error.show{display:block;}
+.form-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 20px;}
+@media (max-width:600px){.form-grid{grid-template-columns:1fr;}}
+.submit-btn{
+  width:100%; background:var(--gold); color:var(--void); border:none; font-weight:700;
+  padding:15px; border-radius:2px; font-size:0.95rem; transition:background .2s ease;
+}
+.submit-btn:hover{background:#e6c455;}
+
+/* ---------- modal ---------- */
+.modal-veil{position:fixed; inset:0; z-index:80; display:none; align-items:center; justify-content:center; padding:20px;}
+.modal-veil.is-open{display:flex;}
+.modal-backdrop{position:absolute; inset:0; background:rgba(4,6,12,0.8); backdrop-filter:blur(6px);}
+.modal-box{
+  position:relative; z-index:2; width:100%; max-width:460px; max-height:88vh; overflow-y:auto;
+  background:var(--slate); border:1px solid var(--line); border-radius:6px; padding:32px;
+  animation:modalIn .32s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes modalIn{from{opacity:0; transform:translateY(18px) scale(.97);} to{opacity:1; transform:translateY(0) scale(1);}}
+.modal-close{position:absolute; top:18px; right:18px; background:none; border:none; color:var(--ash); width:34px;height:34px; border-radius:50%;}
+.modal-close:hover{background:rgba(255,255,255,0.06); color:var(--ivory);}
+.success-view{display:none; text-align:center; padding:20px 0;}
+.success-view.show{display:block;}
+.success-icon{width:56px;height:56px; border-radius:50%; border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; margin:0 auto;}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed; top:24px; left:50%; transform:translateX(-50%) translateY(-14px); z-index:90;
+  opacity:0; pointer-events:none; transition:opacity .35s ease, transform .35s ease;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+.toast-box{
+  display:flex; align-items:center; gap:12px; background:var(--slate); border:1px solid var(--gold-dim);
+  padding:14px 22px; border-radius:4px; font-size:0.88rem; box-shadow:0 20px 40px -16px rgba(0,0,0,0.6);
+}
+
+/* ---------- sticky footer bar ---------- */
+.sticky-bar{
+  position:fixed; bottom:0; left:0; right:0; z-index:40;
+  background:rgba(15,22,38,0.92); backdrop-filter:blur(14px); border-top:1px solid var(--line);
+}
+.sticky-inner{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding:12px 24px;}
+.sticky-inner p{font-size:0.82rem; color:var(--ash); margin:0;}
+.sticky-inner a{color:var(--gold); font-weight:600;}
+.sticky-cta{
+  background:var(--gold); color:var(--void); border:none; font-weight:700; font-size:0.82rem;
+  padding:10px 20px; border-radius:2px; white-space:nowrap;
+}
+
+.site-footer{text-align:center; padding:40px 24px 16px; color:var(--ash-dim); font-size:0.78rem;}
+
+@media (prefers-reduced-motion: reduce){
+  .page, .modal-box, .notation-ticker span{animation:none !important;}
+  html{scroll-behavior:auto;}
+  .drawer, .cta-btn, .tl-node{transition:none !important;}
+}
 </style>
 </head>
-<body class="font-body text-ink antialiased pb-24 overflow-x-hidden">
+<body>
 
 <!-- ============ NAV ============ -->
-<header class="sticky top-0 z-40 bg-bone/92 backdrop-blur border-b border-ink/8">
-  <div class="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between h-18 py-3">
-    <button onclick="navigate('home')" class="flex items-center gap-2">
-      <span class="font-display font-semibold text-xl tracking-tight text-ink">Gupta Chess Academy</span>
+<header class="site-header">
+  <div class="wrap nav-row">
+    <button class="brand" onclick="go('home')">
+      <span class="brand-mark">♞</span>
+      <span class="brand-name">Gupta Chess Academy</span>
     </button>
-    <nav class="hidden md:flex items-center gap-8 eyebrow text-[12px] text-ink/60">
-      <button onclick="navigate('home')" data-nav="home" class="nav-link active pb-1">Home</button>
-      <button onclick="navigate('about')" data-nav="about" class="nav-link pb-1">About Us</button>
-      <button onclick="navigate('blog')" data-nav="blog" class="nav-link pb-1">Blog</button>
-      <button onclick="navigate('contact')" data-nav="contact" class="nav-link pb-1">Contact</button>
+    <nav class="primary-nav">
+      <button class="nav-btn is-active" data-page="home" onclick="go('home')">Home</button>
+      <button class="nav-btn" data-page="beginners" onclick="go('beginners')">Beginners</button>
+      <button class="nav-btn" data-page="intermediate" onclick="go('intermediate')">Intermediate</button>
+      <button class="nav-btn" data-page="tournament" onclick="go('tournament')">Tournament</button>
+      <button class="nav-btn" data-page="about" onclick="go('about')">About</button>
+      <button class="nav-btn" data-page="blog" onclick="go('blog')">Blog</button>
+      <button class="nav-btn" data-page="contact" onclick="go('contact')">Contact</button>
     </nav>
-    <button onclick="openModal()" class="hidden sm:inline-flex items-center gap-2 bg-ink text-bone px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-royal transition-colors">
-      Free Demo <span class="font-mono text-gold">→</span>
-    </button>
-    <button onclick="document.getElementById('mnav').classList.toggle('hidden')" class="md:hidden text-ink" aria-label="Toggle menu">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    <button class="nav-demo-btn desktop-only" onclick="openModal()">Free Demo →</button>
+    <button class="mobile-toggle" aria-label="Toggle menu" onclick="document.getElementById('mnav').classList.toggle('is-open')">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
   </div>
-  <div id="mnav" class="hidden md:hidden border-t border-ink/8 px-5 py-4 flex flex-col gap-4 eyebrow text-sm bg-bone">
-    <button onclick="navigate('home')" class="text-left">Home</button>
-    <button onclick="navigate('about')" class="text-left">About Us</button>
-    <button onclick="navigate('blog')" class="text-left">Blog</button>
-    <button onclick="navigate('contact')" class="text-left">Contact</button>
-    <button onclick="openModal()" class="mt-2 bg-ink text-bone px-5 py-2.5 rounded-full font-semibold text-center">Book Free Demo</button>
+  <div id="mnav" class="mobile-nav">
+    <button data-page="home" onclick="go('home')">Home</button>
+    <button data-page="beginners" onclick="go('beginners')">Beginners</button>
+    <button data-page="intermediate" onclick="go('intermediate')">Intermediate</button>
+    <button data-page="tournament" onclick="go('tournament')">Tournament</button>
+    <button data-page="about" onclick="go('about')">About</button>
+    <button data-page="blog" onclick="go('blog')">Blog</button>
+    <button data-page="contact" onclick="go('contact')">Contact</button>
+    <button onclick="openModal()" style="color:var(--gold); font-weight:700;">Book Free Demo</button>
   </div>
 </header>
 
 <!-- ============ HOME ============ -->
-<main id="page-home" class="page-panel">
+<main id="page-home" class="page">
 
-  <!-- ===== HERO: fully centered, oval directly beneath headline ===== -->
-  <section class="relative max-w-4xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-10 text-center">
+  <section class="hero">
+    <div class="notation-ticker" aria-hidden="true">
+      <span>1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 O-O 8.c3 d5&nbsp;&nbsp;1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 O-O 8.c3 d5&nbsp;&nbsp;</span>
+    </div>
+    <div class="wrap-tight hero-inner">
+      <span class="eyebrow">e4 — the strongest opening move</span>
+      <h1 class="h-display fs-hero">Think independently.<br><em>Move</em> strategically.<br>Be a champion.</h1>
+      <p class="lede">Structured chess coaching for young minds across Bangalore and Mughalsarai — taught by FIDE-rated, tournament-experienced coaches who treat the game like a discipline, not a hobby.</p>
+      <div style="margin-top:32px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <button class="cta-btn" onclick="openModal()">Reserve a Free Demo Seat</button>
+        <button class="cta-btn ghost" onclick="go('about')">Meet the Coaches</button>
+      </div>
 
-    <span class="eyebrow text-gold text-xs">e4 — the strongest opening move</span>
-    <h1 class="fs-hero font-display font-semibold text-ink mt-5">
-      Think Independently.<br>
-      <span class="italic text-royal">Move</span> Strategically.<br>
-      Be A Champion.
-    </h1>
-
-    <!-- oval sits centered directly under headline -->
-    <div class="relative mt-14 flex justify-center">
-      <div class="oval-blob w-[70%] h-[70%] top-[15%] left-[15%]" aria-hidden="true"></div>
-      <div class="oval-hero w-[90%] max-w-[760px] h-[240px] sm:h-[330px] lg:h-[400px] relative z-10">
+      <div class="hero-frame">
         <img src="images/hero-oval-chess.jpg" alt="Students competing at the National Amateur Chess Championships 2026" loading="eager">
-      </div>
-    </div>
-
-    <p class="eyebrow text-royal mt-10 text-sm sm:text-base">
-      Coaching by FIDE-Rated &amp; Tournament-Experienced Coaches
-    </p>
-
-    <p class="fs-lead text-ink/60 mt-6 max-w-lg mx-auto">
-      Structured chess coaching for young minds across Bangalore and Mughalsarai — taught by players who treat the game like a discipline, not a hobby.
-    </p>
-
-    <button onclick="openModal()" class="mt-9 inline-flex bg-royal text-bone px-8 py-4 rounded-full font-semibold hover:bg-royaldk transition shadow-xl shadow-royal/20">
-      Reserve a Free Demo Seat
-    </button>
-  </section>
-
-  <!-- ===== PROGRAMS: organic staggered panels, no grid ===== -->
-  <section class="prog-wrap max-w-5xl mx-auto px-5 sm:px-8 py-24 sm:py-32">
-    <div class="text-center max-w-lg mx-auto mb-20">
-      <span class="eyebrow text-gold text-xs">Nf3 — develop with purpose</span>
-      <h2 class="fs-h2 font-display font-semibold text-ink mt-3">Our Programs</h2>
-    </div>
-
-    <!-- Level 1: leans left, organic blob behind -->
-    <div class="relative mb-4 lg:mb-[-2rem]">
-      <div class="prog-blob w-64 h-64 bg-gold/10 top-[-2rem] left-[-3rem] hidden sm:block" aria-hidden="true"></div>
-      <span class="prog-num fs-num" style="top:-2.5rem; left:-1rem;">01</span>
-      <div class="prog-panel max-w-md">
-        <span class="eyebrow text-[11px] text-gold">Level 01 · e4</span>
-        <h3 class="fs-h3 font-display font-semibold text-ink mt-2">Beginner Foundation</h3>
-        <p class="text-ink/60 mt-3 text-sm leading-relaxed">Rules, notation, and the first ten tactical patterns every player needs — taught through play, not lectures.</p>
-      </div>
-    </div>
-
-    <!-- Level 2: overlaps, shifts far right -->
-    <div class="relative mb-4 lg:mb-[-2rem] lg:ml-auto lg:mr-0" style="max-width: 34rem;">
-      <div class="prog-blob w-72 h-72 bg-royal/10 top-[-3rem] right-[-4rem] hidden sm:block" aria-hidden="true"></div>
-      <span class="prog-num fs-num" style="top:-3rem; right:-1rem;">02</span>
-      <div class="prog-panel max-w-md ml-auto text-right lg:text-right">
-        <span class="eyebrow text-[11px] text-gold">Level 02 · Nf3</span>
-        <h3 class="fs-h3 font-display font-semibold text-ink mt-2">Intermediate Mastery</h3>
-        <p class="text-ink/60 mt-3 text-sm leading-relaxed ml-auto">Opening repertoires, middlegame planning, and endgame technique — the toolkit for consistent tournament wins.</p>
-      </div>
-    </div>
-
-    <!-- Level 3: staggers back center-left -->
-    <div class="relative lg:ml-[8%]">
-      <div class="prog-blob w-60 h-60 bg-gold/10 top-[-2rem] left-[-2rem] hidden sm:block" aria-hidden="true"></div>
-      <span class="prog-num fs-num" style="top:-2.5rem; left:-1rem;">03</span>
-      <div class="prog-panel max-w-md">
-        <span class="eyebrow text-[11px] text-gold">Level 03 · O-O</span>
-        <h3 class="fs-h3 font-display font-semibold text-ink mt-2">Advanced Pro &amp; Rated</h3>
-        <p class="text-ink/60 mt-3 text-sm leading-relaxed">FIDE-rated tournament preparation, deep opening theory, and one-on-one game analysis for competitive players.</p>
+        <div class="hero-frame-cap">
+          <span>National Amateur Championships · 2026</span>
+          <span>Board 1</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- secondary band -->
-  <section class="max-w-5xl mx-auto px-5 sm:px-8 pb-24">
-    <div class="relative">
-      <div class="rounded-[2.5rem] overflow-hidden max-w-xl ml-auto h-64 sm:h-80 shadow-2xl shadow-ink/10 lift">
-        <img src="images/session-showcase.jpg" alt="Chess coaching session with focused young students" class="w-full h-full object-cover">
+  <section class="stat-strip">
+    <div class="stat-cell"><div class="stat-num">50+</div><div class="stat-label">Students Trained</div></div>
+    <div class="stat-cell"><div class="stat-num">8+</div><div class="stat-label">Years Experience</div></div>
+    <div class="stat-cell"><div class="stat-num">2</div><div class="stat-label">Expert Coaches</div></div>
+    <div class="stat-cell"><div class="stat-num">15+</div><div class="stat-label">Tournaments Entered</div></div>
+  </section>
+
+  <!-- sliding drawer portal -->
+  <section class="drawer-section">
+    <div class="wrap">
+      <div class="drawer-head">
+        <span class="eyebrow cyan">Nf3 — develop with purpose</span>
+        <h2 class="h-display fs-h2" style="margin-top:10px;">Choose your board</h2>
       </div>
-      <div class="relative lg:absolute lg:top-12 lg:left-0 bg-bone lg:shadow-2xl lg:shadow-ink/10 rounded-3xl p-8 max-w-xs mt-[-2rem] lg:mt-0 border border-ink/8">
-        <span class="eyebrow text-gold text-xs">O-O — castle before you attack</span>
-        <h2 class="fs-h3 font-display font-semibold text-ink mt-3">Small batches. Real attention.</h2>
-        <div class="grid grid-cols-2 gap-6 mt-6">
-          <div>
-            <p class="font-display text-2xl font-semibold text-royal">50+</p>
-            <p class="eyebrow text-[10px] text-ink/40 mt-1">Students</p>
+      <div class="drawer-stack">
+        <div class="drawer playground" onclick="go('beginners')" tabindex="0" role="button" aria-label="Explore Beginners program">
+          <div class="drawer-content">
+            <span class="drawer-tag">Level 01 · e4</span>
+            <h3 class="drawer-title">The Playground</h3>
+            <p class="drawer-desc">Rules, notation, and the first ten tactical patterns every player needs — taught through play, not lectures.</p>
+            <span class="drawer-link">Enter the playground →</span>
           </div>
-          <div>
-            <p class="font-display text-2xl font-semibold text-royal">8+</p>
-            <p class="eyebrow text-[10px] text-ink/40 mt-1">Years</p>
+        </div>
+        <div class="drawer strategy" onclick="go('intermediate')" tabindex="0" role="button" aria-label="Explore Intermediate program">
+          <div class="drawer-content">
+            <span class="drawer-tag">Level 02 · Nf3</span>
+            <h3 class="drawer-title">The Strategy Lab</h3>
+            <p class="drawer-desc">Opening repertoires, middlegame planning, and endgame technique — the toolkit for consistent tournament wins.</p>
+            <span class="drawer-link">Enter the lab →</span>
+          </div>
+        </div>
+        <div class="drawer arena" onclick="go('tournament')" tabindex="0" role="button" aria-label="Explore Tournament program">
+          <div class="drawer-content">
+            <span class="drawer-tag">Level 03 · O-O</span>
+            <h3 class="drawer-title">The Grandmaster Arena</h3>
+            <p class="drawer-desc">FIDE-rated tournament preparation, deep opening theory, and one-on-one game analysis for competitive players.</p>
+            <span class="drawer-link">Enter the arena →</span>
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- pyramid stack gallery -->
+  <section class="pyramid-section">
+    <div class="wrap">
+      <div class="pyramid-head">
+        <span class="eyebrow">O-O — castle before you attack</span>
+        <h2 class="h-display fs-h2" style="margin-top:10px;">From the trophy cabinet</h2>
+      </div>
+      <div class="pyramid-stage" id="pyramid-home"></div>
+      <div class="pyramid-nav">
+        <button onclick="pyramidStep('home', -1)" aria-label="Previous">‹</button>
+        <button onclick="pyramidStep('home', 1)" aria-label="Next">›</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-pad">
+    <div class="wrap-tight" style="text-align:center;">
+      <span class="eyebrow cyan">Small batches. Real attention.</span>
+      <h2 class="h-display fs-h2" style="margin-top:10px;">Coaching that watches every move you make — closely enough to correct it.</h2>
+      <p class="lede" style="max-width:560px; margin:20px auto 0;">Every batch is kept small enough that a coach notices the habit before it becomes a pattern. Call <a href="tel:+918660813472" style="color:var(--gold);">+91 86608 13472</a> to talk through which batch fits your child.</p>
+    </div>
+  </section>
+</main>
+
+<!-- ============ BEGINNERS — The Playground ============ -->
+<main id="page-beginners" class="page page-beginners" hidden>
+  <section class="theme-hero">
+    <div class="wrap-tight">
+      <span class="theme-badge">Level 01 · The Playground</span>
+      <h1 class="h-display fs-hero">Where curiosity learns <em>its first ten moves</em>.</h1>
+      <p class="lede" style="max-width:520px; margin:20px auto 0;">Cognitive development, focus, and the basic movement of every piece — introduced the way children actually learn: through play, repetition, and small wins.</p>
+      <div style="margin-top:30px;"><button class="cta-btn" onclick="openModal()">Reserve a Free Demo Seat</button></div>
+    </div>
+  </section>
+  <section class="section-pad bordered">
+    <div class="wrap">
+      <div class="theme-grid">
+        <div class="theme-point"><div class="tp-num">01</div><h3>Focus, in short bursts</h3><p>Attention span is built like a muscle. Sessions are structured in short, rewarding stretches so young players stay locked in without burning out.</p></div>
+        <div class="theme-point"><div class="tp-num">02</div><h3>Notation from day one</h3><p>Reading and writing moves — e4, Nf3, O-O — becomes second nature early, so the language of chess never feels foreign later.</p></div>
+        <div class="theme-point"><div class="tp-num">03</div><h3>Ten patterns, not theory</h3><p>Rather than memorised openings, beginners learn the ten tactical shapes — forks, pins, back-rank ideas — that decide most games at this level.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="section-pad">
+    <div class="wrap-tight" style="text-align:center;">
+      <span class="eyebrow">Coaching by FIDE-rated &amp; tournament-experienced coaches</span>
+      <h2 class="h-display fs-h2" style="margin-top:10px;">Ready for their first tournament by Level 03.</h2>
+      <p class="lede" style="margin-top:16px;">Classes from ₹250 per class, across Online, Bangalore, and Mughalsarai batches.</p>
+    </div>
+  </section>
+</main>
+
+<!-- ============ INTERMEDIATE — The Strategy Lab ============ -->
+<main id="page-intermediate" class="page page-intermediate" hidden>
+  <section class="theme-hero">
+    <div class="wrap-tight">
+      <span class="theme-badge">Level 02 · The Strategy Lab</span>
+      <h1 class="h-display fs-hero">Calculate deeper. <em>Plan sharper.</em></h1>
+      <p class="lede" style="max-width:520px; margin:20px auto 0;">Middle-game tactical calculation, pattern recognition, and planning — the toolkit that turns a player who knows the rules into one who wins on purpose.</p>
+      <div style="margin-top:30px;"><button class="cta-btn" onclick="openModal()">Reserve a Free Demo Seat</button></div>
+    </div>
+  </section>
+  <section class="section-pad bordered">
+    <div class="wrap">
+      <div class="theme-grid">
+        <div class="xray-card theme-point" onmousemove="xraySpot(event)"><div class="tp-num">01</div><h3>Opening repertoires</h3><p>A small, well-understood set of openings for both colours — built for the club player, not memorised for a database.</p></div>
+        <div class="xray-card theme-point" onmousemove="xraySpot(event)"><div class="tp-num">02</div><h3>Middlegame planning</h3><p>Reading a position's imbalances and choosing a plan before calculating a single line — the skill that separates intermediate from advanced.</p></div>
+        <div class="xray-card theme-point" onmousemove="xraySpot(event)"><div class="tp-num">03</div><h3>Endgame technique</h3><p>Rook endings, opposition, and conversion — the technical foundation that turns a winning position into an actual win.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="section-pad">
+    <div class="wrap-tight" style="text-align:center;">
+      <span class="eyebrow cyan">The toolkit for consistent tournament wins</span>
+      <h2 class="h-display fs-h2" style="margin-top:10px;">Built for players ready to stop guessing and start planning.</h2>
+    </div>
+  </section>
+</main>
+
+<!-- ============ TOURNAMENT — The Elite Grandmaster Arena ============ -->
+<main id="page-tournament" class="page page-tournament" hidden>
+  <section class="theme-hero">
+    <div class="wrap-tight">
+      <span class="theme-badge">Level 03 · The Grandmaster Arena</span>
+      <h1 class="h-display fs-hero">FIDE ratings are earned <em>under the clock</em>.</h1>
+      <p class="lede" style="max-width:520px; margin:20px auto 0;">Endgame precision, clock management, and tournament psychological preparation — for players stepping into rated, competitive play.</p>
+      <div style="margin-top:30px;"><button class="cta-btn" onclick="openModal()">Reserve a Free Demo Seat</button></div>
+    </div>
+  </section>
+  <section class="section-pad bordered">
+    <div class="wrap">
+      <div class="theme-grid">
+        <div class="theme-point"><div class="tp-num">01</div><h3>FIDE-rated preparation</h3><p>Structured prep for rated events — repertoire depth, opponent-specific homework, and post-game analysis after every round.</p></div>
+        <div class="theme-point"><div class="tp-num">02</div><h3>Clock management</h3><p>Time trouble loses more rated games than bad moves do. Sessions build the discipline to spend clock time where it matters.</p></div>
+        <div class="theme-point"><div class="tp-num">03</div><h3>Tournament psychology</h3><p>How to stay calm in a losing position, reset after a bad round, and hold composure across a long tournament day.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="section-pad">
+    <div class="wrap-tight" style="text-align:center;">
+      <span class="eyebrow" style="color:var(--crimson-bright);">One-on-one game analysis for competitive players</span>
+      <h2 class="h-display fs-h2" style="margin-top:10px;">15+ tournaments entered. The next one is yours.</h2>
     </div>
   </section>
 </main>
 
 <!-- ============ ABOUT ============ -->
-<main id="page-about" class="page-panel" hidden>
-  <section class="max-w-5xl mx-auto px-5 sm:px-8 pt-16 pb-10 text-center">
-    <span class="eyebrow text-gold text-xs">Our record on the board</span>
-    <h1 class="fs-h2 font-display font-semibold text-ink mt-3 max-w-2xl mx-auto">Eight years of turning first moves into tournament wins.</h1>
+<main id="page-about" class="page" hidden>
+  <section class="section-pad bordered" style="text-align:center; padding-top:64px;">
+    <div class="wrap-tight">
+      <span class="eyebrow">Our record on the board</span>
+      <h1 class="h-display fs-h2" style="margin-top:10px;">Eight years of turning first moves into tournament wins.</h1>
+    </div>
+  </section>
 
-    <div class="flex flex-wrap justify-center gap-5 mt-16">
-      <div class="bg-white border border-ink/8 rounded-2xl px-8 py-7 text-center lift">
-        <p class="font-display text-3xl font-semibold text-royal">50+</p>
-        <p class="eyebrow text-[10px] text-ink/40 mt-2">Students Trained</p>
+  <!-- parallax timeline: path to mastery -->
+  <section class="timeline-section bordered">
+    <div class="wrap">
+      <div class="timeline-head">
+        <span class="eyebrow cyan">The path every student walks</span>
+        <h2 class="h-display fs-h2" style="margin-top:10px;">From first move to first trophy</h2>
       </div>
-      <div class="bg-ink text-bone rounded-2xl px-8 py-7 text-center lift lg:mt-6">
-        <p class="font-display text-3xl font-semibold text-gold">8+</p>
-        <p class="eyebrow text-[10px] text-bone/60 mt-2">Years Experience</p>
-      </div>
-      <div class="bg-white border border-ink/8 rounded-2xl px-8 py-7 text-center lift">
-        <p class="font-display text-3xl font-semibold text-royal">2</p>
-        <p class="eyebrow text-[10px] text-ink/40 mt-2">Expert Coaches</p>
-      </div>
-      <div class="bg-royal text-bone rounded-2xl px-8 py-7 text-center lift lg:mt-10">
-        <p class="font-display text-3xl font-semibold text-gold">15+</p>
-        <p class="eyebrow text-[10px] text-bone/60 mt-2">Tournaments Entered</p>
+      <div class="timeline" id="timeline">
+        <div class="tl-node"><span class="tl-dot"></span><span class="tl-num">Level 01 · e4</span><h3 class="tl-title">Beginner Foundation</h3><p class="tl-desc">Rules, notation, and the first ten tactical patterns — taught through play, not lectures.</p></div>
+        <div class="tl-node"><span class="tl-dot"></span><span class="tl-num">Level 02 · Nf3</span><h3 class="tl-title">Intermediate Mastery</h3><p class="tl-desc">Opening repertoires, middlegame planning, and endgame technique for consistent wins.</p></div>
+        <div class="tl-node"><span class="tl-dot"></span><span class="tl-num">Level 03 · O-O</span><h3 class="tl-title">Advanced Pro &amp; Rated</h3><p class="tl-desc">FIDE-rated tournament preparation, deep opening theory, and one-on-one analysis.</p></div>
+        <div class="tl-node"><span class="tl-dot"></span><span class="tl-num">Board 1</span><h3 class="tl-title">Tournament Floor</h3><p class="tl-desc">15+ tournaments entered and counting — the stage every level has been building toward.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- ===== FOUNDERS: text overlaps photo, no staff-directory look ===== -->
-  <section class="max-w-4xl mx-auto px-5 sm:px-8 py-24">
-    <div class="text-center mb-16">
-      <span class="eyebrow text-gold text-xs">Leadership</span>
-      <h2 class="fs-h2 font-display font-semibold text-ink mt-3">Founders</h2>
-    </div>
-
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16 sm:gap-y-0">
-      <!-- Minu Gupta -->
-      <div class="relative">
-        <div class="founder-photo h-72 transform rotate-[-2deg]">
-          <img src="images/founder-minu-gupta.jpg" alt="Minu Gupta, Founder of Gupta Chess Academy">
+  <section class="section-pad bordered">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow">Leadership</span><h2 class="h-display fs-h2" style="margin-top:10px;">Founders</h2></div>
+      <div class="founder-grid">
+        <div class="founder-card">
+          <div class="founder-photo"><img src="images/founder-minu-gupta.jpg" alt="Minu Gupta, Founder of Gupta Chess Academy"></div>
+          <div class="founder-body">
+            <span class="founder-name">Minu Gupta</span><span class="founder-role">Founder</span>
+            <p class="founder-bio">The driving force behind Gupta Chess Academy — founded with a vision to nurture strategic thinkers and champion chess players across Bangalore.</p>
+          </div>
         </div>
-        <div class="founder-card-text rounded-2xl p-6 mx-6 -mt-10 transform rotate-[1deg]">
-          <h3 class="font-display text-xl font-semibold text-ink">Minu Gupta</h3>
-          <p class="eyebrow text-[10px] text-gold mt-1">Founder</p>
-          <p class="text-ink/55 text-sm mt-3 leading-relaxed">The driving force behind Gupta Chess Academy — founded with a vision to nurture strategic thinkers and champion chess players across Bangalore.</p>
+        <div class="founder-card">
+          <div class="founder-photo icon" aria-hidden="true">♞</div>
+          <div class="founder-body">
+            <span class="founder-name">Ankit</span><span class="founder-role">Founder</span>
+            <p class="founder-bio">District championship finalist with 10+ years of competitive play. Co-founded the academy with a vision to bring world-class chess coaching to Bangalore.</p>
+          </div>
         </div>
-      </div>
-      <!-- Ankit -->
-      <div class="relative sm:mt-16">
-        <div class="founder-photo h-72 transform rotate-[2deg] bg-gradient-to-br from-royal/10 to-gold/10 flex items-center justify-center">
-          <span class="text-7xl" aria-hidden="true">♞</span>
-        </div>
-        <div class="founder-card-text rounded-2xl p-6 mx-6 -mt-10 transform rotate-[-1deg]">
-          <h3 class="font-display text-xl font-semibold text-ink">Ankit</h3>
-          <p class="eyebrow text-[10px] text-gold mt-1">Founder</p>
-          <p class="text-ink/55 text-sm mt-3 leading-relaxed">District championship finalist with 10+ years of competitive play. Co-founded the academy with a vision to bring world-class chess coaching to Bangalore.</p>
-        </div>
-      </div>
-      <!-- Sanskar Agrawal -->
-      <div class="relative lg:mt-8">
-        <div class="founder-photo h-72 transform rotate-[-1.5deg] bg-gradient-to-br from-gold/10 to-royal/10 flex items-center justify-center">
-          <span class="text-7xl" aria-hidden="true">♚</span>
-        </div>
-        <div class="founder-card-text rounded-2xl p-6 mx-6 -mt-10 transform rotate-[1.5deg]">
-          <h3 class="font-display text-xl font-semibold text-ink">Sanskar Agrawal</h3>
-          <p class="eyebrow text-[10px] text-gold mt-1">Co-Founder</p>
-          <p class="text-ink/55 text-sm mt-3 leading-relaxed">Rapid and Blitz specialist, rated 1800+ on Chess.com. Co-built the academy's curriculum and structure, ensuring every student gets a world-class learning experience.</p>
+        <div class="founder-card">
+          <div class="founder-photo icon" aria-hidden="true">♚</div>
+          <div class="founder-body">
+            <span class="founder-name">Sanskar Agrawal</span><span class="founder-role">Co-Founder</span>
+            <p class="founder-bio">Rapid and Blitz specialist, rated 1800+ on Chess.com. Co-built the academy's curriculum and structure, ensuring every student gets a world-class learning experience.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- coaches -->
-  <section class="max-w-4xl mx-auto px-5 sm:px-8 py-8">
-    <div class="text-center mb-12">
-      <span class="eyebrow text-gold text-xs">On the bench</span>
-      <h2 class="fs-h2 font-display font-semibold text-ink mt-3">Coaches</h2>
-    </div>
-    <div class="flex flex-wrap justify-center gap-6">
-      <div class="bg-white rounded-3xl border border-ink/8 lift flex items-center gap-5 p-6 max-w-xs">
-        <div class="founder-photo w-16 h-16 flex-shrink-0 rounded-full">
-          <img src="images/coach-ankit.jpg" alt="Coach Ankit">
-        </div>
-        <div>
-          <h3 class="font-display text-base font-semibold text-ink">Ankit</h3>
-          <p class="eyebrow text-[10px] text-gold mt-1">Head Coach</p>
-        </div>
-      </div>
-      <div class="bg-white rounded-3xl border border-ink/8 lift flex items-center gap-5 p-6 max-w-xs sm:mt-8">
-        <div class="founder-photo w-16 h-16 flex-shrink-0 rounded-full bg-gradient-to-br from-royal/10 to-gold/10 flex items-center justify-center">
-          <span class="text-2xl" aria-hidden="true">♚</span>
-        </div>
-        <div>
-          <h3 class="font-display text-base font-semibold text-ink">Sanskar Agrawal</h3>
-          <p class="eyebrow text-[10px] text-gold mt-1">Chess Coach &amp; Co-Founder</p>
-        </div>
-      </div>
-      <div class="bg-white rounded-3xl border border-ink/8 lift flex items-center gap-5 p-6 max-w-xs">
-        <div class="founder-photo w-16 h-16 flex-shrink-0 rounded-full">
-          <img src="images/coach-satyam.jpg" alt="Coach Satyam Prakash">
-        </div>
-        <div>
-          <h3 class="font-display text-base font-semibold text-ink">Satyam Prakash</h3>
-          <p class="eyebrow text-[10px] text-gold mt-1">FIDE Rated Coach · 1847</p>
-        </div>
-      </div>
-      <div class="bg-white rounded-3xl border border-ink/8 lift flex items-center gap-5 p-6 max-w-xs sm:mt-8">
-        <div class="founder-photo w-16 h-16 flex-shrink-0 rounded-full">
-          <img src="images/coach-sindhu.jpg" alt="Sindhu Vegi, Business Coordinator">
-        </div>
-        <div>
-          <h3 class="font-display text-base font-semibold text-ink">Sindhu Vegi</h3>
-          <p class="eyebrow text-[10px] text-gold mt-1">Business Coordinator</p>
-        </div>
+  <section class="section-pad bordered">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow cyan">On the bench</span><h2 class="h-display fs-h2" style="margin-top:10px;">Coaches</h2></div>
+      <div class="coach-row">
+        <div class="coach-chip"><div class="coach-avatar"><img src="images/coach-ankit.jpg" alt="Coach Ankit"></div><div><div class="coach-name">Ankit</div><div class="coach-role">Head Coach</div></div></div>
+        <div class="coach-chip"><div class="coach-avatar" aria-hidden="true">♚</div><div><div class="coach-name">Sanskar Agrawal</div><div class="coach-role">Chess Coach &amp; Co-Founder</div></div></div>
+        <div class="coach-chip"><div class="coach-avatar"><img src="images/coach-satyam.jpg" alt="Coach Satyam Prakash"></div><div><div class="coach-name">Satyam Prakash</div><div class="coach-role">FIDE Rated Coach · 1847</div></div></div>
+        <div class="coach-chip"><div class="coach-avatar"><img src="images/coach-sindhu.jpg" alt="Sindhu Vegi, Business Coordinator"></div><div><div class="coach-name">Sindhu Vegi</div><div class="coach-role">Business Coordinator</div></div></div>
       </div>
     </div>
   </section>
 
-  <!-- locations -->
-  <section class="max-w-4xl mx-auto px-5 sm:px-8 py-24">
-    <div class="text-center mb-12">
-      <span class="eyebrow text-gold text-xs">On the map</span>
-      <h2 class="fs-h2 font-display font-semibold text-ink mt-3">Our Centres</h2>
-    </div>
-    <div class="flex flex-wrap justify-center gap-6">
-      <div class="bg-ink text-bone rounded-3xl p-7 lift max-w-xs">
-        <p class="eyebrow text-[10px] text-gold">Bangalore · Singasandra</p>
-        <h3 class="font-display text-lg font-semibold mt-2">Splendid Skylines</h3>
-        <p class="text-bone/55 text-sm mt-2">Beside Teatree Hospital, Bangalore, Karnataka 560068</p>
-      </div>
-      <div class="bg-ink text-bone rounded-3xl p-7 lift max-w-xs sm:mt-8">
-        <p class="eyebrow text-[10px] text-gold">Bangalore · HSR Layout / Kudlu Gate</p>
-        <h3 class="font-display text-lg font-semibold mt-2">Kudlu Gate Batch</h3>
-        <p class="text-bone/55 text-sm mt-2">HSR Layout · Kudlu Gate, Bangalore, Karnataka</p>
-      </div>
-      <div class="bg-royal text-bone rounded-3xl p-7 lift max-w-xs sm:mt-16">
-        <p class="eyebrow text-[10px] text-gold">Uttar Pradesh · Home Centre</p>
-        <h3 class="font-display text-lg font-semibold mt-2">Mughalsarai Centre</h3>
-        <p class="text-bone/55 text-sm mt-2">Lot No. 2, Pani Tanki Road, Chandauli, Uttar Pradesh</p>
+  <section class="section-pad bordered">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow">On the map</span><h2 class="h-display fs-h2" style="margin-top:10px;">Our Centres</h2></div>
+      <div class="centre-grid">
+        <div class="centre-card"><span class="centre-tag">Bangalore · Singasandra</span><h3 class="centre-name">Splendid Skylines</h3><p class="centre-addr">Beside Teatree Hospital, Bangalore, Karnataka 560068</p></div>
+        <div class="centre-card"><span class="centre-tag">Bangalore · HSR Layout / Kudlu Gate</span><h3 class="centre-name">Kudlu Gate Batch</h3><p class="centre-addr">HSR Layout · Kudlu Gate, Bangalore, Karnataka</p></div>
+        <div class="centre-card"><span class="centre-tag">Uttar Pradesh · Home Centre</span><h3 class="centre-name">Mughalsarai Centre</h3><p class="centre-addr">Lot No. 2, Pani Tanki Road, Chandauli, Uttar Pradesh</p></div>
       </div>
     </div>
   </section>
 
-  <!-- gallery -->
-  <section class="max-w-4xl mx-auto px-5 sm:px-8 pb-24">
-    <div class="text-center mb-12">
-      <span class="eyebrow text-gold text-xs">Recent wins</span>
-      <h2 class="fs-h2 font-display font-semibold text-ink mt-3">From the Trophy Cabinet</h2>
-    </div>
-    <div class="flex flex-col sm:flex-row gap-6">
-      <div class="rounded-3xl overflow-hidden lift h-64 sm:w-2/3 shadow-xl shadow-ink/10">
-        <img src="images/gallery/trophy-award-2026.jpg" alt="Trophy ceremony at the Karnataka State U-11 FIDE Rated Chess Championship" class="w-full h-full object-cover">
-      </div>
-      <div class="rounded-3xl overflow-hidden lift h-64 sm:w-1/3 sm:mt-10 shadow-xl shadow-ink/10">
-        <img src="images/gallery/tournament-award-galleria-yelahanka.jpg" alt="2nd Prize (U-09 Girls) at Kaladarpana Rapid Chess, The Galleria, Yelahanka" class="w-full h-full object-cover">
+  <section class="section-pad">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow cyan">Recent wins</span><h2 class="h-display fs-h2" style="margin-top:10px;">From the Trophy Cabinet</h2></div>
+      <div class="gallery-duo">
+        <div class="g-big"><img src="images/gallery/trophy-award-2026.jpg" alt="Trophy ceremony at the Karnataka State U-11 FIDE Rated Chess Championship"></div>
+        <div class="g-small"><img src="images/gallery/tournament-award-galleria-yelahanka.jpg" alt="2nd Prize (U-09 Girls) at Kaladarpana Rapid Chess, The Galleria, Yelahanka"></div>
       </div>
     </div>
   </section>
 </main>
 
-<!-- ============ BLOG — editorial: 60% feature + stacked offset sidebar ============ -->
-<main id="page-blog" class="page-panel" hidden>
-  <section class="max-w-5xl mx-auto px-5 sm:px-8 pt-16 pb-24">
-    <div class="text-center max-w-lg mx-auto mb-16">
-      <span class="eyebrow text-gold text-xs">From the coaching desk</span>
-      <h1 class="fs-h2 font-display font-semibold text-ink mt-3">Tactics, strategy, and notes from the classroom.</h1>
-    </div>
+<!-- ============ BLOG ============ -->
+<main id="page-blog" class="page" hidden>
+  <section class="section-pad" style="padding-bottom:0;">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow">From the coaching desk</span><h1 class="h-display fs-h2" style="margin-top:10px;">Tactics, strategy, and notes from the classroom.</h1></div>
 
-    <div class="flex flex-col lg:flex-row gap-8">
-      <!-- feature article — 60% width -->
-      <article class="lg:w-[60%] bg-white rounded-3xl border border-ink/8 overflow-hidden lift shadow-xl shadow-ink/5">
-        <div class="h-64 sm:h-80 overflow-hidden">
-          <img src="images/blog-chess-parent.jpg" alt="A parent and coach talking with a young chess student" class="w-full h-full object-cover">
-        </div>
-        <div class="p-8">
-          <span class="eyebrow text-[10px] text-gold">Kids &amp; Parents · Featured · Ankit · May 20, 2026</span>
-          <h3 class="fs-h3 font-display font-semibold text-ink mt-3">Dear Chess Parent: Let Your Child Play</h3>
-          <p class="text-ink/55 text-sm mt-4 leading-relaxed max-w-md">A child crying on the way out — not because they lost, but because of what their parent said. An honest letter every chess parent needs to read.</p>
-        </div>
-      </article>
+      <!-- pyramid stack of top 3 -->
+      <div class="pyramid-stage" id="pyramid-blog"></div>
+      <div class="pyramid-nav">
+        <button onclick="pyramidStep('blog', -1)" aria-label="Previous">‹</button>
+        <button onclick="pyramidStep('blog', 1)" aria-label="Next">›</button>
+      </div>
 
-      <!-- side stack — offset on Y axis -->
-      <div class="lg:w-[40%] flex flex-col gap-8">
-        <article class="bg-ink text-bone rounded-3xl overflow-hidden lift">
-          <div class="h-36 overflow-hidden">
-            <img src="images/blog-openings.jpg" alt="Chess opening theory illustration" class="w-full h-full object-cover">
-          </div>
-          <div class="p-6">
-            <span class="eyebrow text-[10px] text-gold">e4 · Openings · Ankit · Apr 10, 2026</span>
-            <h3 class="font-display text-lg font-semibold mt-2">5 Openings Every Beginner Must Learn First</h3>
-          </div>
-        </article>
-        <article class="bg-white rounded-3xl border border-ink/8 overflow-hidden lift lg:ml-10">
-          <div class="h-36 overflow-hidden">
-            <img src="images/blog-chess-tactics.jpg" alt="Pins, forks and skewers tactics illustration for young chess players" class="w-full h-full object-cover">
-          </div>
-          <div class="p-6">
-            <span class="eyebrow text-[10px] text-gold">Nxf7 · Tactics · Minu Gupta · Mar 22, 2026</span>
-            <h3 class="font-display text-lg font-semibold text-ink mt-2">Pins, Forks &amp; Skewers — The 3 Tactics That Win Most Games</h3>
-          </div>
-        </article>
+      <!-- archive grid -->
+      <div class="blog-grid-archive">
+        <div class="blog-card">
+          <img src="images/blog-tournament-mindset.jpg" alt="Chess psychology and focus illustration">
+          <div class="blog-card-body"><span class="blog-tag">O-O-O · Psychology · Sanskar Agrawal · Feb 14, 2026</span><h3 class="blog-title-sm">How to Stay Calm in a Losing Position — Tournament Tips</h3></div>
+        </div>
+        <div class="blog-card">
+          <img src="images/blog-kids-age.jpg" alt="Young child learning chess with a coach">
+          <div class="blog-card-body"><span class="blog-tag">Kids &amp; Parents · Ankit · Jan 28, 2026</span><h3 class="blog-title-sm">What Age Should Your Child Start Learning Chess?</h3></div>
+        </div>
+        <div class="blog-card">
+          <img src="images/blog-mistakes.jpg" alt="Common chess beginner mistakes illustration">
+          <div class="blog-card-body"><span class="blog-tag">Beginners · Sanskar Agrawal · Jan 5, 2026</span><h3 class="blog-title-sm">7 Common Mistakes Every Chess Beginner Makes</h3></div>
+        </div>
       </div>
     </div>
+  </section>
+  <div style="height:88px;"></div>
+</main>
 
-    <!-- more from the blog -->
-    <div class="grid sm:grid-cols-3 gap-6 mt-8">
-      <article class="bg-white rounded-3xl border border-ink/8 overflow-hidden lift">
-        <div class="h-36 overflow-hidden">
-          <img src="images/blog-tournament-mindset.jpg" alt="Chess psychology and focus illustration" class="w-full h-full object-cover">
+<!-- ============ CONTACT ============ -->
+<main id="page-contact" class="page" hidden>
+  <section class="section-pad" style="text-align:center;">
+    <div class="wrap-tight">
+      <span class="eyebrow">Let's talk chess</span>
+      <h1 class="h-display fs-h2" style="margin-top:10px;">Get in touch</h1>
+      <p class="lede" style="margin-top:14px; max-width:440px; margin-left:auto; margin-right:auto;">Tell us about your child and we'll match them to the right batch — online, Bangalore, or Mughalsarai.</p>
+
+      <form id="contact-form" class="form-panel" style="text-align:left; margin-top:36px;" novalidate>
+        <div class="form-grid">
+          <div class="field">
+            <label for="studentName">Student Name</label>
+            <input id="studentName" name="studentName" type="text" required>
+            <p class="field-error">Please enter the student's name.</p>
+          </div>
+          <div class="field">
+            <label for="parentName">Parent Name</label>
+            <input id="parentName" name="parentName" type="text" required>
+            <p class="field-error">Please enter the parent's name.</p>
+          </div>
+          <div class="field">
+            <label for="age">Age</label>
+            <input id="age" name="age" type="number" min="3" max="18" required>
+            <p class="field-error">Please enter a valid age (3–18).</p>
+          </div>
+          <div class="field">
+            <label for="phone">Phone Number</label>
+            <input id="phone" name="phone" type="tel" required pattern="[0-9+\-\s]{7,15}">
+            <p class="field-error">Please enter a valid phone number.</p>
+          </div>
         </div>
-        <div class="p-6">
-          <span class="eyebrow text-[10px] text-gold">O-O-O · Psychology · Sanskar Agrawal · Feb 14, 2026</span>
-          <h3 class="font-display text-base font-semibold text-ink mt-2">How to Stay Calm in a Losing Position — Tournament Tips</h3>
+        <div class="field">
+          <label for="batch">Selected Batch</label>
+          <select id="batch" name="batch" required>
+            <option value="">Choose a batch</option>
+            <option>Online</option>
+            <option>Bangalore</option>
+            <option>Mughalsarai</option>
+          </select>
+          <p class="field-error">Please select a batch.</p>
         </div>
-      </article>
-      <article class="bg-white rounded-3xl border border-ink/8 overflow-hidden lift">
-        <div class="h-36 overflow-hidden">
-          <img src="images/blog-kids-age.jpg" alt="Young child learning chess with a coach" class="w-full h-full object-cover">
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="4" placeholder="Anything we should know before the first session?"></textarea>
         </div>
-        <div class="p-6">
-          <span class="eyebrow text-[10px] text-gold">Kids &amp; Parents · Ankit · Jan 28, 2026</span>
-          <h3 class="font-display text-base font-semibold text-ink mt-2">What Age Should Your Child Start Learning Chess?</h3>
-        </div>
-      </article>
-      <article class="bg-white rounded-3xl border border-ink/8 overflow-hidden lift">
-        <div class="h-36 overflow-hidden">
-          <img src="images/blog-mistakes.jpg" alt="Common chess beginner mistakes illustration" class="w-full h-full object-cover">
-        </div>
-        <div class="p-6">
-          <span class="eyebrow text-[10px] text-gold">Beginners · Sanskar Agrawal · Jan 5, 2026</span>
-          <h3 class="font-display text-base font-semibold text-ink mt-2">7 Common Mistakes Every Chess Beginner Makes</h3>
-        </div>
-      </article>
+        <button type="submit" class="submit-btn">Send Message</button>
+      </form>
     </div>
   </section>
 </main>
 
-<!-- ============ CONTACT PAGE ============ -->
-<main id="page-contact" class="page-panel" hidden>
-  <section class="max-w-3xl mx-auto px-5 sm:px-8 pt-16 pb-24 text-center">
-    <span class="eyebrow text-gold text-xs">Let's talk chess</span>
-    <h1 class="fs-h2 font-display font-semibold text-ink mt-3">Get in Touch</h1>
-    <p class="text-ink/55 mt-4 max-w-md mx-auto">Tell us about your child and we'll match them to the right batch — online, Bangalore, or Mughalsarai.</p>
-
-    <form id="contact-form" class="mt-10 bg-white border border-ink/8 rounded-3xl p-6 sm:p-10 grid sm:grid-cols-2 gap-6 text-left shadow-xl shadow-ink/5" novalidate>
-      <div class="sm:col-span-1">
-        <label for="studentName" class="eyebrow text-[11px] text-ink/50">Student Name</label>
-        <input id="studentName" name="studentName" type="text" required
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-bone focus:border-royal outline-none transition">
-        <p class="err text-xs text-red-600 mt-1 hidden">Please enter the student's name.</p>
-      </div>
-      <div class="sm:col-span-1">
-        <label for="parentName" class="eyebrow text-[11px] text-ink/50">Parent Name</label>
-        <input id="parentName" name="parentName" type="text" required
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-bone focus:border-royal outline-none transition">
-        <p class="err text-xs text-red-600 mt-1 hidden">Please enter the parent's name.</p>
-      </div>
-      <div class="sm:col-span-1">
-        <label for="age" class="eyebrow text-[11px] text-ink/50">Age</label>
-        <input id="age" name="age" type="number" min="3" max="18" required
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-bone focus:border-royal outline-none transition">
-        <p class="err text-xs text-red-600 mt-1 hidden">Please enter a valid age (3–18).</p>
-      </div>
-      <div class="sm:col-span-1">
-        <label for="phone" class="eyebrow text-[11px] text-ink/50">Phone Number</label>
-        <input id="phone" name="phone" type="tel" required pattern="[0-9+\-\s]{7,15}"
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-bone focus:border-royal outline-none transition">
-        <p class="err text-xs text-red-600 mt-1 hidden">Please enter a valid phone number.</p>
-      </div>
-      <div class="sm:col-span-2">
-        <label for="batch" class="eyebrow text-[11px] text-ink/50">Selected Batch</label>
-        <select id="batch" name="batch" required
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-bone focus:border-royal outline-none transition">
-          <option value="">Choose a batch</option>
-          <option>Online</option>
-          <option>Bangalore</option>
-          <option>Mughalsarai</option>
-        </select>
-        <p class="err text-xs text-red-600 mt-1 hidden">Please select a batch.</p>
-      </div>
-      <div class="sm:col-span-2">
-        <label for="message" class="eyebrow text-[11px] text-ink/50">Message</label>
-        <textarea id="message" name="message" rows="4"
-          class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-bone focus:border-royal outline-none transition resize-none"
-          placeholder="Anything we should know before the first session?"></textarea>
-      </div>
-      <div class="sm:col-span-2 text-center">
-        <button type="submit" class="bg-ink text-bone px-8 py-3.5 rounded-full font-semibold hover:bg-royal transition w-full sm:w-auto">
-          Send Message
-        </button>
-      </div>
-    </form>
-  </section>
-</main>
-
-<!-- ============ FREE DEMO MODAL (JS untouched, styling refined) ============ -->
-<div id="modal" class="fixed inset-0 z-[60] hidden items-center justify-center px-4">
-  <div class="modal-backdrop absolute inset-0" onclick="closeModal()"></div>
-  <div class="modal-panel relative bg-bone rounded-3xl max-w-md w-full p-7 sm:p-9 shadow-2xl">
-    <button onclick="closeModal()" aria-label="Close" class="absolute top-5 right-5 w-9 h-9 rounded-full flex items-center justify-center hover:bg-ink/5 transition">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
+<!-- ============ FREE DEMO MODAL ============ -->
+<div id="modal" class="modal-veil">
+  <div class="modal-backdrop" onclick="closeModal()"></div>
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
 
     <div id="modal-form-view">
-      <span class="eyebrow text-gold text-xs">Limited seats · Founding batch</span>
-      <h2 class="fs-h3 font-display font-semibold text-ink mt-2">Reserve Your Free Demo Seat</h2>
-      <p class="text-ink/55 text-sm mt-2">Starting from ₹250 per class — exact pricing shared after your free consultation.</p>
+      <span class="eyebrow">Limited seats · Founding batch</span>
+      <h2 class="h-display fs-h3" style="margin-top:10px;">Reserve your free demo seat</h2>
+      <p class="lede" style="font-size:0.88rem; margin-top:8px;">Classes from ₹250 per class — exact pricing shared after your free consultation.</p>
 
-      <form id="demo-form" class="mt-6 space-y-4" novalidate>
-        <div>
-          <label for="d-name" class="eyebrow text-[11px] text-ink/50">Student Name</label>
-          <input id="d-name" name="d-name" type="text" required
-            class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-white focus:border-royal outline-none transition">
-          <p class="err text-xs text-red-600 mt-1 hidden">Please enter the student's name.</p>
+      <form id="demo-form" style="margin-top:24px;" novalidate>
+        <div class="field">
+          <label for="d-name">Student Name</label>
+          <input id="d-name" name="d-name" type="text" required>
+          <p class="field-error">Please enter the student's name.</p>
         </div>
-        <div>
-          <label for="d-parent" class="eyebrow text-[11px] text-ink/50">Parent Name</label>
-          <input id="d-parent" name="d-parent" type="text" required
-            class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-white focus:border-royal outline-none transition">
-          <p class="err text-xs text-red-600 mt-1 hidden">Please enter the parent's name.</p>
+        <div class="field">
+          <label for="d-parent">Parent Name</label>
+          <input id="d-parent" name="d-parent" type="text" required>
+          <p class="field-error">Please enter the parent's name.</p>
         </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label for="d-age" class="eyebrow text-[11px] text-ink/50">Age</label>
-            <input id="d-age" name="d-age" type="number" min="3" max="18" required
-              class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-white focus:border-royal outline-none transition">
-            <p class="err text-xs text-red-600 mt-1 hidden">Valid age required.</p>
+        <div class="form-grid">
+          <div class="field">
+            <label for="d-age">Age</label>
+            <input id="d-age" name="d-age" type="number" min="3" max="18" required>
+            <p class="field-error">Valid age required.</p>
           </div>
-          <div>
-            <label for="d-phone" class="eyebrow text-[11px] text-ink/50">Phone</label>
-            <input id="d-phone" name="d-phone" type="tel" required pattern="[0-9+\-\s]{7,15}"
-              class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-white focus:border-royal outline-none transition">
-            <p class="err text-xs text-red-600 mt-1 hidden">Valid phone required.</p>
+          <div class="field">
+            <label for="d-phone">Phone</label>
+            <input id="d-phone" name="d-phone" type="tel" required pattern="[0-9+\-\s]{7,15}">
+            <p class="field-error">Valid phone required.</p>
           </div>
         </div>
-        <div>
-          <label for="d-batch" class="eyebrow text-[11px] text-ink/50">Preferred Batch</label>
-          <select id="d-batch" name="d-batch" required
-            class="w-full mt-2 px-4 py-3 rounded-xl border border-ink/15 bg-white focus:border-royal outline-none transition">
+        <div class="field">
+          <label for="d-batch">Preferred Batch</label>
+          <select id="d-batch" name="d-batch" required>
             <option value="">Choose a batch</option>
             <option>Online</option>
             <option>Bangalore Offline (Singasandra)</option>
             <option>Bangalore Offline (HSR Layout / Kudlu Gate)</option>
             <option>Mughalsarai Offline</option>
           </select>
-          <p class="err text-xs text-red-600 mt-1 hidden">Please select a batch.</p>
+          <p class="field-error">Please select a batch.</p>
         </div>
-        <button type="submit" class="w-full bg-royal text-bone px-6 py-3.5 rounded-full font-semibold hover:bg-royaldk transition">
-          Confirm My Free Seat
-        </button>
+        <button type="submit" class="submit-btn">Confirm My Free Seat</button>
       </form>
     </div>
 
-    <div id="modal-success-view" class="hidden text-center py-6">
-      <div class="mx-auto w-16 h-16 rounded-full bg-royal/10 flex items-center justify-center">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1F3A8F" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg>
+    <div id="modal-success-view" class="success-view">
+      <div class="success-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg>
       </div>
-      <h2 class="fs-h3 font-display font-semibold text-ink mt-5">Seat Reserved!</h2>
-      <p class="text-ink/55 text-sm mt-3 max-w-xs mx-auto">We'll call you shortly to confirm the schedule for your free demo class.</p>
-      <button onclick="resetModal()" class="mt-7 bg-ink text-bone px-6 py-3 rounded-full font-semibold hover:bg-royal transition text-sm">
-        Done
-      </button>
+      <h2 class="h-display fs-h3" style="margin-top:18px;">Seat reserved!</h2>
+      <p class="lede" style="margin-top:10px; font-size:0.88rem;">We'll call you shortly to confirm the schedule for your free demo class.</p>
+      <button class="cta-btn" style="margin-top:22px;" onclick="resetModal()">Done</button>
     </div>
   </div>
 </div>
 
 <!-- ============ TOAST ============ -->
-<div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-[70] opacity-0 pointer-events-none translate-y-[-12px]">
-  <div class="bg-ink text-bone px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#BFA05C" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
-    <span id="toast-msg" class="font-medium text-sm">Thank you! We'll be in touch shortly.</span>
+<div id="toast" class="toast">
+  <div class="toast-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+    <span id="toast-msg">Thank you! We'll be in touch shortly.</span>
   </div>
 </div>
 
 <!-- ============ STICKY FOOTER BAR ============ -->
-<div class="fixed bottom-0 left-0 right-0 z-30 glass-bar">
-  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
-    <p class="text-xs sm:text-sm text-ink/70 text-center sm:text-left">
-      <span class="font-semibold text-ink">Classes from:</span> ₹250 per class &nbsp;|&nbsp; Call
-      <a href="tel:+918660813472" class="text-royal font-semibold hover:text-gold transition">+91 86608 13472</a>
-    </p>
-    <button onclick="openModal()" class="flex-shrink-0 bg-royal text-bone px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-royaldk transition whitespace-nowrap">
-      Book a FREE Demo Class at Singasandra / Kudlu
-    </button>
+<div class="sticky-bar">
+  <div class="wrap sticky-inner">
+    <p><strong style="color:var(--ivory);">Classes from:</strong> ₹250 per class &nbsp;|&nbsp; Call <a href="tel:+918660813472">+91 86608 13472</a></p>
+    <button class="sticky-cta" onclick="openModal()">Book a Free Demo at Singasandra / Kudlu</button>
   </div>
 </div>
 
-<footer class="max-w-6xl mx-auto px-5 sm:px-8 py-10 text-center text-ink/35 text-xs">
-  © 2026 Gupta Chess Academy. Singasandra · Kudlu · Mughalsarai.
-</footer>
+<footer class="site-footer">© 2026 Gupta Chess Academy. Singasandra · Kudlu · Mughalsarai.</footer>
 
 <script>
   // ---------- ROUTING ----------
-  const pages = ['home','about','blog','contact'];
-  function navigate(page) {
-    pages.forEach(p => {
-      const el = document.getElementById('page-' + p);
-      if (!el) return;
-      if (p === page) { el.hidden = false; el.classList.remove('page-panel'); void el.offsetWidth; el.classList.add('page-panel'); }
-      else el.hidden = true;
+  const pages = ['home','beginners','intermediate','tournament','about','blog','contact'];
+  function go(page){
+    pages.forEach(p=>{
+      const el = document.getElementById('page-'+p);
+      if(!el) return;
+      if(p===page){ el.hidden=false; el.classList.remove('page'); void el.offsetWidth; el.classList.add('page'); }
+      else el.hidden=true;
     });
-    document.querySelectorAll('.nav-link').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.nav === page);
+    document.querySelectorAll('.nav-btn, .mobile-nav button[data-page], .mobile-nav button').forEach(btn=>{
+      if(btn.dataset.page) btn.classList.toggle('is-active', btn.dataset.page===page);
     });
-    document.getElementById('mnav').classList.add('hidden');
-    window.scrollTo({ top: 0 });
+    document.getElementById('mnav').classList.remove('is-open');
+    window.scrollTo({top:0});
+    if(page==='about') setTimeout(initTimelineObserver, 60);
   }
 
-  // ---------- MODAL (unchanged mechanism) ----------
-  function openModal() {
-    resetModal();
-    const m = document.getElementById('modal');
-    m.classList.remove('hidden');
-    m.classList.add('flex');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeModal() {
-    const m = document.getElementById('modal');
-    m.classList.add('hidden');
-    m.classList.remove('flex');
-    document.body.style.overflow = '';
-  }
-  function resetModal() {
-    document.getElementById('modal-form-view').classList.remove('hidden');
-    document.getElementById('modal-success-view').classList.add('hidden');
-  }
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  // ---------- MODAL ----------
+  function openModal(){ resetModal(); document.getElementById('modal').classList.add('is-open'); document.body.style.overflow='hidden'; }
+  function closeModal(){ document.getElementById('modal').classList.remove('is-open'); document.body.style.overflow=''; }
+  function resetModal(){ document.getElementById('modal-form-view').style.display='block'; document.getElementById('modal-success-view').classList.remove('show'); }
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 
   // ---------- TOAST ----------
-  function showToast(msg) {
+  function showToast(msg){
     const t = document.getElementById('toast');
     document.getElementById('toast-msg').textContent = msg;
-    t.classList.remove('opacity-0','translate-y-[-12px]');
-    t.classList.add('opacity-100','translate-y-0');
+    t.classList.add('show');
     clearTimeout(window.__toastTimer);
-    window.__toastTimer = setTimeout(() => {
-      t.classList.remove('opacity-100','translate-y-0');
-      t.classList.add('opacity-0','translate-y-[-12px]');
-    }, 3600);
+    window.__toastTimer = setTimeout(()=> t.classList.remove('show'), 3600);
   }
 
   // ---------- VALIDATION ----------
-  function validateForm(form) {
+  function validateForm(form){
     let valid = true;
-    form.querySelectorAll('[required]').forEach(field => {
-      const errEl = field.closest('div').querySelector('.err');
-      const isValid = field.checkValidity() && field.value.trim() !== '';
-      if (!isValid) {
-        valid = false;
-        field.classList.add('border-red-400');
-        if (errEl) errEl.classList.remove('hidden');
-      } else {
-        field.classList.remove('border-red-400');
-        if (errEl) errEl.classList.add('hidden');
-      }
+    form.querySelectorAll('[required]').forEach(field=>{
+      const errEl = field.closest('.field').querySelector('.field-error');
+      const ok = field.checkValidity() && field.value.trim()!=='';
+      if(!ok){ valid=false; field.classList.add('field-err'); if(errEl) errEl.classList.add('show'); }
+      else { field.classList.remove('field-err'); if(errEl) errEl.classList.remove('show'); }
     });
     return valid;
   }
-  document.querySelectorAll('input, select, textarea').forEach(f => {
-    f.addEventListener('input', () => {
-      if (f.checkValidity() && f.value.trim() !== '') {
-        f.classList.remove('border-red-400');
-        const errEl = f.closest('div').querySelector('.err');
-        if (errEl) errEl.classList.add('hidden');
+  document.querySelectorAll('input, select, textarea').forEach(f=>{
+    f.addEventListener('input', ()=>{
+      if(f.checkValidity() && f.value.trim()!==''){
+        f.classList.remove('field-err');
+        const errEl = f.closest('.field') ? f.closest('.field').querySelector('.field-error') : null;
+        if(errEl) errEl.classList.remove('show');
       }
     });
   });
 
-  // ---------- CONTACT FORM ----------
-  document.getElementById('contact-form').addEventListener('submit', function(e) {
+  document.getElementById('contact-form').addEventListener('submit', function(e){
     e.preventDefault();
-    if (!validateForm(this)) return;
-    showToast('Thank you! Your enquiry has been received — we\'ll call you soon.');
+    if(!validateForm(this)) return;
+    showToast("Thank you! Your enquiry has been received — we'll call you soon.");
     this.reset();
   });
 
-  // ---------- DEMO MODAL FORM → SUCCESS STATE ----------
-  document.getElementById('demo-form').addEventListener('submit', function(e) {
+  document.getElementById('demo-form').addEventListener('submit', function(e){
     e.preventDefault();
-    if (!validateForm(this)) return;
-    document.getElementById('modal-form-view').classList.add('hidden');
-    document.getElementById('modal-success-view').classList.remove('hidden');
+    if(!validateForm(this)) return;
+    document.getElementById('modal-form-view').style.display='none';
+    document.getElementById('modal-success-view').classList.add('show');
     this.reset();
   });
+
+  // ---------- SLIDING DRAWER: click-to-pin on touch devices ----------
+  document.querySelectorAll('.drawer').forEach(d=>{
+    d.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' ') d.click(); });
+  });
+
+  // ---------- X-RAY SPOTLIGHT ----------
+  function xraySpot(e){
+    const card = e.currentTarget;
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  }
+
+  // ---------- PYRAMID STACK CAROUSEL ----------
+  const pyramidData = {
+    home: [
+      { img:'images/hero-oval-chess.jpg', tag:'National Amateur Championships · 2026', title:'Board 1, National Stage' },
+      { img:'images/session-showcase.jpg', tag:'Weekday Batch', title:'Small Batches. Real Attention.' },
+      { img:'images/gallery/trophy-award-2026.jpg', tag:'Karnataka State U-11 FIDE Rated', title:'Trophy Ceremony, 2026' },
+      { img:'images/gallery/tournament-award-galleria-yelahanka.jpg', tag:'Kaladarpana Rapid Chess', title:'2nd Prize, U-09 Girls' }
+    ],
+    blog: [
+      { img:'images/blog-chess-parent.jpg', tag:'Kids & Parents · Featured · Ankit · May 20, 2026', title:'Dear Chess Parent: Let Your Child Play' },
+      { img:'images/blog-openings.jpg', tag:'e4 · Openings · Ankit · Apr 10, 2026', title:'5 Openings Every Beginner Must Learn First' },
+      { img:'images/blog-chess-tactics.jpg', tag:'Nxf7 · Tactics · Minu Gupta · Mar 22, 2026', title:'Pins, Forks & Skewers — The 3 Tactics That Win Most Games' }
+    ]
+  };
+  const pyramidState = { home:0, blog:0 };
+
+  function renderPyramid(key){
+    const stage = document.getElementById('pyramid-'+key);
+    if(!stage) return;
+    stage.innerHTML = '';
+    const data = pyramidData[key];
+    const active = pyramidState[key];
+    const n = data.length;
+    for(let i=0; i<n; i++){
+      let offset = i - active;
+      if(offset > n/2) offset -= n;
+      if(offset < -n/2) offset += n;
+      const item = data[i];
+      const card = document.createElement('div');
+      card.className = 'pyramid-card';
+      const abs = Math.abs(offset);
+      if(abs > 2){ card.style.opacity = 0; card.style.pointerEvents='none'; }
+      else{
+        const scale = 1 - abs*0.12;
+        const tx = offset * 60;
+        const tz = -abs*160;
+        card.style.transform = `translateX(${tx}px) translateZ(${tz}px) scale(${scale})`;
+        card.style.opacity = 1 - abs*0.32;
+        card.style.zIndex = 10 - abs;
+        card.style.filter = abs===0 ? 'none' : 'brightness(0.7)';
+      }
+      card.innerHTML = `<img src="${item.img}" alt="${item.title}"><div class="pc-body"><span class="pc-tag">${item.tag}</span><h3 class="pc-title">${item.title}</h3></div>`;
+      if(offset !== 0) card.addEventListener('click', ()=>{ pyramidState[key] = i; renderPyramid(key); });
+      stage.appendChild(card);
+    }
+  }
+  function pyramidStep(key, dir){
+    const n = pyramidData[key].length;
+    pyramidState[key] = (pyramidState[key] + dir + n) % n;
+    renderPyramid(key);
+  }
+  renderPyramid('home');
+  renderPyramid('blog');
+
+  // ---------- PARALLAX TIMELINE ----------
+  function initTimelineObserver(){
+    const nodes = document.querySelectorAll('.tl-node');
+    if(!nodes.length || nodes[0].dataset.observed) return;
+    const io = new IntersectionObserver(entries=>{
+      entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('in-view'); });
+    }, { threshold:0.25 });
+    nodes.forEach(n=>{ n.dataset.observed='1'; io.observe(n); });
+  }
 </script>
 </body>
 </html>
