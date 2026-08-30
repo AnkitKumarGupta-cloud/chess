@@ -48,32 +48,20 @@
 <!-- ============ HOME ============ -->
 <main id="page-home" class="page">
 
-  <section class="hero">
-    <div class="notation-ticker" aria-hidden="true">
-      <span>1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 O-O 8.c3 d5&nbsp;&nbsp;1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 O-O 8.c3 d5&nbsp;&nbsp;</span>
-    </div>
-    <div class="wrap-tight hero-inner">
-      <span class="eyebrow">e4 — the strongest opening move</span>
-      <h1 class="h-display fs-hero">Build the mind.<br><em>Master</em> the board.</h1>
-      <p class="lede">Structured chess coaching for young minds across Bangalore and Mughalsarai — taught by FIDE-rated, tournament-experienced coaches who treat the game like a discipline, not a hobby.</p>
-      <div style="margin-top:32px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
-        <button class="cta-btn" onclick="openModal()">Book Free Demo</button>
-        <button class="cta-btn ghost" onclick="document.querySelector('.drawer-section').scrollIntoView({behavior:'smooth'})">Explore Programs</button>
-      </div>
-
-      <div class="hero-oval-wrap">
-        <div class="hero-oval-glow" aria-hidden="true"></div>
-        <img class="hero-float-icon f1" src="images/decor/icon-cap.png" alt="" aria-hidden="true">
-        <img class="hero-float-icon f2" src="images/decor/icon-bulb.png" alt="" aria-hidden="true">
-        <img class="hero-float-icon f3" src="images/decor/icon-gear.png" alt="" aria-hidden="true">
-        <img class="hero-float-icon f4" src="images/decor/icon-pawn.png" alt="" aria-hidden="true">
-        <div class="oval-hero">
-          <img src="images/hero-oval-chess.jpg" alt="Students competing at the National Amateur Chess Championships 2026" loading="eager">
+  <section class="hero-split">
+    <div class="wrap hero-split-inner">
+      <div class="hero-split-copy">
+        <span class="eyebrow">Gupta Chess Academy</span>
+        <h1 class="h-display fs-hero">Build the mind.<br><em>Master</em> the board.</h1>
+        <p class="lede">Structured chess coaching for young minds across Bangalore and Mughalsarai — taught by FIDE-rated, tournament-experienced coaches who treat the game like a discipline, not a hobby.</p>
+        <div class="hero-cta-row">
+          <button class="cta-btn" onclick="openModal()">Book Free Demo</button>
+          <button class="cta-btn ghost" onclick="document.querySelector('.programs-section').scrollIntoView({behavior:'smooth'})">Explore Programs</button>
         </div>
       </div>
-      <div class="hero-frame-cap">
-        <span>National Amateur Championships · 2026</span>
-        <span>Board 1</span>
+      <div class="hero-split-media">
+        <img src="images/hero-oval-chess.jpg" alt="Students competing at the National Amateur Chess Championships 2026" loading="eager">
+        <span class="hero-media-cap">National Amateur Championships · 2026</span>
       </div>
     </div>
   </section>
@@ -85,41 +73,44 @@
     <div class="stat-cell"><div class="stat-num">15+</div><div class="stat-label">Tournaments Entered</div></div>
   </section>
 
-  <!-- sliding drawer portal -->
-  <section class="drawer-section">
+  <!-- programs: editorial panels -->
+  <section class="programs-section">
     <div class="wrap">
       <div class="drawer-head">
-        <span class="eyebrow cyan">Nf3 — develop with purpose</span>
-        <h2 class="h-display fs-h2" style="margin-top:10px;">Choose your board</h2>
+        <span class="eyebrow cyan">Programs</span>
+        <h2 class="h-display fs-h2" style="margin-top:10px;">Play. Think. Compete.</h2>
       </div>
-      <div class="drawer-stack">
-        <div class="drawer playground" onclick="handleDrawerClick(this, 'beginners')" tabindex="0" role="button" aria-label="Explore Beginners program">
-          <div class="drawer-content">
-            <img class="drawer-icon" src="images/decor/icon-pawn-card.png" alt="" aria-hidden="true">
-            <span class="drawer-tag">Level 01 · e4</span>
-            <h3 class="drawer-title">The Playground</h3>
-            <p class="drawer-desc">Rules, notation, and the first ten tactical patterns every player needs — taught through play, not lectures.</p>
-            <span class="drawer-link" onclick="event.stopPropagation(); window.location.href='beginners.html'">Enter the playground →</span>
+      <div class="program-panels">
+        <a class="program-panel" href="beginners.html" aria-label="Explore Beginners program">
+          <div class="pp-media" style="background-image:url('images/decor/card-playground.jpg')"></div>
+          <div class="pp-copy">
+            <span class="pp-num">01</span>
+            <span class="pp-badge">Beginner</span>
+            <h3 class="pp-title">The Playground</h3>
+            <p class="pp-desc">Rules, notation, and the first ten tactical patterns every player needs — taught through play, not lectures.</p>
+            <span class="pp-link">Explore Program →</span>
           </div>
-        </div>
-        <div class="drawer strategy" onclick="handleDrawerClick(this, 'intermediate')" tabindex="0" role="button" aria-label="Explore Intermediate program">
-          <div class="drawer-content">
-            <img class="drawer-icon" src="images/decor/icon-knight-card.png" alt="" aria-hidden="true">
-            <span class="drawer-tag">Level 02 · Nf3</span>
-            <h3 class="drawer-title">The Strategy Lab</h3>
-            <p class="drawer-desc">Opening repertoires, middlegame planning, and endgame technique — the toolkit for consistent tournament wins.</p>
-            <span class="drawer-link" onclick="event.stopPropagation(); window.location.href='intermediate.html'">Enter the lab →</span>
+        </a>
+        <a class="program-panel reverse" href="intermediate.html" aria-label="Explore Intermediate program">
+          <div class="pp-media" style="background-image:url('images/decor/card-strategy.jpg')"></div>
+          <div class="pp-copy">
+            <span class="pp-num">02</span>
+            <span class="pp-badge">Intermediate</span>
+            <h3 class="pp-title">The Strategy Lab</h3>
+            <p class="pp-desc">Opening repertoires, middlegame planning, and endgame technique — the toolkit for consistent tournament wins.</p>
+            <span class="pp-link">Explore Program →</span>
           </div>
-        </div>
-        <div class="drawer arena" onclick="handleDrawerClick(this, 'tournament')" tabindex="0" role="button" aria-label="Explore Tournament program">
-          <div class="drawer-content">
-            <img class="drawer-icon" src="images/decor/icon-king-card.png" alt="" aria-hidden="true">
-            <span class="drawer-tag">Level 03 · O-O</span>
-            <h3 class="drawer-title">The Grandmaster Arena</h3>
-            <p class="drawer-desc">FIDE-rated tournament preparation, deep opening theory, and one-on-one game analysis for competitive players.</p>
-            <span class="drawer-link" onclick="event.stopPropagation(); window.location.href='tournament.html'">Enter the arena →</span>
+        </a>
+        <a class="program-panel" href="tournament.html" aria-label="Explore Tournament program">
+          <div class="pp-media" style="background-image:url('images/decor/card-arena.jpg')"></div>
+          <div class="pp-copy">
+            <span class="pp-num">03</span>
+            <span class="pp-badge">Competitive</span>
+            <h3 class="pp-title">The Grandmaster Arena</h3>
+            <p class="pp-desc">FIDE-rated tournament preparation, deep opening theory, and one-on-one game analysis for competitive players.</p>
+            <span class="pp-link">Explore Program →</span>
           </div>
-        </div>
+        </a>
       </div>
     </div>
   </section>
@@ -128,7 +119,7 @@
   <section class="pyramid-section">
     <div class="wrap">
       <div class="pyramid-head">
-        <span class="eyebrow">O-O — castle before you attack</span>
+        <span class="eyebrow">Achievements</span>
         <h2 class="h-display fs-h2" style="margin-top:10px;">From the trophy cabinet</h2>
       </div>
       <div class="pyramid-stage" id="pyramid-home"></div>
@@ -137,10 +128,9 @@
 
   <!-- ============ GOOGLE REVIEWS ============ -->
   <section class="section-pad reviews-section" style="border-top:1px solid var(--line); position:relative; overflow:hidden;">
-    <img src="images/decor/badge-knight-sticker.png" alt="" aria-hidden="true" class="reviews-sticker">
     <div class="wrap">
       <div class="reviews-head">
-        <span class="eyebrow cyan">e5 — trusted, move after move</span>
+        <span class="eyebrow cyan">Testimonials</span>
         <h2 class="h-display fs-h2" style="margin-top:10px;">What parents are saying</h2>
         <p class="lede" style="margin-top:14px;">Don't take our word for it — read what parents say after their child has actually trained with us.</p>
       </div>
@@ -179,7 +169,7 @@
   <section class="section-pad" style="border-top:1px solid var(--line); border-bottom:none;">
     <div class="wrap">
       <div class="journey-split">
-        <img class="journey-img" src="images/decor/journey-path.png" alt="Illustration of a chess pawn's path winding up toward a crowned mountain peak">
+        <img class="journey-img" src="images/session-showcase.jpg" alt="Small-batch coaching session at Gupta Chess Academy" style="border-radius:8px; object-fit:cover; aspect-ratio:4/3;">
         <div class="journey-copy">
           <span class="eyebrow cyan">Small batches. Real attention.</span>
           <h2 class="h-display fs-h2" style="margin-top:10px;">Coaching that watches every move you make — closely enough to correct it.</h2>
