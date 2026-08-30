@@ -275,7 +275,14 @@ section{position:relative;}
 .drawer.arena{background-color:#7A2331;}
 .drawer:hover, .drawer.is-open{flex:2.4;}
 .drawer-content{position:relative; z-index:2; padding:22px 24px; width:100%; color:#fff;}
-.drawer-tag{font-family:var(--mono); font-size:10px; letter-spacing:0.16em; text-transform:uppercase;}
+.drawer-icon{
+  width:34px; height:34px; object-fit:contain; margin-bottom:10px;
+  opacity:0.92; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.25));
+}
+.drawer-tag{
+  display:inline-block; font-family:var(--mono); font-size:10px; letter-spacing:0.16em; text-transform:uppercase;
+  padding:5px 11px; border-radius:999px; border:1px solid rgba(255,255,255,0.35); background:rgba(255,255,255,0.1);
+}
 .drawer.playground .drawer-tag{color:#FFE4CC;}
 .drawer.strategy .drawer-tag{color:#DCEBFF;}
 .drawer.arena .drawer-tag{color:#F6C9CE;}
@@ -299,11 +306,16 @@ section{position:relative;}
     flex:none !important; height:118px; align-items:flex-end;
     border:1px solid var(--line); border-radius:6px;
   }
-  .drawer.is-open{height:300px;}
+  .drawer.is-open{height:320px;}
+  .drawer-icon{width:28px; height:28px; margin-bottom:6px;}
   .drawer-title{font-size:1.3rem;}
   .drawer-desc{max-height:0 !important; opacity:0 !important;}
   .drawer.is-open .drawer-desc{max-height:150px !important; opacity:1 !important;}
-  .drawer-link{opacity:0 !important; transform:translateY(6px) !important;}
+  .drawer-link{
+    opacity:0 !important; transform:translateY(6px) !important;
+    border-bottom:none !important; background:rgba(255,255,255,0.16); padding:9px 16px !important;
+    border-radius:4px; margin-top:14px !important;
+  }
   .drawer.is-open .drawer-link{opacity:1 !important; transform:translateY(0) !important;}
 }
 
@@ -710,6 +722,7 @@ section{position:relative;}
       <div class="drawer-stack">
         <div class="drawer playground" onclick="handleDrawerClick(this, 'beginners')" tabindex="0" role="button" aria-label="Explore Beginners program">
           <div class="drawer-content">
+            <img class="drawer-icon" src="images/decor/icon-pawn-card.png" alt="" aria-hidden="true">
             <span class="drawer-tag">Level 01 · e4</span>
             <h3 class="drawer-title">The Playground</h3>
             <p class="drawer-desc">Rules, notation, and the first ten tactical patterns every player needs — taught through play, not lectures.</p>
@@ -718,6 +731,7 @@ section{position:relative;}
         </div>
         <div class="drawer strategy" onclick="handleDrawerClick(this, 'intermediate')" tabindex="0" role="button" aria-label="Explore Intermediate program">
           <div class="drawer-content">
+            <img class="drawer-icon" src="images/decor/icon-knight-card.png" alt="" aria-hidden="true">
             <span class="drawer-tag">Level 02 · Nf3</span>
             <h3 class="drawer-title">The Strategy Lab</h3>
             <p class="drawer-desc">Opening repertoires, middlegame planning, and endgame technique — the toolkit for consistent tournament wins.</p>
@@ -726,6 +740,7 @@ section{position:relative;}
         </div>
         <div class="drawer arena" onclick="handleDrawerClick(this, 'tournament')" tabindex="0" role="button" aria-label="Explore Tournament program">
           <div class="drawer-content">
+            <img class="drawer-icon" src="images/decor/icon-king-card.png" alt="" aria-hidden="true">
             <span class="drawer-tag">Level 03 · O-O</span>
             <h3 class="drawer-title">The Grandmaster Arena</h3>
             <p class="drawer-desc">FIDE-rated tournament preparation, deep opening theory, and one-on-one game analysis for competitive players.</p>
