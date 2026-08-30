@@ -322,6 +322,14 @@ section{position:relative;}
 
 /* ---------- google reviews section ---------- */
 .reviews-section{ background:var(--slate-2); }
+.reviews-sticker{
+  position:absolute; top:28px; right:28px; width:96px; height:96px;
+  transform:rotate(12deg); filter:drop-shadow(0 10px 20px rgba(0,0,0,0.35));
+  z-index:1; pointer-events:none; user-select:none;
+}
+@media(max-width:760px){
+  .reviews-sticker{ width:64px; height:64px; top:18px; right:18px; }
+}
 .reviews-head{ text-align:center; max-width:620px; margin:0 auto 30px; }
 .reviews-summary{ display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:36px; }
 .reviews-summary .rs-label{ font-family:var(--display); font-weight:800; font-size:1.3rem; letter-spacing:0.02em; color:var(--ivory); }
@@ -927,7 +935,8 @@ section{position:relative;}
   </section>
 
   <!-- ============ GOOGLE REVIEWS ============ -->
-  <section class="section-pad reviews-section" style="border-top:1px solid var(--line);">
+  <section class="section-pad reviews-section" style="border-top:1px solid var(--line); position:relative; overflow:hidden;">
+    <img src="images/decor/badge-knight-sticker.png" alt="" aria-hidden="true" class="reviews-sticker">
     <div class="wrap">
       <div class="reviews-head">
         <span class="eyebrow cyan">e5 — trusted, move after move</span>
