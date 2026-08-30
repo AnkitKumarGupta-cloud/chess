@@ -693,14 +693,10 @@ section{position:relative;}
         <h2 class="h-display fs-h2" style="margin-top:10px;">From the trophy cabinet</h2>
       </div>
       <div class="pyramid-stage" id="pyramid-home"></div>
-      <div class="pyramid-nav">
-        <button onclick="pyramidStep('home', -1)" aria-label="Previous">‹</button>
-        <button onclick="pyramidStep('home', 1)" aria-label="Next">›</button>
-      </div>
     </div>
   </section>
 
-  <section class="section-pad" style="border-top:1px solid var(--line);">
+  <section class="section-pad" style="border-top:1px solid var(--line); border-bottom:none;">
     <div class="wrap">
       <div class="journey-split">
         <img class="journey-img" src="images/decor/journey-path.png" alt="Illustration of a chess pawn's path winding up toward a crowned mountain peak">
@@ -876,9 +872,10 @@ section{position:relative;}
   <section class="section-pad">
     <div class="wrap">
       <div class="section-head"><span class="eyebrow cyan">Recent wins</span><h2 class="h-display fs-h2" style="margin-top:10px;">From the Trophy Cabinet</h2></div>
-      <div class="gallery-duo">
-        <div class="g-big"><img src="images/gallery/trophy-award-2026.jpg" alt="Trophy ceremony at the Karnataka State U-11 FIDE Rated Chess Championship"></div>
-        <div class="g-small"><img src="images/gallery/tournament-award-galleria-yelahanka.jpg" alt="2nd Prize (U-09 Girls) at Kaladarpana Rapid Chess, The Galleria, Yelahanka"></div>
+      <div class="pyramid-stage" id="pyramid-about"></div>
+      <div class="pyramid-nav">
+        <button onclick="pyramidStep('about', -1)" aria-label="Previous">‹</button>
+        <button onclick="pyramidStep('about', 1)" aria-label="Next">›</button>
       </div>
     </div>
   </section>
@@ -894,27 +891,11 @@ section{position:relative;}
         <h1 class="h-display fs-h2" style="margin-top:10px;">Tactics, strategy, and notes from the classroom.</h1>
       </div>
 
-      <!-- pyramid stack of top 3 -->
+      <!-- swipeable stack — all posts, one consistent interaction -->
       <div class="pyramid-stage" id="pyramid-blog"></div>
       <div class="pyramid-nav">
         <button onclick="pyramidStep('blog', -1)" aria-label="Previous">‹</button>
         <button onclick="pyramidStep('blog', 1)" aria-label="Next">›</button>
-      </div>
-
-      <!-- archive grid -->
-      <div class="blog-grid-archive">
-        <div class="blog-card">
-          <img src="images/blog-tournament-mindset.jpg" alt="Chess psychology and focus illustration">
-          <div class="blog-card-body"><span class="blog-tag">O-O-O · Psychology · Sanskar Agrawal · Feb 14, 2026</span><h3 class="blog-title-sm">How to Stay Calm in a Losing Position — Tournament Tips</h3></div>
-        </div>
-        <div class="blog-card">
-          <img src="images/blog-kids-age.jpg" alt="Young child learning chess with a coach">
-          <div class="blog-card-body"><span class="blog-tag">Kids &amp; Parents · Ankit · Jan 28, 2026</span><h3 class="blog-title-sm">What Age Should Your Child Start Learning Chess?</h3></div>
-        </div>
-        <div class="blog-card">
-          <img src="images/blog-mistakes.jpg" alt="Common chess beginner mistakes illustration">
-          <div class="blog-card-body"><span class="blog-tag">Beginners · Sanskar Agrawal · Jan 5, 2026</span><h3 class="blog-title-sm">7 Common Mistakes Every Chess Beginner Makes</h3></div>
-        </div>
       </div>
     </div>
   </section>
@@ -1150,13 +1131,20 @@ section{position:relative;}
       { img:'images/gallery/trophy-award-2026.jpg', tag:'Karnataka State U-11 FIDE Rated', title:'Trophy Ceremony, 2026' },
       { img:'images/gallery/tournament-award-galleria-yelahanka.jpg', tag:'Kaladarpana Rapid Chess', title:'2nd Prize, U-09 Girls' }
     ],
+    about: [
+      { img:'images/gallery/trophy-award-2026.jpg', tag:'Karnataka State U-11 FIDE Rated', title:'Trophy Ceremony, 2026' },
+      { img:'images/gallery/tournament-award-galleria-yelahanka.jpg', tag:'Kaladarpana Rapid Chess, The Galleria', title:'2nd Prize, U-09 Girls' }
+    ],
     blog: [
-      { img:'images/blog-chess-parent.jpg', tag:'Kids & Parents · Featured · Ankit · May 20, 2026', title:'Dear Chess Parent: Let Your Child Play' },
+      { img:'images/blog-chess-parent.jpg', tag:'Kids & Parents · Ankit · May 20, 2026', title:'Dear Chess Parent: Let Your Child Play' },
       { img:'images/blog-openings.jpg', tag:'e4 · Openings · Ankit · Apr 10, 2026', title:'5 Openings Every Beginner Must Learn First' },
-      { img:'images/blog-chess-tactics.jpg', tag:'Nxf7 · Tactics · Minu Gupta · Mar 22, 2026', title:'Pins, Forks & Skewers — The 3 Tactics That Win Most Games' }
+      { img:'images/blog-chess-tactics.jpg', tag:'Nxf7 · Tactics · Minu Gupta · Mar 22, 2026', title:'Pins, Forks & Skewers — The 3 Tactics That Win Most Games' },
+      { img:'images/blog-tournament-mindset.jpg', tag:'O-O-O · Psychology · Sanskar Agrawal · Feb 14, 2026', title:'How to Stay Calm in a Losing Position — Tournament Tips' },
+      { img:'images/blog-kids-age.jpg', tag:'Kids & Parents · Ankit · Jan 28, 2026', title:'What Age Should Your Child Start Learning Chess?' },
+      { img:'images/blog-mistakes.jpg', tag:'Beginners · Sanskar Agrawal · Jan 5, 2026', title:'7 Common Mistakes Every Chess Beginner Makes' }
     ]
   };
-  const pyramidState = { home:0, blog:0 };
+  const pyramidState = { home:0, blog:0, about:0 };
 
   function renderPyramid(key){
     const stage = document.getElementById('pyramid-'+key);
@@ -1195,9 +1183,10 @@ section{position:relative;}
   }
   renderPyramid('home');
   renderPyramid('blog');
+  renderPyramid('about');
 
   // ---------- SWIPE SUPPORT FOR PYRAMID STACKS ----------
-  ['home','blog'].forEach(key=>{
+  ['home','blog','about'].forEach(key=>{
     const stage = document.getElementById('pyramid-'+key);
     if(!stage) return;
     let startX = 0, startY = 0, dragging = false;
