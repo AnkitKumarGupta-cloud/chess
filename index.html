@@ -263,18 +263,17 @@ section{position:relative;}
   cursor:pointer;
   transition:flex .55s cubic-bezier(.22,.8,.24,1);
   overflow:hidden;
-  display:flex; align-items:flex-end;
 }
 .drawer::before{
   content:''; position:absolute; inset:0;
-  background:linear-gradient(to top, rgba(30,26,21,0.8) 0%, rgba(30,26,21,0.3) 55%, rgba(30,26,21,0.02) 100%);
+  background:linear-gradient(to top, rgba(30,26,21,0.85) 0%, rgba(30,26,21,0.4) 45%, rgba(30,26,21,0.05) 100%);
   transition:background .5s ease;
 }
 .drawer.playground{background-color:#F2894F; background-image:url('images/decor/card-playground.jpg');}
 .drawer.strategy{background-color:#3B7DE8; background-image:url('images/decor/card-strategy.jpg');}
 .drawer.arena{background-color:#7A2331; background-image:url('images/decor/card-arena.jpg');}
 .drawer:hover, .drawer.is-open{flex:2.4;}
-.drawer-content{position:relative; z-index:2; padding:22px 24px; width:100%; color:#fff;}
+.drawer-content{position:absolute; left:0; right:0; bottom:0; z-index:2; padding:22px 24px; width:100%; color:#fff;}
 .drawer-icon{
   width:34px; height:34px; object-fit:contain; margin-bottom:10px;
   opacity:0.92; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.25));
@@ -303,7 +302,7 @@ section{position:relative;}
 @media (max-width: 760px){
   .drawer-stack{flex-direction:column; height:auto; gap:10px; border:none;}
   .drawer{
-    flex:none !important; height:170px; align-items:flex-end;
+    flex:none !important; height:170px;
     border:1px solid var(--line); border-radius:6px;
   }
   .drawer.is-open{height:340px;}
