@@ -302,23 +302,18 @@ section{position:relative;}
 @media (max-width: 760px){
   .drawer-stack{flex-direction:column; height:auto; gap:10px; border:none;}
   .drawer{
-    flex:none !important; height:170px;
+    flex:none !important; height:340px;
     border:1px solid var(--line); border-radius:6px;
   }
-  .drawer.is-open{height:340px;}
-  .drawer-icon{width:28px; height:28px; margin-bottom:6px; display:none;}
-  .drawer.is-open .drawer-icon{display:block;}
-  .drawer-tag{display:none;}
-  .drawer.is-open .drawer-tag{display:inline-block;}
+  .drawer-icon{width:28px; height:28px; margin-bottom:6px; display:block;}
+  .drawer-tag{display:inline-block;}
   .drawer-title{font-size:1.3rem;}
-  .drawer-desc{max-height:0 !important; opacity:0 !important;}
-  .drawer.is-open .drawer-desc{max-height:150px !important; opacity:1 !important;}
+  .drawer-desc{max-height:150px !important; opacity:1 !important;}
   .drawer-link{
-    opacity:0 !important; transform:translateY(6px) !important;
+    opacity:1 !important; transform:translateY(0) !important;
     border-bottom:none !important; background:rgba(255,255,255,0.16); padding:9px 16px !important;
     border-radius:4px; margin-top:14px !important;
   }
-  .drawer.is-open .drawer-link{opacity:1 !important; transform:translateY(0) !important;}
 }
 
 /* ---------- google reviews section ---------- */
@@ -1203,11 +1198,7 @@ section{position:relative;}
 
   // ---------- SLIDING DRAWER: hover-to-expand on desktop, tap-to-expand on mobile ----------
   function handleDrawerClick(el, page){
-    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if(canHover){ window.location.href = ({beginners:'beginners.html',intermediate:'intermediate.html',tournament:'tournament.html'})[page]; return; }
-    const wasOpen = el.classList.contains('is-open');
-    document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('is-open'));
-    if(!wasOpen) el.classList.add('is-open');
+    window.location.href = ({beginners:'beginners.html',intermediate:'intermediate.html',tournament:'tournament.html'})[page];
   }
   document.querySelectorAll('.drawer').forEach(d=>{
     d.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); d.click(); } });
