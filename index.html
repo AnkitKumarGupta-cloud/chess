@@ -320,6 +320,67 @@ section{position:relative;}
   .drawer.is-open .drawer-link{opacity:1 !important; transform:translateY(0) !important;}
 }
 
+/* ---------- google reviews section ---------- */
+.reviews-section{ background:var(--slate-2); }
+.reviews-head{ text-align:center; max-width:620px; margin:0 auto 30px; }
+.reviews-summary{ display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:36px; }
+.reviews-summary .rs-label{ font-family:var(--display); font-weight:800; font-size:1.3rem; letter-spacing:0.02em; color:var(--ivory); }
+.rs-stars{ display:flex; gap:4px; }
+.rs-stars svg{ width:26px; height:26px; }
+.rs-count{ font-family:var(--sans); font-size:0.92rem; color:var(--ash); }
+.rs-count strong{ color:var(--ivory); font-weight:700; }
+.rs-google{ display:flex; align-items:center; gap:6px; margin-top:2px; }
+.rs-google svg{ height:22px; }
+
+.reviews-track-wrap{ position:relative; }
+.reviews-track{
+  display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch; scrollbar-width:none; padding:4px 4px 8px;
+}
+.reviews-track::-webkit-scrollbar{ display:none; }
+.review-card{
+  flex:0 0 82%; max-width:340px; scroll-snap-align:start;
+  background:var(--slate); border:1px solid var(--line); border-radius:8px;
+  padding:22px 22px 24px; display:flex; flex-direction:column; gap:12px;
+  box-shadow:0 10px 30px -18px rgba(30,42,58,0.14);
+}
+@media(min-width:640px){ .review-card{ flex-basis:360px; } }
+.review-top{ display:flex; align-items:center; gap:12px; }
+.review-avatar{
+  width:44px; height:44px; border-radius:50%; overflow:hidden; flex-shrink:0;
+  background:linear-gradient(135deg, rgba(242,112,60,0.22), rgba(47,111,237,0.14));
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--display); font-weight:700; color:var(--gold); font-size:1.05rem;
+}
+.review-avatar img{ width:100%; height:100%; object-fit:cover; }
+.review-name{ font-family:var(--display); font-weight:700; font-size:0.95rem; color:var(--ivory); }
+.review-time{ font-family:var(--sans); font-size:0.78rem; color:var(--ash-dim); }
+.review-google-badge{ margin-left:auto; flex-shrink:0; }
+.review-google-badge svg{ width:18px; height:18px; }
+.review-stars{ display:flex; align-items:center; gap:3px; }
+.review-stars svg{ width:15px; height:15px; }
+.review-verified{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:15px; height:15px; border-radius:50%; background:var(--cyan); margin-left:4px;
+}
+.review-verified svg{ width:9px; height:9px; }
+.review-text{ font-family:var(--sans); font-size:0.9rem; line-height:1.65; color:var(--ash); }
+
+.reviews-nav{ display:none; align-items:center; justify-content:center; gap:14px; margin-top:22px; }
+@media(min-width:720px){ .reviews-nav{ display:flex; } }
+.reviews-arrow{
+  width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:var(--slate);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ivory);
+  transition:background .18s ease, border-color .18s ease;
+}
+.reviews-arrow:hover{ background:var(--slate-2); border-color:var(--gold); }
+
+.reviews-footer-link{
+  text-align:center; margin-top:26px; font-family:var(--mono); font-size:11px;
+  letter-spacing:0.08em; text-transform:uppercase;
+}
+.reviews-footer-link a{ color:var(--gold); border-bottom:1px solid rgba(242,112,60,0.35); padding-bottom:2px; }
+
 /* ---------- pyramid stack carousel ---------- */
 .pyramid-section{padding:88px 0; border-bottom:1px solid var(--line); overflow:hidden;}
 .pyramid-head{text-align:center; max-width:560px; margin:0 auto 52px;}
@@ -865,6 +926,47 @@ section{position:relative;}
     </div>
   </section>
 
+  <!-- ============ GOOGLE REVIEWS ============ -->
+  <section class="section-pad reviews-section" style="border-top:1px solid var(--line);">
+    <div class="wrap">
+      <div class="reviews-head">
+        <span class="eyebrow cyan">e5 — trusted, move after move</span>
+        <h2 class="h-display fs-h2" style="margin-top:10px;">What parents are saying</h2>
+        <p class="lede" style="margin-top:14px;">Don't take our word for it — read what parents say after their child has actually trained with us.</p>
+      </div>
+
+      <div class="reviews-summary">
+        <span class="rs-label">Excellent</span>
+        <div class="rs-stars" aria-label="5 out of 5 stars">
+          <svg viewBox="0 0 24 24" fill="#F2C94C"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#F2C94C"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#F2C94C"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#F2C94C"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z"/></svg>
+          <svg viewBox="0 0 24 24" fill="#F2C94C"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z"/></svg>
+        </div>
+        <span class="rs-count">Based on <strong>60+ reviews</strong></span>
+        <div class="rs-google">
+          <svg viewBox="0 0 74 24"><text x="0" y="19" font-family="Arial, sans-serif" font-size="20" font-weight="600"><tspan fill="#4285F4">G</tspan><tspan fill="#EA4335">o</tspan><tspan fill="#FBBC05">o</tspan><tspan fill="#4285F4">g</tspan><tspan fill="#34A853">l</tspan><tspan fill="#EA4335">e</tspan></text></svg>
+        </div>
+      </div>
+
+      <div class="reviews-track-wrap">
+        <div class="reviews-track" id="reviews-track">
+          <!-- review cards injected by JS -->
+        </div>
+      </div>
+
+      <div class="reviews-nav">
+        <button class="reviews-arrow" onclick="reviewsScroll(-1)" aria-label="Previous reviews">‹</button>
+        <button class="reviews-arrow" onclick="reviewsScroll(1)" aria-label="Next reviews">›</button>
+      </div>
+
+      <div class="reviews-footer-link">
+        <a href="#" target="_blank" rel="noopener">Read all reviews on Google →</a>
+      </div>
+    </div>
+  </section>
+
   <section class="section-pad" style="border-top:1px solid var(--line); border-bottom:none;">
     <div class="wrap">
       <div class="journey-split">
@@ -1186,6 +1288,49 @@ section{position:relative;}
       if(Math.abs(dx) > 50) lightboxNav(dx < 0 ? 1 : -1);
     });
   })();
+
+  // ---------- GOOGLE REVIEWS (placeholder — swap with real reviews) ----------
+  const STAR_SVG = '<svg viewBox="0 0 24 24" fill="#F2C94C"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z"/></svg>';
+  const VERIFIED_SVG = '<svg viewBox="0 0 24 24" fill="#fff"><path d="M9 16.2l-3.5-3.5L4 14.2 9 19.2 20 8.2l-1.5-1.5z"/></svg>';
+
+  const REVIEWS_DATA = [
+    { name:'Priya Sharma', initials:'PS', time:'2 weeks ago', text:'My son has been training here for 8 months and the improvement is visible — not just in his game, but in how he approaches problems in general. Coach Ankit is patient and genuinely invested.' },
+    { name:'Rohit Nair', initials:'RN', time:'1 month ago', text:'Small batch sizes make a real difference. My daughter gets actual feedback every class instead of being lost in a crowd. Highly recommend for serious beginners.' },
+    { name:'Anita Krishnan', initials:'AK', time:'3 weeks ago', text:'We tried two other academies before this one. The difference in coaching quality and structure is night and day. Worth every rupee.' },
+    { name:'Vikram Reddy', initials:'VR', time:'2 months ago', text:'Satyam sir\'s FIDE rated coaching helped my son qualify for the state-level tournament this year. Couldn\'t be happier with the results.' },
+    { name:'Sneha Iyer', initials:'SI', time:'1 week ago', text:'Sindhu is always quick to respond about scheduling and fees — makes the whole experience smooth for busy parents like us.' },
+    { name:'Arjun Menon', initials:'AM', time:'3 months ago', text:'My daughter went from knowing just the rules to winning her first inter-school tournament in under a year. The coaches genuinely care about progress, not just attendance.' }
+  ];
+
+  function renderReviews(){
+    const track = document.getElementById('reviews-track');
+    if(!track) return;
+    track.innerHTML = REVIEWS_DATA.map(r => `
+      <div class="review-card">
+        <div class="review-top">
+          <div class="review-avatar">${r.initials}</div>
+          <div>
+            <div class="review-name">${r.name}</div>
+            <div class="review-time">${r.time}</div>
+          </div>
+          <span class="review-google-badge">
+            <svg viewBox="0 0 48 48"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24s.85 6.91 2.34 9.88z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>
+          </span>
+        </div>
+        <div class="review-stars">${STAR_SVG.repeat(5)}<span class="review-verified">${VERIFIED_SVG}</span></div>
+        <p class="review-text">${r.text}</p>
+      </div>
+    `).join('');
+  }
+  renderReviews();
+
+  function reviewsScroll(dir){
+    const track = document.getElementById('reviews-track');
+    if(!track) return;
+    const card = track.querySelector('.review-card');
+    const step = card ? card.getBoundingClientRect().width + 16 : 320;
+    track.scrollBy({ left: dir * step, behavior: 'smooth' });
+  }
 
   function renderPyramid(key){
     const stage = document.getElementById('pyramid-'+key);
