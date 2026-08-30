@@ -338,25 +338,6 @@ section{position:relative;}
 }
 .pyramid-nav button:hover{border-color:var(--gold); color:var(--gold);}
 
-/* ---------- blog full index grid ---------- */
-.blog-index-head{text-align:center; margin:76px 0 28px;}
-.blog-grid{
-  display:grid; grid-template-columns:repeat(3, 1fr); gap:26px; margin-bottom:20px;
-}
-@media (max-width:900px){ .blog-grid{grid-template-columns:repeat(2, 1fr);} }
-@media (max-width:620px){ .blog-grid{grid-template-columns:1fr;} }
-.blog-grid-card{
-  border:1px solid var(--line); border-radius:6px; overflow:hidden; background:var(--slate);
-  cursor:pointer; transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-}
-.blog-grid-card:hover{transform:translateY(-4px); box-shadow:0 24px 48px -24px rgba(30,42,58,0.28); border-color:var(--gold-dim);}
-.blog-grid-card .bgc-img{position:relative; overflow:hidden;}
-.blog-grid-card img{width:100%; height:180px; object-fit:cover; display:block;}
-.blog-grid-card .bgc-body{padding:18px 20px 22px;}
-.blog-grid-card .bgc-tag{font-family:var(--mono); font-size:9.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold);}
-.blog-grid-card .bgc-title{font-family:var(--display); font-size:1.02rem; font-weight:700; margin:8px 0 0; line-height:1.35;}
-.blog-grid-card .bgc-meta{font-family:var(--mono); font-size:10px; color:var(--ash-dim); margin-top:10px;}
-
 /* ---------- x-ray spotlight cards ---------- */
 .xray-card{
   position:relative; border:1px solid var(--line); border-radius:4px; overflow:hidden;
@@ -750,12 +731,6 @@ section{position:relative;}
         <button onclick="pyramidStep('blog', -1)" aria-label="Previous">‹</button>
         <button onclick="pyramidStep('blog', 1)" aria-label="Next">›</button>
       </div>
-
-      <!-- full post index -->
-      <div class="blog-index-head">
-        <span class="eyebrow">All articles</span>
-      </div>
-      <div class="blog-grid" id="blog-grid"></div>
     </div>
   </section>
   <div style="height:88px;"></div>
@@ -1065,21 +1040,6 @@ section{position:relative;}
     modal.scrollTop = 0;
     document.body.style.overflow = 'hidden';
   }
-
-  function renderBlogGrid(){
-    const grid = document.getElementById('blog-grid');
-    if(!grid) return;
-    grid.innerHTML = '';
-    Object.keys(BLOG_DATA).forEach(id => {
-      const d = BLOG_DATA[id];
-      const card = document.createElement('div');
-      card.className = 'blog-grid-card';
-      card.innerHTML = `<div class="bgc-img"><img src="${d.img}" alt="${d.title}"></div><div class="bgc-body"><span class="bgc-tag">${d.cat}</span><h3 class="bgc-title">${d.title}</h3><div class="bgc-meta">${d.date} · ${d.author}</div></div>`;
-      card.addEventListener('click', () => openBlog(id));
-      grid.appendChild(card);
-    });
-  }
-  renderBlogGrid();
 
   function closeBlogModal(){
     document.getElementById('blog-modal').classList.remove('is-open');
