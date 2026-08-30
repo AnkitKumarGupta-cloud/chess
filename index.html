@@ -595,13 +595,7 @@ section{position:relative;}
 .pl-arrow:hover{background:rgba(0,0,0,0.72);}
 .pl-arrow-prev{left:14px;}
 .pl-arrow-next{right:14px;}
-.pl-counter{
-  position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:4;
-  background:rgba(0,0,0,0.46);backdrop-filter:blur(4px);
-  color:rgba(255,255,255,0.82);border-radius:20px;
-  font-family:var(--mono);font-size:11px;letter-spacing:0.06em;
-  padding:4px 12px;pointer-events:none;border:1px solid rgba(255,255,255,0.1);
-}
+
 .photo-lightbox-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);display:block;}
 .photo-lightbox-title{font-family:var(--display);font-size:clamp(1rem,1.4vw+0.6rem,1.35rem);font-weight:700;margin:6px 0 0;color:var(--ivory);line-height:1.25;}
 @media(max-width:600px){
@@ -952,7 +946,6 @@ section{position:relative;}
   <div class="photo-lightbox-backdrop" onclick="closePhotoLightbox()"></div>
   <div class="photo-lightbox-box">
     <button class="photo-lightbox-close" onclick="closePhotoLightbox()" aria-label="Close">✕</button>
-    <span id="pl-counter" class="pl-counter">1 / 1</span>
     <button class="pl-arrow pl-arrow-prev" onclick="lightboxNav(-1)" aria-label="Previous photo">&#8249;</button>
     <button class="pl-arrow pl-arrow-next" onclick="lightboxNav(1)" aria-label="Next photo">&#8250;</button>
     <img id="pl-img" src="" alt="">
@@ -1147,17 +1140,14 @@ section{position:relative;}
   function _lbRender(animate){
     const item = _lbData[_lbIdx];
     const img  = document.getElementById('pl-img');
+    const show = _lbData.length > 1;
     function apply(){
       img.src = item.img;
       img.alt = item.title;
       document.getElementById('pl-tag').textContent   = item.tag;
       document.getElementById('pl-title').textContent = item.title;
-      document.getElementById('pl-counter').textContent = (_lbIdx+1) + ' / ' + _lbData.length;
-      // hide arrows when only 1 photo
-      const show = _lbData.length > 1;
       document.querySelector('.pl-arrow-prev').style.display = show ? '' : 'none';
       document.querySelector('.pl-arrow-next').style.display = show ? '' : 'none';
-      document.getElementById('pl-counter').style.display = show ? '' : 'none';
     }
     if(animate && _lbData.length > 1){
       img.classList.add('pl-fade');
@@ -1185,14 +1175,6 @@ section{position:relative;}
     document.getElementById('photo-lightbox').classList.remove('is-open');
     document.body.style.overflow = '';
   }
-
-  // keyboard: ← → close
-  document.addEventListener('keydown', e => {
-    if(!document.getElementById('photo-lightbox').classList.contains('is-open')) return;
-    if(e.key === 'ArrowLeft')  lightboxNav(-1);
-    if(e.key === 'ArrowRight') lightboxNav(1);
-    if(e.key === 'Escape')     closePhotoLightbox();
-  });
 
   // touch swipe inside lightbox
   (function(){
