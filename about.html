@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gupta Chess Academy — Bangalore &amp; Mughalsarai</title>
+<title>About Us | Gupta Chess Academy</title>
 <link rel="icon" type="image/png" href="favicon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -635,11 +635,11 @@ section{position:relative;}
       <span class="brand-name">Gupta Chess Academy</span>
     </a>
     <nav class="primary-nav">
-      <a class="nav-btn is-active" data-page="home" href="index.html">Home</a>
+      <a class="nav-btn" data-page="home" href="index.html">Home</a>
       <a class="nav-btn" data-page="beginners" href="beginners.html">Beginners</a>
       <a class="nav-btn" data-page="intermediate" href="intermediate.html">Intermediate</a>
       <a class="nav-btn" data-page="tournament" href="tournament.html">Tournament</a>
-      <a class="nav-btn" data-page="about" href="about.html">About</a>
+      <a class="nav-btn is-active" data-page="about" href="about.html">About</a>
       <a class="nav-btn" data-page="blog" href="blog.html">Blog</a>
       <a class="nav-btn" data-page="contact" href="contact.html">Contact</a>
     </nav>
@@ -660,102 +660,90 @@ section{position:relative;}
   </div>
 </header>
 
-<!-- ============ HOME ============ -->
-<main id="page-home" class="page">
-
-  <section class="hero">
-    <div class="notation-ticker" aria-hidden="true">
-      <span>1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 O-O 8.c3 d5&nbsp;&nbsp;1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 O-O 8.c3 d5&nbsp;&nbsp;</span>
-    </div>
-    <div class="wrap-tight hero-inner">
-      <span class="eyebrow">e4 — the strongest opening move</span>
-      <h1 class="h-display fs-hero">Think independently.<br><em>Move</em> strategically.<br>Be a champion.</h1>
-      <p class="lede">Structured chess coaching for young minds across Bangalore and Mughalsarai — taught by FIDE-rated, tournament-experienced coaches who treat the game like a discipline, not a hobby.</p>
-      <div style="margin-top:32px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
-        <button class="cta-btn" onclick="openModal()">Reserve a Free Demo Seat</button>
-        <button class="cta-btn ghost" onclick="window.location.href='about.html'">Meet the Coaches</button>
-      </div>
-
-      <div class="hero-oval-wrap">
-        <div class="hero-oval-glow" aria-hidden="true"></div>
-        <img class="hero-float-icon f1" src="images/decor/icon-cap.png" alt="" aria-hidden="true">
-        <img class="hero-float-icon f2" src="images/decor/icon-bulb.png" alt="" aria-hidden="true">
-        <img class="hero-float-icon f3" src="images/decor/icon-gear.png" alt="" aria-hidden="true">
-        <img class="hero-float-icon f4" src="images/decor/icon-pawn.png" alt="" aria-hidden="true">
-        <div class="oval-hero">
-          <img src="images/hero-oval-chess.jpg" alt="Students competing at the National Amateur Chess Championships 2026" loading="eager">
-        </div>
-      </div>
-      <div class="hero-frame-cap">
-        <span>National Amateur Championships · 2026</span>
-        <span>Board 1</span>
-      </div>
+<!-- ============ ABOUT ============ -->
+<main id="page-about" class="page">
+  <section class="section-pad bordered" style="text-align:center; padding-top:64px;">
+    <div class="wrap-tight">
+      <span class="eyebrow">Our record on the board</span>
+      <h1 class="h-display fs-h2" style="margin-top:10px;">Eight years of turning first moves into tournament wins.</h1>
     </div>
   </section>
 
-  <section class="stat-strip">
-    <div class="stat-cell"><div class="stat-num">50+</div><div class="stat-label">Students Trained</div></div>
-    <div class="stat-cell"><div class="stat-num">8+</div><div class="stat-label">Years Experience</div></div>
-    <div class="stat-cell"><div class="stat-num">2</div><div class="stat-label">Expert Coaches</div></div>
-    <div class="stat-cell"><div class="stat-num">15+</div><div class="stat-label">Tournaments Entered</div></div>
-  </section>
-
-  <!-- sliding drawer portal -->
-  <section class="drawer-section">
+  <!-- parallax timeline: path to mastery -->
+  <section class="timeline-section bordered">
     <div class="wrap">
-      <div class="drawer-head">
-        <span class="eyebrow cyan">Nf3 — develop with purpose</span>
-        <h2 class="h-display fs-h2" style="margin-top:10px;">Choose your board</h2>
+      <div class="timeline-head">
+        <span class="eyebrow cyan">The path every student walks</span>
+        <h2 class="h-display fs-h2" style="margin-top:10px;">From first move to first trophy</h2>
       </div>
-      <div class="drawer-stack">
-        <div class="drawer playground" onclick="handleDrawerClick(this, 'beginners')" tabindex="0" role="button" aria-label="Explore Beginners program">
-          <div class="drawer-content">
-            <span class="drawer-tag">Level 01 · e4</span>
-            <h3 class="drawer-title">The Playground</h3>
-            <p class="drawer-desc">Rules, notation, and the first ten tactical patterns every player needs — taught through play, not lectures.</p>
-            <span class="drawer-link" onclick="event.stopPropagation(); window.location.href='beginners.html'">Enter the playground →</span>
+      <div class="timeline" id="timeline">
+        <div class="tl-node"><span class="tl-dot"></span><img class="tl-icon" src="images/decor/icon-pawn.png" alt=""><span class="tl-num">Level 01 · e4</span><h3 class="tl-title">Beginner Foundation</h3><p class="tl-desc">Rules, notation, and the first ten tactical patterns — taught through play, not lectures.</p></div>
+        <div class="tl-node"><span class="tl-dot"></span><img class="tl-icon" src="images/decor/icon-puzzle.png" alt=""><span class="tl-num">Level 02 · Nf3</span><h3 class="tl-title">Intermediate Mastery</h3><p class="tl-desc">Opening repertoires, middlegame planning, and endgame technique for consistent wins.</p></div>
+        <div class="tl-node"><span class="tl-dot"></span><img class="tl-icon" src="images/decor/icon-king.png" alt=""><span class="tl-num">Level 03 · O-O</span><h3 class="tl-title">Advanced Pro &amp; Rated</h3><p class="tl-desc">FIDE-rated tournament preparation, deep opening theory, and one-on-one analysis.</p></div>
+        <div class="tl-node"><span class="tl-dot"></span><img class="tl-icon" src="images/decor/icon-trophy.png" alt=""><span class="tl-num">Board 1</span><h3 class="tl-title">Tournament Floor</h3><p class="tl-desc">15+ tournaments entered and counting — the stage every level has been building toward.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-pad bordered">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow">Leadership</span><h2 class="h-display fs-h2" style="margin-top:10px;">Founders</h2></div>
+      <div class="founder-grid">
+        <div class="founder-card">
+          <div class="founder-photo"><img src="images/founder-minu-gupta.jpg" alt="Minu Gupta, Founder of Gupta Chess Academy"></div>
+          <div class="founder-body">
+            <span class="founder-name">Minu Gupta</span><span class="founder-role">Founder</span>
+            <p class="founder-bio">The driving force behind Gupta Chess Academy — founded with a vision to nurture strategic thinkers and champion chess players across Bangalore.</p>
           </div>
         </div>
-        <div class="drawer strategy" onclick="handleDrawerClick(this, 'intermediate')" tabindex="0" role="button" aria-label="Explore Intermediate program">
-          <div class="drawer-content">
-            <span class="drawer-tag">Level 02 · Nf3</span>
-            <h3 class="drawer-title">The Strategy Lab</h3>
-            <p class="drawer-desc">Opening repertoires, middlegame planning, and endgame technique — the toolkit for consistent tournament wins.</p>
-            <span class="drawer-link" onclick="event.stopPropagation(); window.location.href='intermediate.html'">Enter the lab →</span>
+        <div class="founder-card">
+          <div class="founder-photo icon" aria-hidden="true">♞</div>
+          <div class="founder-body">
+            <span class="founder-name">Ankit</span><span class="founder-role">Founder</span>
+            <p class="founder-bio">District championship finalist with 10+ years of competitive play. Co-founded the academy with a vision to bring world-class chess coaching to Bangalore.</p>
           </div>
         </div>
-        <div class="drawer arena" onclick="handleDrawerClick(this, 'tournament')" tabindex="0" role="button" aria-label="Explore Tournament program">
-          <div class="drawer-content">
-            <span class="drawer-tag">Level 03 · O-O</span>
-            <h3 class="drawer-title">The Grandmaster Arena</h3>
-            <p class="drawer-desc">FIDE-rated tournament preparation, deep opening theory, and one-on-one game analysis for competitive players.</p>
-            <span class="drawer-link" onclick="event.stopPropagation(); window.location.href='tournament.html'">Enter the arena →</span>
+        <div class="founder-card">
+          <div class="founder-photo icon" aria-hidden="true">♚</div>
+          <div class="founder-body">
+            <span class="founder-name">Sanskar Agrawal</span><span class="founder-role">Co-Founder</span>
+            <p class="founder-bio">Rapid and Blitz specialist, rated 1800+ on Chess.com. Co-built the academy's curriculum and structure, ensuring every student gets a world-class learning experience.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- pyramid stack gallery -->
-  <section class="pyramid-section">
+  <section class="section-pad bordered">
     <div class="wrap">
-      <div class="pyramid-head">
-        <span class="eyebrow">O-O — castle before you attack</span>
-        <h2 class="h-display fs-h2" style="margin-top:10px;">From the trophy cabinet</h2>
+      <div class="section-head"><span class="eyebrow cyan">On the bench</span><h2 class="h-display fs-h2" style="margin-top:10px;">Coaches</h2></div>
+      <div class="coach-row">
+        <div class="coach-chip"><div class="coach-avatar"><img src="images/coach-ankit.jpg" alt="Coach Ankit"></div><div><div class="coach-name">Ankit</div><div class="coach-role">Head Coach</div></div></div>
+        <div class="coach-chip"><div class="coach-avatar" aria-hidden="true">♚</div><div><div class="coach-name">Sanskar Agrawal</div><div class="coach-role">Chess Coach &amp; Co-Founder</div></div></div>
+        <div class="coach-chip"><div class="coach-avatar"><img src="images/coach-satyam.jpg" alt="Coach Satyam Prakash"></div><div><div class="coach-name">Satyam Prakash</div><div class="coach-role">FIDE Rated Coach · 1847</div></div></div>
+        <div class="coach-chip"><div class="coach-avatar"><img src="images/coach-sindhu.jpg" alt="Sindhu Vegi, Business Coordinator"></div><div><div class="coach-name">Sindhu Vegi</div><div class="coach-role">Business Coordinator</div></div></div>
       </div>
-      <div class="pyramid-stage" id="pyramid-home"></div>
     </div>
   </section>
 
-  <section class="section-pad" style="border-top:1px solid var(--line); border-bottom:none;">
+  <section class="section-pad bordered">
     <div class="wrap">
-      <div class="journey-split">
-        <img class="journey-img" src="images/decor/journey-path.png" alt="Illustration of a chess pawn's path winding up toward a crowned mountain peak">
-        <div class="journey-copy">
-          <span class="eyebrow cyan">Small batches. Real attention.</span>
-          <h2 class="h-display fs-h2" style="margin-top:10px;">Coaching that watches every move you make — closely enough to correct it.</h2>
-          <p class="lede" style="margin-top:16px;">Every batch is kept small enough that a coach notices the habit before it becomes a pattern. Call <a href="tel:+918660813472" style="color:var(--gold); font-weight:600;">+91 86608 13472</a> to talk through which batch fits your child.</p>
-        </div>
+      <div class="section-head"><span class="eyebrow">On the map</span><h2 class="h-display fs-h2" style="margin-top:10px;">Our Centres</h2></div>
+      <div class="centre-grid">
+        <div class="centre-card"><span class="centre-tag">Bangalore · Singasandra</span><h3 class="centre-name">Splendid Skylines</h3><p class="centre-addr">Beside Teatree Hospital, Bangalore, Karnataka 560068</p></div>
+        <div class="centre-card"><span class="centre-tag">Bangalore · HSR Layout / Kudlu Gate</span><h3 class="centre-name">Kudlu Gate Batch</h3><p class="centre-addr">HSR Layout · Kudlu Gate, Bangalore, Karnataka</p></div>
+        <div class="centre-card"><span class="centre-tag">Uttar Pradesh · Home Centre</span><h3 class="centre-name">Mughalsarai Centre</h3><p class="centre-addr">Lot No. 2, Pani Tanki Road, Chandauli, Uttar Pradesh</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-pad">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow cyan">Recent wins</span><h2 class="h-display fs-h2" style="margin-top:10px;">From the Trophy Cabinet</h2></div>
+      <div class="pyramid-stage" id="pyramid-about"></div>
+      <div class="pyramid-nav">
+        <button onclick="pyramidStep('about', -1)" aria-label="Previous">‹</button>
+        <button onclick="pyramidStep('about', 1)" aria-label="Next">›</button>
       </div>
     </div>
   </section>
@@ -1023,6 +1011,8 @@ section{position:relative;}
     }, { threshold:0.25 });
     nodes.forEach(n=>{ n.dataset.observed='1'; io.observe(n); });
   }
+  initTimelineObserver();
+
 
 </script>
 
