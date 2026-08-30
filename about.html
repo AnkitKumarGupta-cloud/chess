@@ -603,12 +603,12 @@ section{position:relative;}
 }
 
 /* ---------- coach bio modal (reuses blog-modal visual language) ---------- */
-.coach-modal-veil{position:fixed;inset:0;z-index:88;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
+.coach-modal-veil{position:fixed;inset:0;z-index:9999;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
 .coach-modal-veil.is-open{display:flex;}
-.coach-modal-backdrop{position:fixed;inset:0;background:rgba(4,6,12,0.84);backdrop-filter:blur(8px);}
+.coach-modal-backdrop{position:fixed;inset:0;background:rgba(4,6,12,0.86);}
 .coach-modal-box{
-  position:relative;z-index:2;width:100%;max-width:520px;
-  background:var(--slate);border:1px solid var(--line);border-radius:6px;
+  position:relative;z-index:2;isolation:isolate;width:100%;max-width:520px;
+  background-color:#FFFFFF;background:var(--slate);border:1px solid var(--line);border-radius:6px;
   overflow:hidden;margin:auto;flex-shrink:0;
   animation:modalIn .3s cubic-bezier(.2,.8,.2,1) both;
 }
