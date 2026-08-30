@@ -549,9 +549,7 @@ section{position:relative;}
 }
 
 /* ---------- forms ---------- */
-.form-panel{position:relative; overflow:visible; border:1px solid var(--line); border-radius:6px; padding:36px; background:var(--slate);}
-.form-accent-icon{position:absolute; top:-30px; right:-14px; width:88px; pointer-events:none; filter:drop-shadow(0 8px 16px rgba(30,42,58,0.14));}
-@media (max-width:560px){.form-accent-icon{width:60px; top:-20px; right:-6px;}}
+.form-panel{border:1px solid var(--line); border-radius:6px; padding:36px; background:var(--slate);}
 .field{margin-bottom:20px;}
 .field label{font-family:var(--mono); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ash);}
 .field input, .field select, .field textarea{
@@ -727,7 +725,6 @@ section{position:relative;}
       <p class="lede" style="margin-top:14px; max-width:440px; margin-left:auto; margin-right:auto;">Tell us about your child and we'll match them to the right batch — online, Bangalore, or Mughalsarai.</p>
 
       <form id="contact-form" class="form-panel" style="text-align:left; margin-top:36px;" novalidate>
-        <img class="form-accent-icon" src="images/decor/icon-knight-envelope.png" alt="" aria-hidden="true">
         <div class="form-grid">
           <div class="field">
             <label for="studentName">Student Name</label>
