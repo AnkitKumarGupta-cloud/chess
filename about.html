@@ -956,25 +956,6 @@ section{position:relative;}
     </div>
   </section>
 
-  <!-- ============ COACH BIO MODAL ============ -->
-  <div id="coach-modal" class="coach-modal-veil">
-    <div class="coach-modal-backdrop" onclick="closeCoachModal()"></div>
-    <div class="coach-modal-box">
-      <button class="coach-modal-close-btn" onclick="closeCoachModal()" aria-label="Close">&#x2715;</button>
-      <div class="coach-modal-top">
-        <div id="cm-avatar" class="coach-modal-avatar"></div>
-        <div>
-          <div id="cm-name" class="coach-modal-name"></div>
-          <span id="cm-role" class="coach-modal-role"></span>
-        </div>
-      </div>
-      <div class="coach-modal-body">
-        <div id="cm-bio" class="coach-modal-bio"></div>
-        <div id="cm-quote" class="coach-modal-quote"></div>
-      </div>
-    </div>
-  </div>
-
   <section class="section-pad bordered">
     <div class="wrap">
       <div class="section-head"><span class="eyebrow">On the map</span><h2 class="h-display fs-h2" style="margin-top:10px;">Our Centres</h2></div>
@@ -997,6 +978,25 @@ section{position:relative;}
     </div>
   </section>
 </main>
+
+<!-- ============ COACH BIO MODAL ============ -->
+<div id="coach-modal" class="coach-modal-veil">
+  <div class="coach-modal-backdrop" onclick="closeCoachModal()"></div>
+  <div class="coach-modal-box">
+    <button class="coach-modal-close-btn" onclick="closeCoachModal()" aria-label="Close">&#x2715;</button>
+    <div class="coach-modal-top">
+      <div id="cm-avatar" class="coach-modal-avatar"></div>
+      <div>
+        <div id="cm-name" class="coach-modal-name"></div>
+        <span id="cm-role" class="coach-modal-role"></span>
+      </div>
+    </div>
+    <div class="coach-modal-body">
+      <div id="cm-bio" class="coach-modal-bio"></div>
+      <div id="cm-quote" class="coach-modal-quote"></div>
+    </div>
+  </div>
+</div>
 
 <!-- ============ FREE DEMO MODAL ============ -->
 <div id="modal" class="modal-veil">
@@ -1283,40 +1283,24 @@ section{position:relative;}
   };
 
   function openCoachModal(id){
-    try{
-      const d = COACH_DATA[id];
-      if(!d){ alert('DEBUG: no COACH_DATA entry for id="'+id+'"'); return; }
-      const card = document.querySelector('[data-coach="'+id+'"]');
-      if(!card){ alert('DEBUG: could not find card for id="'+id+'"'); return; }
-      const nameEl = card.querySelector('.coach-name');
-      const nameText = nameEl ? nameEl.textContent : '';
-      const avatarBox = document.getElementById('cm-avatar');
-      if(!avatarBox){ alert('DEBUG: #cm-avatar not found in DOM'); return; }
-      if(d.avatar){
-        avatarBox.innerHTML = '<img src="'+d.avatar+'" alt="'+nameText+'">';
-      } else {
-        avatarBox.innerHTML = '♚';
-      }
-      const nameNode = document.getElementById('cm-name');
-      const roleNode = document.getElementById('cm-role');
-      const bioNode  = document.getElementById('cm-bio');
-      const quoteNode = document.getElementById('cm-quote');
-      if(!nameNode || !roleNode || !bioNode || !quoteNode){
-        alert('DEBUG: missing modal text node — name:'+!!nameNode+' role:'+!!roleNode+' bio:'+!!bioNode+' quote:'+!!quoteNode);
-        return;
-      }
-      nameNode.textContent = nameText;
-      roleNode.textContent = d.role;
-      bioNode.textContent = d.bio;
-      quoteNode.textContent = d.quote;
-      const modal = document.getElementById('coach-modal');
-      if(!modal){ alert('DEBUG: #coach-modal not found in DOM'); return; }
-      modal.classList.add('is-open');
-      modal.scrollTop = 0;
-      document.body.style.overflow = 'hidden';
-    } catch(err){
-      alert('DEBUG ERROR: ' + err.message);
+    const d = COACH_DATA[id];
+    if(!d) return;
+    const card = document.querySelector('[data-coach="'+id+'"]');
+    const nameText = card ? card.querySelector('.coach-name').textContent : '';
+    const avatarBox = document.getElementById('cm-avatar');
+    if(d.avatar){
+      avatarBox.innerHTML = '<img src="'+d.avatar+'" alt="'+nameText+'">';
+    } else {
+      avatarBox.innerHTML = '♚';
     }
+    document.getElementById('cm-name').textContent = nameText;
+    document.getElementById('cm-role').textContent = d.role;
+    document.getElementById('cm-bio').textContent = d.bio;
+    document.getElementById('cm-quote').textContent = d.quote;
+    const modal = document.getElementById('coach-modal');
+    modal.classList.add('is-open');
+    modal.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
   }
 
   function closeCoachModal(){
