@@ -811,20 +811,26 @@ section{position:relative;}
     });
   });
 
-  document.getElementById('contact-form').addEventListener('submit', function(e){
-    e.preventDefault();
-    if(!validateForm(this)) return;
-    showToast("Thank you! Your enquiry has been received — we'll call you soon.");
-    this.reset();
-  });
+  const contactFormEl = document.getElementById('contact-form');
+  if(contactFormEl){
+    contactFormEl.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!validateForm(this)) return;
+      showToast("Thank you! Your enquiry has been received — we'll call you soon.");
+      this.reset();
+    });
+  }
 
-  document.getElementById('demo-form').addEventListener('submit', function(e){
-    e.preventDefault();
-    if(!validateForm(this)) return;
-    document.getElementById('modal-form-view').style.display='none';
-    document.getElementById('modal-success-view').classList.add('show');
-    this.reset();
-  });
+  const demoFormEl = document.getElementById('demo-form');
+  if(demoFormEl){
+    demoFormEl.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!validateForm(this)) return;
+      document.getElementById('modal-form-view').style.display='none';
+      document.getElementById('modal-success-view').classList.add('show');
+      this.reset();
+    });
+  }
 
   // ---------- SLIDING DRAWER: hover-to-expand on desktop, tap-to-expand on mobile ----------
   function handleDrawerClick(el, page){
