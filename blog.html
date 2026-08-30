@@ -157,12 +157,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .mobile-toggle{display:none; background:none;border:none;color:var(--ivory);}
 .mobile-nav{display:none; flex-direction:column; gap:2px; border-top:1px solid var(--line); background:var(--void);}
 .mobile-nav.is-open{display:flex;}
-.mobile-nav button{
+.mobile-nav button, .mobile-nav a{
   background:none;border:none;color:var(--ash); text-align:left;
   font-family:var(--mono); font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
   padding:16px 24px; border-bottom:1px solid var(--line);
 }
-.mobile-nav button.is-active{color:var(--gold);}
+.mobile-nav button.is-active, .mobile-nav a.is-active{color:var(--gold);}
 
 @media (max-width: 880px){
   .primary-nav{display:none;}
@@ -621,7 +621,7 @@ section{position:relative;}
 }
 
 .nav-btn{display:inline-block; text-decoration:none;}
-.mobile-nav a{display:block; text-decoration:none;}
+.mobile-nav a{text-decoration:none;}
 .brand{text-decoration:none;}
 </style>
 </head>
