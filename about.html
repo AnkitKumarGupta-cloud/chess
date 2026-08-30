@@ -548,32 +548,46 @@ section{position:relative;}
   .blog-modal-body{padding:22px 20px 30px;}
 }
 
-/* ---------- photo lightbox (trophy cabinet / gallery cards) ---------- */
-.photo-lightbox{position:fixed;inset:0;z-index:88;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
+/* ---------- photo lightbox with prev/next navigation ---------- */
+.photo-lightbox{position:fixed;inset:0;z-index:88;display:none;align-items:center;justify-content:center;padding:20px;}
 .photo-lightbox.is-open{display:flex;}
-.photo-lightbox-backdrop{position:fixed;inset:0;background:rgba(4,6,12,0.84);backdrop-filter:blur(8px);}
+.photo-lightbox-backdrop{position:fixed;inset:0;background:rgba(4,6,12,0.88);backdrop-filter:blur(10px);}
 .photo-lightbox-box{
-  position:relative;z-index:2;width:100%;max-width:640px;
+  position:relative;z-index:2;width:100%;max-width:680px;
   background:var(--slate);border:1px solid var(--line);border-radius:6px;
   overflow:hidden;margin:auto;flex-shrink:0;
-  animation:modalIn .32s cubic-bezier(.2,.8,.2,1) both;
+  animation:modalIn .28s cubic-bezier(.2,.8,.2,1) both;
 }
-.photo-lightbox-box img{width:100%;height:360px;object-fit:cover;display:block;}
-.photo-lightbox-body{padding:22px 28px 28px;}
+.photo-lightbox-box img{width:100%;height:380px;object-fit:cover;display:block;transition:opacity .16s ease;}
+.photo-lightbox-box img.pl-fade{opacity:0;}
+.photo-lightbox-body{padding:16px 28px 22px;display:flex;align-items:center;gap:12px;}
+.pl-caption{flex:1;min-width:0;}
 .photo-lightbox-close{
-  position:absolute;top:16px;right:16px;z-index:3;
-  background:rgba(0,0,0,0.48);border:none;color:#fff;
-  width:38px;height:38px;border-radius:50%;
+  position:absolute;top:14px;right:14px;z-index:5;
+  background:rgba(0,0,0,0.52);border:none;color:#fff;
+  width:36px;height:36px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;backdrop-filter:blur(4px);font-size:18px;line-height:1;
+  cursor:pointer;backdrop-filter:blur(4px);font-size:17px;line-height:1;
   transition:background .2s ease;
 }
-.photo-lightbox-close:hover{background:rgba(0,0,0,0.7);}
-.photo-lightbox-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);}
-.photo-lightbox-title{font-family:var(--display);font-size:clamp(1.15rem,1.6vw+0.7rem,1.5rem);font-weight:700;margin:8px 0 0;color:var(--ivory);line-height:1.25;}
+.photo-lightbox-close:hover{background:rgba(0,0,0,0.72);}
+.pl-arrow{
+  position:absolute;top:50%;transform:translateY(-120%);z-index:4;
+  background:rgba(0,0,0,0.46);border:1px solid rgba(255,255,255,0.12);color:#fff;
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;backdrop-filter:blur(4px);font-size:22px;line-height:1;
+  transition:background .18s ease;user-select:none;
+}
+.pl-arrow:hover{background:rgba(0,0,0,0.72);}
+.pl-arrow-prev{left:14px;}
+.pl-arrow-next{right:14px;}
+.photo-lightbox-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);display:block;}
+.photo-lightbox-title{font-family:var(--display);font-size:clamp(1rem,1.4vw+0.6rem,1.35rem);font-weight:700;margin:6px 0 0;color:var(--ivory);line-height:1.25;}
 @media(max-width:600px){
-  .photo-lightbox-box img{height:230px;}
-  .photo-lightbox-body{padding:18px 20px 22px;}
+  .photo-lightbox-box img{height:240px;}
+  .pl-arrow{width:38px;height:38px;font-size:18px;}
+  .photo-lightbox-body{padding:14px 16px 18px;}
 }
 
 /* clickable hint on the active gallery card too */
@@ -903,10 +917,14 @@ section{position:relative;}
   <div class="photo-lightbox-backdrop" onclick="closePhotoLightbox()"></div>
   <div class="photo-lightbox-box">
     <button class="photo-lightbox-close" onclick="closePhotoLightbox()" aria-label="Close">✕</button>
+    <button class="pl-arrow pl-arrow-prev" onclick="lightboxNav(-1)" aria-label="Previous photo">&#8249;</button>
+    <button class="pl-arrow pl-arrow-next" onclick="lightboxNav(1)" aria-label="Next photo">&#8250;</button>
     <img id="pl-img" src="" alt="">
     <div class="photo-lightbox-body">
-      <span id="pl-tag" class="photo-lightbox-tag"></span>
-      <h3 id="pl-title" class="photo-lightbox-title"></h3>
+      <div class="pl-caption">
+        <span id="pl-tag" class="photo-lightbox-tag"></span>
+        <h3 id="pl-title" class="photo-lightbox-title"></h3>
+      </div>
     </div>
   </div>
 </div>
@@ -1088,18 +1106,56 @@ section{position:relative;}
   };
   const pyramidState = { home:0, blog:0, about:0 };
 
-  function openPhotoLightbox(item){
-    document.getElementById('pl-img').src = item.img;
-    document.getElementById('pl-img').alt = item.title;
-    document.getElementById('pl-tag').textContent = item.tag;
-    document.getElementById('pl-title').textContent = item.title;
+  // ---------- PHOTO LIGHTBOX (navigable) ----------
+  let _lbData = [];
+  let _lbIdx  = 0;
+
+  function _lbRender(animate){
+    const item = _lbData[_lbIdx];
+    const img  = document.getElementById('pl-img');
+    const show = _lbData.length > 1;
+    function apply(){
+      img.src = item.img;
+      img.alt = item.title;
+      document.getElementById('pl-tag').textContent   = item.tag;
+      document.getElementById('pl-title').textContent = item.title;
+      document.querySelector('.pl-arrow-prev').style.display = show ? '' : 'none';
+      document.querySelector('.pl-arrow-next').style.display = show ? '' : 'none';
+    }
+    if(animate && _lbData.length > 1){
+      img.classList.add('pl-fade');
+      setTimeout(()=>{ apply(); img.classList.remove('pl-fade'); }, 160);
+    } else { apply(); }
+  }
+
+  function openPhotoLightbox(data, idx){
+    if(Array.isArray(data)){ _lbData = data; _lbIdx = idx || 0; }
+    else { _lbData = [data]; _lbIdx = 0; }
+    _lbRender(false);
     document.getElementById('photo-lightbox').classList.add('is-open');
     document.body.style.overflow = 'hidden';
   }
+
+  function lightboxNav(dir){
+    _lbIdx = (_lbIdx + dir + _lbData.length) % _lbData.length;
+    _lbRender(true);
+  }
+
   function closePhotoLightbox(){
     document.getElementById('photo-lightbox').classList.remove('is-open');
     document.body.style.overflow = '';
   }
+
+  // touch swipe inside lightbox
+  (function(){
+    const lb = document.getElementById('photo-lightbox');
+    let sx = 0;
+    lb.addEventListener('touchstart', e=>{ sx = e.touches[0].clientX; }, {passive:true});
+    lb.addEventListener('touchend',   e=>{
+      const dx = e.changedTouches[0].clientX - sx;
+      if(Math.abs(dx) > 50) lightboxNav(dx < 0 ? 1 : -1);
+    });
+  })();
 
   function renderPyramid(key){
     const stage = document.getElementById('pyramid-'+key);
@@ -1138,7 +1194,10 @@ section{position:relative;}
         card.addEventListener('click', ()=>{ openBlog(item.blogId); });
       } else if(key === 'home' || key === 'about'){
         card.classList.add('gallery-clickable');
-        card.addEventListener('click', ()=>{ openPhotoLightbox(item); });
+        card.addEventListener('click', (()=>{
+          const capturedI = i;
+          return ()=>{ openPhotoLightbox(pyramidData[key], capturedI); };
+        })());
       }
       stage.appendChild(card);
     }
