@@ -303,12 +303,14 @@ section{position:relative;}
 @media (max-width: 760px){
   .drawer-stack{flex-direction:column; height:auto; gap:10px; border:none;}
   .drawer{
-    flex:none !important; height:118px; align-items:flex-end;
+    flex:none !important; height:170px; align-items:flex-end;
     border:1px solid var(--line); border-radius:6px;
   }
-  .drawer.is-open{height:320px;}
+  .drawer.is-open{height:340px;}
   .drawer-icon{width:28px; height:28px; margin-bottom:6px; display:none;}
   .drawer.is-open .drawer-icon{display:block;}
+  .drawer-tag{display:none;}
+  .drawer.is-open .drawer-tag{display:inline-block;}
   .drawer-title{font-size:1.3rem;}
   .drawer-desc{max-height:0 !important; opacity:0 !important;}
   .drawer.is-open .drawer-desc{max-height:150px !important; opacity:1 !important;}
