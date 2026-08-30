@@ -307,7 +307,8 @@ section{position:relative;}
     border:1px solid var(--line); border-radius:6px;
   }
   .drawer.is-open{height:320px;}
-  .drawer-icon{width:28px; height:28px; margin-bottom:6px;}
+  .drawer-icon{width:28px; height:28px; margin-bottom:6px; display:none;}
+  .drawer.is-open .drawer-icon{display:block;}
   .drawer-title{font-size:1.3rem;}
   .drawer-desc{max-height:0 !important; opacity:0 !important;}
   .drawer.is-open .drawer-desc{max-height:150px !important; opacity:1 !important;}
