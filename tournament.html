@@ -441,16 +441,6 @@ section{position:relative;}
   background:var(--void);
   color:var(--ivory);
 }
-.theme-float-sticker{position:absolute; z-index:1; pointer-events:none; opacity:0.16; animation:floatY 5.5s ease-in-out infinite;}
-.page-tournament .theme-float-sticker.s1{top:6%; left:4%; width:100px; animation-delay:0s;}
-.page-tournament .theme-float-sticker.s2{top:12%; right:6%; width:90px; animation-delay:.8s;}
-.page-tournament .theme-float-sticker.s3{bottom:8%; left:9%; width:96px; animation-delay:1.6s;}
-@media (max-width:700px){
-  .theme-float-sticker{opacity:0.12;}
-  .page-tournament .theme-float-sticker.s1{width:64px; left:-2%;}
-  .page-tournament .theme-float-sticker.s2{width:58px; right:-2%;}
-  .page-tournament .theme-float-sticker.s3{width:60px; left:2%;}
-}
 .page-tournament .theme-hero{
   background:radial-gradient(ellipse at 50% -10%, rgba(196,54,74,0.22), transparent 60%), #201015;
 }
@@ -728,9 +718,6 @@ section{position:relative;}
 <!-- ============ TOURNAMENT — The Elite Grandmaster Arena ============ -->
 <main id="page-tournament" class="page page-tournament">
   <section class="theme-hero">
-    <img class="theme-float-sticker s1" src="images/decor/icon-trophy-knight.png" alt="" aria-hidden="true">
-    <img class="theme-float-sticker s2" src="images/decor/icon-chess-clock.png" alt="" aria-hidden="true">
-    <img class="theme-float-sticker s3" src="images/decor/icon-rating-chart.png" alt="" aria-hidden="true">
     <div class="wrap-tight">
       <span class="theme-badge">Level 03 · The Grandmaster Arena</span>
       <h1 class="h-display fs-hero">FIDE ratings are earned <em>under the clock</em>.</h1>
