@@ -548,6 +548,38 @@ section{position:relative;}
   .blog-modal-body{padding:22px 20px 30px;}
 }
 
+/* ---------- photo lightbox (trophy cabinet / gallery cards) ---------- */
+.photo-lightbox{position:fixed;inset:0;z-index:88;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
+.photo-lightbox.is-open{display:flex;}
+.photo-lightbox-backdrop{position:fixed;inset:0;background:rgba(4,6,12,0.84);backdrop-filter:blur(8px);}
+.photo-lightbox-box{
+  position:relative;z-index:2;width:100%;max-width:640px;
+  background:var(--slate);border:1px solid var(--line);border-radius:6px;
+  overflow:hidden;margin:auto;flex-shrink:0;
+  animation:modalIn .32s cubic-bezier(.2,.8,.2,1) both;
+}
+.photo-lightbox-box img{width:100%;height:360px;object-fit:cover;display:block;}
+.photo-lightbox-body{padding:22px 28px 28px;}
+.photo-lightbox-close{
+  position:absolute;top:16px;right:16px;z-index:3;
+  background:rgba(0,0,0,0.48);border:none;color:#fff;
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;backdrop-filter:blur(4px);font-size:18px;line-height:1;
+  transition:background .2s ease;
+}
+.photo-lightbox-close:hover{background:rgba(0,0,0,0.7);}
+.photo-lightbox-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);}
+.photo-lightbox-title{font-family:var(--display);font-size:clamp(1.15rem,1.6vw+0.7rem,1.5rem);font-weight:700;margin:8px 0 0;color:var(--ivory);line-height:1.25;}
+@media(max-width:600px){
+  .photo-lightbox-box img{height:230px;}
+  .photo-lightbox-body{padding:18px 20px 22px;}
+}
+
+/* clickable hint on the active gallery card too */
+.pyramid-card.gallery-clickable{cursor:pointer;}
+.pyramid-card.gallery-clickable:hover{box-shadow:0 30px 60px -20px rgba(242,112,60,0.3);}
+
 /* ---------- forms ---------- */
 .form-panel{border:1px solid var(--line); border-radius:6px; padding:36px; background:var(--slate);}
 .field{margin-bottom:20px;}
@@ -866,6 +898,19 @@ section{position:relative;}
   </div>
 </div>
 
+<!-- ============ PHOTO LIGHTBOX ============ -->
+<div id="photo-lightbox" class="photo-lightbox">
+  <div class="photo-lightbox-backdrop" onclick="closePhotoLightbox()"></div>
+  <div class="photo-lightbox-box">
+    <button class="photo-lightbox-close" onclick="closePhotoLightbox()" aria-label="Close">✕</button>
+    <img id="pl-img" src="" alt="">
+    <div class="photo-lightbox-body">
+      <span id="pl-tag" class="photo-lightbox-tag"></span>
+      <h3 id="pl-title" class="photo-lightbox-title"></h3>
+    </div>
+  </div>
+</div>
+
 <!-- ============ TOAST ============ -->
 <div id="toast" class="toast">
   <div class="toast-box">
@@ -1041,6 +1086,19 @@ section{position:relative;}
   };
   const pyramidState = { home:0, blog:0, about:0 };
 
+  function openPhotoLightbox(item){
+    document.getElementById('pl-img').src = item.img;
+    document.getElementById('pl-img').alt = item.title;
+    document.getElementById('pl-tag').textContent = item.tag;
+    document.getElementById('pl-title').textContent = item.title;
+    document.getElementById('photo-lightbox').classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePhotoLightbox(){
+    document.getElementById('photo-lightbox').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
   function renderPyramid(key){
     const stage = document.getElementById('pyramid-'+key);
     if(!stage) return;
@@ -1067,13 +1125,18 @@ section{position:relative;}
         card.style.filter = abs===0 ? 'none' : 'brightness(0.7)';
       }
       const readMoreHint = (offset === 0 && key === 'blog' && item.blogId)
-        ? `<span class="pc-read-more">Read Article →</span>` : '';
+        ? `<span class="pc-read-more">Read Article →</span>`
+        : (offset === 0 && (key === 'home' || key === 'about'))
+        ? `<span class="pc-read-more">View Photo →</span>` : '';
       card.innerHTML = `<div class="pc-img"><img src="${item.img}" alt="${item.title}"></div><div class="pc-body"><span class="pc-tag">${item.tag}</span><h3 class="pc-title">${item.title}</h3>${readMoreHint}</div>`;
       if(offset !== 0){
         card.addEventListener('click', ()=>{ pyramidState[key] = i; renderPyramid(key); });
       } else if(key === 'blog' && item.blogId){
         card.classList.add('blog-clickable');
         card.addEventListener('click', ()=>{ openBlog(item.blogId); });
+      } else if(key === 'home' || key === 'about'){
+        card.classList.add('gallery-clickable');
+        card.addEventListener('click', ()=>{ openPhotoLightbox(item); });
       }
       stage.appendChild(card);
     }
