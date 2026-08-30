@@ -527,6 +527,20 @@ section{position:relative;}
   transition:background .2s ease;
 }
 .blog-modal-close-btn:hover{background:rgba(0,0,0,0.7);}
+.bm-arrow{
+  position:absolute;top:145px;transform:translateY(-50%);z-index:5;
+  background:rgba(0,0,0,0.52);border:1px solid rgba(255,255,255,0.12);color:#fff;
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;backdrop-filter:blur(4px);font-size:22px;line-height:1;
+  transition:background .18s ease;user-select:none;
+}
+.bm-arrow:hover{background:rgba(0,0,0,0.74);}
+.bm-arrow-prev{left:14px;}
+.bm-arrow-next{right:14px;}
+@media(max-width:600px){
+  .bm-arrow{top:100px;width:38px;height:38px;font-size:18px;}
+}
 .blog-modal-cat{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);}
 .blog-modal-title{font-family:var(--display);font-size:clamp(1.3rem,2.2vw+0.8rem,1.95rem);font-weight:700;margin:10px 0 0;color:var(--ivory);line-height:1.2;}
 .blog-modal-meta{display:flex;gap:22px;margin-top:14px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.08em;color:var(--ash-dim);padding-bottom:18px;border-bottom:1px solid var(--line);}
@@ -741,6 +755,8 @@ section{position:relative;}
   <div class="blog-modal-backdrop" onclick="closeBlogModal()"></div>
   <div class="blog-modal-box">
     <button class="blog-modal-close-btn" onclick="closeBlogModal()" aria-label="Close article">&#x2715;</button>
+    <button class="bm-arrow bm-arrow-prev" onclick="blogModalNav(-1)" aria-label="Previous article">&#8249;</button>
+    <button class="bm-arrow bm-arrow-next" onclick="blogModalNav(1)" aria-label="Next article">&#8250;</button>
     <img id="bm-img" class="blog-modal-img" src="" alt="">
     <div class="blog-modal-body">
       <span id="bm-cat" class="blog-modal-cat"></span>
@@ -1026,7 +1042,12 @@ section{position:relative;}
     }
   };
 
-  function openBlog(id){
+  // order in which blog cards navigate (matches pyramidData.blog order)
+  const BLOG_ORDER = ['blog7','blog1','blog2','blog4','blog5','blog6'];
+  let _bmIdx = 0;
+
+  function _bmRender(){
+    const id = BLOG_ORDER[_bmIdx];
     const d = BLOG_DATA[id];
     if(!d) return;
     document.getElementById('bm-img').src = d.img;
@@ -1036,15 +1057,41 @@ section{position:relative;}
     document.getElementById('bm-meta').innerHTML = '<span>📅 ' + d.date + '</span><span>👤 ' + d.author + '</span>';
     document.getElementById('bm-content').innerHTML = d.content;
     const modal = document.getElementById('blog-modal');
-    modal.classList.add('is-open');
     modal.scrollTop = 0;
+    const show = BLOG_ORDER.length > 1;
+    document.querySelector('.bm-arrow-prev').style.display = show ? '' : 'none';
+    document.querySelector('.bm-arrow-next').style.display = show ? '' : 'none';
+  }
+
+  function openBlog(id){
+    const idx = BLOG_ORDER.indexOf(id);
+    _bmIdx = idx >= 0 ? idx : 0;
+    _bmRender();
+    const modal = document.getElementById('blog-modal');
+    modal.classList.add('is-open');
     document.body.style.overflow = 'hidden';
+  }
+
+  function blogModalNav(dir){
+    _bmIdx = (_bmIdx + dir + BLOG_ORDER.length) % BLOG_ORDER.length;
+    _bmRender();
   }
 
   function closeBlogModal(){
     document.getElementById('blog-modal').classList.remove('is-open');
     document.body.style.overflow = '';
   }
+
+  // touch swipe inside blog modal
+  (function(){
+    const bm = document.getElementById('blog-modal');
+    let sx = 0;
+    bm.addEventListener('touchstart', e=>{ sx = e.touches[0].clientX; }, {passive:true});
+    bm.addEventListener('touchend',   e=>{
+      const dx = e.changedTouches[0].clientX - sx;
+      if(Math.abs(dx) > 50) blogModalNav(dx < 0 ? 1 : -1);
+    });
+  })();
 
   document.addEventListener('keydown', e => {
     if(e.key === 'Escape') closeBlogModal();
