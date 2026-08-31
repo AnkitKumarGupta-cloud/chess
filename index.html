@@ -48,20 +48,24 @@
 <!-- ============ HOME ============ -->
 <main id="page-home" class="page">
 
-  <section class="hero-split">
-    <div class="wrap hero-split-inner">
-      <div class="hero-split-copy">
-        <span class="eyebrow">Gupta Chess Academy</span>
-        <h1 class="h-display fs-hero">Build the mind.<br><em>Master</em> the board.</h1>
-        <p class="lede">Structured chess coaching for young minds across Bangalore and Mughalsarai — taught by FIDE-rated, tournament-experienced coaches who treat the game like a discipline, not a hobby.</p>
-        <div class="hero-cta-row">
-          <button class="cta-btn" onclick="openModal()">Book Free Demo</button>
-          <button class="cta-btn ghost" onclick="document.querySelector('.programs-section').scrollIntoView({behavior:'smooth'})">Explore Programs</button>
-        </div>
+  <section class="hero-oval2">
+    <div class="hero-oval2-board-tex" aria-hidden="true"></div>
+    <div class="wrap-tight hero-oval2-inner">
+      <span class="eyebrow">Gupta Chess Academy</span>
+      <h1 class="h-display fs-hero">Build the mind.<br><em>Master</em> the board.</h1>
+      <p class="lede">Structured chess coaching for young minds across Bangalore and Mughalsarai — taught by FIDE-rated, tournament-experienced coaches who treat the game like a discipline, not a hobby.</p>
+      <div class="hero-cta-row" style="justify-content:center;">
+        <button class="cta-btn" onclick="openModal()">Book Free Demo</button>
+        <button class="cta-btn ghost" onclick="document.querySelector('.programs-section').scrollIntoView({behavior:'smooth'})">Explore Programs</button>
       </div>
-      <div class="hero-split-media">
-        <img src="images/hero-oval-chess.jpg" alt="Students competing at the National Amateur Chess Championships 2026" loading="eager">
-        <span class="hero-media-cap">National Amateur Championships · 2026</span>
+
+      <div class="hero-photo-stage">
+        <div class="hero-photo-glow" aria-hidden="true"></div>
+        <div class="hero-oval-frame">
+          <img src="images/hero-oval-chess.jpg" alt="Students competing at the National Amateur Chess Championships 2026" loading="eager">
+        </div>
+        <img class="hero-sticker" src="images/decor/badge-knight-sticker.png" alt="" aria-hidden="true">
+        <span class="hero-photo-cap">National Amateur Championships · 2026</span>
       </div>
     </div>
   </section>
