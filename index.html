@@ -149,6 +149,8 @@
         </div>
       </div>
 
+      <div id="review-featured" class="review-featured"></div>
+
       <div class="reviews-track-wrap">
         <div class="reviews-track" id="reviews-track">
           <!-- review cards injected by JS -->
@@ -233,7 +235,7 @@
 
     <div id="modal-success-view" class="success-view">
       <div class="success-icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F2703C" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D94A3D" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg>
       </div>
       <h2 class="h-display fs-h3" style="margin-top:18px;">Seat reserved!</h2>
       <p class="lede" style="margin-top:10px; font-size:0.88rem;">We'll call you shortly to confirm the schedule for your free demo class.</p>
@@ -262,7 +264,7 @@
 <!-- ============ TOAST ============ -->
 <div id="toast" class="toast">
   <div class="toast-box">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F2703C" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D94A3D" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
     <span id="toast-msg">Thank you! We'll be in touch shortly.</span>
   </div>
 </div>
@@ -499,8 +501,26 @@
 
   function renderReviews(){
     const track = document.getElementById('reviews-track');
+    const featured = document.getElementById('review-featured');
     if(!track) return;
-    track.innerHTML = REVIEWS_DATA.map(r => `
+
+    if(featured && REVIEWS_DATA.length){
+      const f = REVIEWS_DATA[0];
+      featured.innerHTML = `
+        <span class="rf-mark" aria-hidden="true">&#8220;</span>
+        <p class="rf-text">${f.text}</p>
+        <div class="rf-byline">
+          <div class="review-avatar">${f.initials}</div>
+          <div>
+            <div class="review-name">${f.name}</div>
+            <div class="review-time">${f.time}</div>
+          </div>
+          <div class="review-stars" style="margin-left:auto;">${STAR_SVG.repeat(5)}</div>
+        </div>
+      `;
+    }
+
+    track.innerHTML = REVIEWS_DATA.slice(1).map(r => `
       <div class="review-card">
         <div class="review-top">
           <div class="review-avatar">${r.initials}</div>

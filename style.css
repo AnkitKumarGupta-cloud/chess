@@ -435,6 +435,29 @@ section{position:relative;}
 .rs-google svg{ height:36px; }
 
 .reviews-track-wrap{ position:relative; }
+
+/* ---------- one large featured testimonial ---------- */
+.review-featured{
+  max-width:700px; margin:0 auto 40px; text-align:center; position:relative;
+  padding:0 20px;
+}
+.rf-mark{
+  font-family:var(--display); font-size:4.5rem; line-height:1; color:var(--red);
+  opacity:0.5; display:block; margin-bottom:-6px;
+}
+.rf-text{
+  font-family:var(--serif); font-weight:600; font-size:clamp(1.2rem, 1.4vw + 0.9rem, 1.55rem);
+  line-height:1.5; color:var(--ivory);
+}
+.rf-byline{
+  display:flex; align-items:center; gap:12px; justify-content:center; margin-top:24px;
+}
+.rf-byline .review-avatar{width:40px; height:40px; font-size:0.9rem;}
+.rf-byline > div:nth-child(2){text-align:left;}
+@media (max-width:600px){
+  .rf-byline{flex-wrap:wrap;}
+  .rf-byline .review-stars{margin-left:0 !important; width:100%; justify-content:center; margin-top:8px;}
+}
 .reviews-track{
   display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch; scrollbar-width:none; padding:4px 4px 8px;
@@ -564,6 +587,38 @@ section{position:relative;}
     width:100%; left:0; text-align:left; padding:0 0 56px 44px;
   }
   .tl-node:nth-child(odd) .tl-dot, .tl-node:nth-child(even) .tl-dot{left:9px; right:auto;}
+}
+
+/* ---------- journey strip (train -> compete -> improve -> achieve) ---------- */
+.journey-strip{padding:40px 0; border-bottom:1px solid var(--line); background:var(--slate);}
+.journey-strip-row{display:flex; align-items:center; justify-content:center; gap:18px; flex-wrap:wrap;}
+.js-step{display:flex; align-items:baseline; gap:10px;}
+.js-num{font-family:var(--mono); font-size:11px; color:var(--red-bright); letter-spacing:0.08em;}
+.js-label{font-family:var(--display); font-weight:700; font-size:1.15rem; color:var(--ivory); text-transform:uppercase; letter-spacing:0.02em;}
+.js-arrow{color:var(--ash-dim); font-size:1.1rem;}
+@media (max-width:700px){
+  .journey-strip-row{gap:10px;}
+  .js-label{font-size:0.95rem;}
+}
+
+/* ---------- cinematic full-bleed banner ---------- */
+.cinematic-banner{
+  position:relative; min-height:420px; display:flex; align-items:center; justify-content:center;
+  background-size:cover; background-position:center; border-bottom:1px solid var(--line);
+  overflow:hidden;
+}
+.cinematic-banner::before{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(6,8,12,0.55) 0%, rgba(6,8,12,0.78) 100%),
+             linear-gradient(200deg, rgba(217,74,61,0.22) 0%, transparent 45%);
+}
+.cinematic-banner-inner{position:relative; z-index:1; text-align:center;}
+@media (max-width:700px){ .cinematic-banner{min-height:320px;} }
+
+/* ---------- cta banner (closing conversion section) ---------- */
+.cta-banner{
+  padding:112px 0; position:relative; overflow:hidden;
+  background:radial-gradient(ellipse 700px 400px at 50% 0%, rgba(217,74,61,0.16), transparent 65%);
 }
 
 /* ---------- program theme pages (unified — no per-page light themes) ---------- */

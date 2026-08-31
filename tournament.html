@@ -55,6 +55,19 @@
       <div style="margin-top:30px;"><button class="cta-btn" onclick="openModal()">Book Free Demo</button></div>
     </div>
   </section>
+
+  <section class="journey-strip">
+    <div class="wrap journey-strip-row">
+      <div class="js-step"><span class="js-num">01</span><span class="js-label">Train</span></div>
+      <span class="js-arrow">→</span>
+      <div class="js-step"><span class="js-num">02</span><span class="js-label">Compete</span></div>
+      <span class="js-arrow">→</span>
+      <div class="js-step"><span class="js-num">03</span><span class="js-label">Improve</span></div>
+      <span class="js-arrow">→</span>
+      <div class="js-step"><span class="js-num">04</span><span class="js-label">Achieve</span></div>
+    </div>
+  </section>
+
   <section class="section-pad bordered">
     <div class="wrap">
       <div class="theme-grid">
@@ -64,10 +77,30 @@
       </div>
     </div>
   </section>
-  <section class="section-pad">
-    <div class="wrap-tight" style="text-align:center;">
+
+  <section class="cinematic-banner" style="background-image:url('images/hero-oval-chess.jpg');">
+    <div class="cinematic-banner-inner wrap-tight">
+      <span class="eyebrow" style="color:var(--red-bright);">National Amateur Championships · 2026</span>
+      <h2 class="h-display fs-h2" style="margin-top:12px; color:#fff;">15+ tournaments entered.<br>The next one is yours.</h2>
+    </div>
+  </section>
+
+  <section class="section-pad bordered">
+    <div class="wrap">
+      <div class="section-head"><span class="eyebrow cyan">Results</span><h2 class="h-display fs-h2" style="margin-top:10px;">Results on the Board</h2></div>
+      <div class="pyramid-stage" id="pyramid-tournament"></div>
+      <div class="pyramid-nav">
+        <button onclick="pyramidStep('tournament', -1)" aria-label="Previous">‹</button>
+        <button onclick="pyramidStep('tournament', 1)" aria-label="Next">›</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-banner">
+    <div class="wrap-tight" style="text-align:center; position:relative; z-index:1;">
       <span class="eyebrow" style="color:var(--red-bright);">One-on-one game analysis for competitive players</span>
-      <h2 class="h-display fs-h2" style="margin-top:10px;">15+ tournaments entered. The next one is yours.</h2>
+      <h2 class="h-display fs-h2" style="margin-top:12px;">Ready to make your next move?</h2>
+      <div style="margin-top:30px;"><button class="cta-btn" onclick="openModal()">Book Free Demo</button></div>
     </div>
   </section>
 </main>
@@ -125,7 +158,7 @@
 
     <div id="modal-success-view" class="success-view">
       <div class="success-icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F2703C" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D94A3D" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg>
       </div>
       <h2 class="h-display fs-h3" style="margin-top:18px;">Seat reserved!</h2>
       <p class="lede" style="margin-top:10px; font-size:0.88rem;">We'll call you shortly to confirm the schedule for your free demo class.</p>
@@ -137,7 +170,7 @@
 <!-- ============ TOAST ============ -->
 <div id="toast" class="toast">
   <div class="toast-box">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F2703C" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D94A3D" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
     <span id="toast-msg">Thank you! We'll be in touch shortly.</span>
   </div>
 </div>
@@ -298,6 +331,10 @@
       { img:'images/gallery/trophy-award-2026.jpg', tag:'Karnataka State U-11 FIDE Rated', title:'Trophy Ceremony, 2026' },
       { img:'images/gallery/tournament-award-galleria-yelahanka.jpg', tag:'Kaladarpana Rapid Chess, The Galleria', title:'2nd Prize, U-09 Girls' }
     ],
+    tournament: [
+      { img:'images/gallery/trophy-award-2026.jpg', tag:'Karnataka State U-11 FIDE Rated', title:'Trophy Ceremony, 2026' },
+      { img:'images/gallery/tournament-award-galleria-yelahanka.jpg', tag:'Kaladarpana Rapid Chess, The Galleria', title:'2nd Prize, U-09 Girls' }
+    ],
     blog: [
       { blogId:'blog7', img:'images/blog-chess-parent.jpg', tag:'Kids & Parents · Ankit · May 20, 2026', title:'Dear Chess Parent: Let Your Child Play' },
       { blogId:'blog1', img:'images/blog-openings.jpg', tag:'e4 · Openings · Ankit · Apr 10, 2026', title:'5 Openings Every Beginner Must Learn First' },
@@ -307,7 +344,7 @@
       { blogId:'blog6', img:'images/blog-mistakes.jpg', tag:'Beginners · Sanskar Agrawal · Jan 5, 2026', title:'7 Common Mistakes Every Chess Beginner Makes' }
     ]
   };
-  const pyramidState = { home:0, blog:0, about:0 };
+  const pyramidState = { home:0, blog:0, about:0, tournament:0 };
 
   function renderPyramid(key){
     const stage = document.getElementById('pyramid-'+key);
@@ -354,9 +391,10 @@
   renderPyramid('home');
   renderPyramid('blog');
   renderPyramid('about');
+  renderPyramid('tournament');
 
   // ---------- SWIPE SUPPORT FOR PYRAMID STACKS ----------
-  ['home','blog','about'].forEach(key=>{
+  ['home','blog','about','tournament'].forEach(key=>{
     const stage = document.getElementById('pyramid-'+key);
     if(!stage) return;
     let startX = 0, startY = 0, dragging = false;
