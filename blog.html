@@ -50,32 +50,20 @@
   <section class="section-pad" style="padding-bottom:0;">
     <div class="wrap">
       <div class="section-head" style="max-width:640px;">
+        <img src="images/decor/book-knight.png" alt="" aria-hidden="true" style="width:120px; margin:0 auto 18px;">
         <span class="eyebrow">From the coaching desk</span>
         <h1 class="h-display fs-h2" style="margin-top:10px;">Tactics, strategy, and notes from the classroom.</h1>
       </div>
 
-      <!-- featured article -->
-      <a class="blog-featured" onclick="openBlog('blog7')" role="button" tabindex="0">
-        <div class="bf-media" style="background-image:url('images/blog-chess-parent.jpg')"></div>
-        <div class="bf-copy">
-          <span class="blog-tag">Kids &amp; Parents</span>
-          <h2 class="bf-title">Dear Chess Parent: Let Your Child Play</h2>
-          <p class="bf-excerpt">Every weekend I see the same thing. Parents walking into tournament halls with their kids — new chess set, nervous smiles, water bottles and snacks carefully packed. The excitement is real. But so is the anxiety.</p>
-          <div class="bf-meta"><span>May 20, 2026</span><span>Ankit</span></div>
-          <span class="pp-link" style="margin-top:18px;">Read Article →</span>
-        </div>
-      </a>
-
-      <!-- supporting article grid -->
-      <div class="blog-grid-archive" style="margin-top:34px;">
-        <div class="blog-card" onclick="openBlog('blog1')"><img src="images/blog-openings.jpg" alt=""><div class="blog-card-body"><span class="blog-tag">Openings</span><h3 class="blog-title-sm">5 Openings Every Beginner Must Learn First</h3><p class="bc-excerpt">You don't need 20 openings. You need 5 solid ones that teach you how to think in the opening.</p><div class="bf-meta" style="margin-top:12px;"><span>Apr 10, 2026</span><span>Ankit</span></div></div></div>
-        <div class="blog-card" onclick="openBlog('blog2')"><img src="images/blog-chess-tactics.jpg" alt=""><div class="blog-card-body"><span class="blog-tag">Tactics</span><h3 class="blog-title-sm">Pins, Forks &amp; Skewers</h3><p class="bc-excerpt">Most beginner games aren't decided by deep strategy — they're decided by three patterns one player saw and the other didn't.</p><div class="bf-meta" style="margin-top:12px;"><span>Mar 22, 2026</span><span>Minu Gupta</span></div></div></div>
-        <div class="blog-card" onclick="openBlog('blog4')"><img src="images/blog-tournament-mindset.jpg" alt=""><div class="blog-card-body"><span class="blog-tag">Psychology</span><h3 class="blog-title-sm">How to Stay Calm in a Losing Position</h3><p class="bc-excerpt">A student gets into a bad position, panics, and plays the next five moves in two minutes. The game is gone before they even give themselves a chance.</p><div class="bf-meta" style="margin-top:12px;"><span>Feb 14, 2026</span><span>Sanskar Agrawal</span></div></div></div>
-        <div class="blog-card" onclick="openBlog('blog5')"><img src="images/blog-kids-age.jpg" alt=""><div class="blog-card-body"><span class="blog-tag">Kids &amp; Parents</span><h3 class="blog-title-sm">What Age Should Your Child Start Learning Chess?</h3><p class="bc-excerpt">"Is my child too young? Or have we already missed the window?" — the question parents ask before they even ask about fees.</p><div class="bf-meta" style="margin-top:12px;"><span>Jan 28, 2026</span><span>Ankit</span></div></div></div>
-        <div class="blog-card" onclick="openBlog('blog6')"><img src="images/blog-mistakes.jpg" alt=""><div class="blog-card-body"><span class="blog-tag">Beginners</span><h3 class="blog-title-sm">7 Common Chess Beginner Mistakes</h3><p class="bc-excerpt">After coaching for this long, the mistakes beginners make jump out at you. Same errors, different students, year after year.</p><div class="bf-meta" style="margin-top:12px;"><span>Jan 5, 2026</span><span>Sanskar Agrawal</span></div></div></div>
+      <!-- swipeable stack — all posts, one consistent interaction -->
+      <div class="pyramid-stage" id="pyramid-blog"></div>
+      <div class="pyramid-nav">
+        <button onclick="pyramidStep('blog', -1)" aria-label="Previous">‹</button>
+        <button onclick="pyramidStep('blog', 1)" aria-label="Next">›</button>
       </div>
     </div>
   </section>
+  <div style="height:88px;"></div>
 </main>
 
 <!-- ============ BLOG ARTICLE MODAL ============ -->
@@ -148,7 +136,7 @@
 
     <div id="modal-success-view" class="success-view">
       <div class="success-icon">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D94A3D" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F2703C" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg>
       </div>
       <h2 class="h-display fs-h3" style="margin-top:18px;">Seat reserved!</h2>
       <p class="lede" style="margin-top:10px; font-size:0.88rem;">We'll call you shortly to confirm the schedule for your free demo class.</p>
@@ -160,7 +148,7 @@
 <!-- ============ TOAST ============ -->
 <div id="toast" class="toast">
   <div class="toast-box">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D94A3D" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F2703C" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
     <span id="toast-msg">Thank you! We'll be in touch shortly.</span>
   </div>
 </div>
