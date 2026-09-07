@@ -178,6 +178,14 @@ section{position:relative;}
   border-bottom:1px solid var(--line);
   background:radial-gradient(ellipse 820px 420px at 50% -14%, rgba(217,74,61,0.16), transparent 62%);
 }
+.hero-bg-graphic{
+  position:absolute; z-index:0; top:0; right:0; height:100%; width:42%;
+  background-image:url('images/decor/hero-king-schematic.png');
+  background-repeat:no-repeat; background-position:right center; background-size:contain;
+  opacity:0.10; pointer-events:none;
+}
+@media(max-width:900px){ .hero-bg-graphic{ width:60%; opacity:0.08; } }
+@media(max-width:600px){ .hero-bg-graphic{ display:none; } }
 .hero-inner{position:relative; z-index:2;}
 .hero h1{margin-top:22px;}
 .hero h1 em{font-style:normal; color:var(--red-bright);}
