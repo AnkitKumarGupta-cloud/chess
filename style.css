@@ -210,10 +210,10 @@ section{position:relative;}
   animation:floatY 4.5s ease-in-out infinite;
   opacity:0.9;
 }
-.hero-float-icon.f1{top:-6%; left:2%; width:64px; animation-delay:0s;}
-.hero-float-icon.f2{top:8%; right:0%; width:58px; animation-delay:.6s;}
-.hero-float-icon.f3{bottom:2%; left:-2%; width:60px; animation-delay:1.2s;}
-.hero-float-icon.f4{bottom:-8%; right:8%; width:66px; animation-delay:1.8s;}
+.hero-float-icon.f1{top:6%; left:8%; width:64px; animation-delay:0s;}
+.hero-float-icon.f2{top:14%; right:6%; width:58px; animation-delay:.6s;}
+.hero-float-icon.f3{bottom:12%; left:4%; width:60px; animation-delay:1.2s;}
+.hero-float-icon.f4{bottom:4%; right:8%; width:66px; animation-delay:1.8s;}
 @keyframes floatY{
   0%, 100%{transform:translateY(0);}
   50%{transform:translateY(-14px);}
@@ -308,6 +308,8 @@ section{position:relative;}
   border-bottom:1px solid var(--red-bright); padding-bottom:2px;
   opacity:0; transform:translateY(6px); transition:opacity .35s ease .12s, transform .35s ease .12s;
 }
+.link-arrow{display:inline-block; transition:transform .25s ease;}
+.drawer-link:hover .link-arrow{transform:translateX(4px);}
 .drawer:hover .drawer-link, .drawer.is-open .drawer-link{opacity:1; transform:translateY(0);}
 
 @media (max-width: 760px){
@@ -353,6 +355,12 @@ section{position:relative;}
   -webkit-overflow-scrolling:touch; scrollbar-width:none; padding:4px 4px 8px;
 }
 .reviews-track::-webkit-scrollbar{ display:none; }
+@media(min-width:900px){
+  .reviews-track{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;
+    overflow-x:visible; scroll-snap-type:none; padding:4px;
+  }
+}
 .review-card{
   flex:0 0 82%; max-width:340px; scroll-snap-align:start;
   background:var(--slate-2); border:1px solid var(--line); border-radius:8px;
@@ -360,6 +368,7 @@ section{position:relative;}
   box-shadow:0 10px 30px -18px rgba(0,0,0,0.5);
 }
 @media(min-width:640px){ .review-card{ flex-basis:360px; } }
+@media(min-width:900px){ .review-card{ flex-basis:auto; max-width:none; width:auto; } }
 .review-top{ display:flex; align-items:center; gap:12px; }
 .review-avatar{
   width:44px; height:44px; border-radius:50%; overflow:hidden; flex-shrink:0;
@@ -383,6 +392,7 @@ section{position:relative;}
 
 .reviews-nav{ display:none; align-items:center; justify-content:center; gap:14px; margin-top:22px; }
 @media(min-width:720px){ .reviews-nav{ display:flex; } }
+@media(min-width:900px){ .reviews-nav{ display:none; } }
 .reviews-arrow{
   width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:var(--slate-2);
   display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ivory);
