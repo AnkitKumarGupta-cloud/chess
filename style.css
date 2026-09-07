@@ -218,10 +218,10 @@ section{position:relative;}
   animation:floatY 4.5s ease-in-out infinite;
   opacity:0.9;
 }
-.hero-float-icon.f1{top:6%; left:8%; width:64px; animation-delay:0s;}
+.hero-float-icon.f1{top:6%; left:8%; width:78px; animation-delay:0s;}
 .hero-float-icon.f2{top:14%; right:6%; width:58px; animation-delay:.6s;}
 .hero-float-icon.f3{bottom:12%; left:4%; width:60px; animation-delay:1.2s;}
-.hero-float-icon.f4{bottom:4%; right:8%; width:66px; animation-delay:1.8s;}
+.hero-float-icon.f4{bottom:4%; right:8%; width:40px; animation-delay:1.8s;}
 @keyframes floatY{
   0%, 100%{transform:translateY(0);}
   50%{transform:translateY(-14px);}
