@@ -185,7 +185,7 @@ section{position:relative;}
   opacity:0.10; pointer-events:none;
 }
 @media(max-width:900px){ .hero-bg-graphic{ width:60%; opacity:0.08; } }
-@media(max-width:600px){ .hero-bg-graphic{ display:none; } }
+@media(max-width:600px){ .hero-bg-graphic{ width:80%; opacity:0.09; top:6%; bottom:auto; height:38%; right:-5%; } }
 .hero-inner{position:relative; z-index:2;}
 .hero h1{margin-top:22px;}
 .hero h1 em{font-style:normal; color:var(--red-bright);}
