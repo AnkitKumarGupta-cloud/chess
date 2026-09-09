@@ -105,7 +105,7 @@
           <span class="team-tap-hint">Tap for full bio →</span>
         </div>
         <div class="team-member" data-coach="sanskar">
-          <div class="team-avatar" aria-hidden="true">♚</div>
+          <div class="team-avatar" aria-hidden="true">♞</div>
           <div class="team-name">Sanskar Agrawal</div>
           <div class="team-role">Co-Founder</div>
           <span class="team-tap-hint">Tap for full bio →</span>
@@ -121,14 +121,14 @@
       <div class="coach-section-label">Leadership</div>
       <div class="team-row">
         <div class="team-member" data-coach="ankit">
-          <div class="team-avatar"><img src="images/coach-ankit.jpg" alt="Coach Ankit" loading="lazy"></div>
+          <div class="team-avatar" aria-hidden="true">♞</div>
           <div class="team-name">Ankit</div>
           <div class="team-role">Head Coach</div>
           <span class="team-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z"/></svg>10+ Yrs · 50+ Students Trained</span>
           <span class="team-tap-hint">Tap for full bio →</span>
         </div>
         <div class="team-member" data-coach="sanskar">
-          <div class="team-avatar" aria-hidden="true">♚</div>
+          <div class="team-avatar" aria-hidden="true">♞</div>
           <div class="team-name">Sanskar Agrawal</div>
           <div class="team-role">Chess Coach &amp; Co-Founder</div>
           <span class="team-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279L12 19.771l-7.416 3.642 1.48-8.279L0 9.306l8.332-1.151z"/></svg>1800+ Rated · Chess.com</span>
@@ -463,7 +463,7 @@
       quote: '"A good chess academy doesn\'t just teach moves — it builds the kind of mind that stays calm when things get hard, on the board and off it."'
     },
     ankit: {
-      avatar: 'images/coach-ankit.jpg',
+      avatar: null,
       role: 'Head Coach · 10+ Yrs Experience',
       bio: 'District championship finalist with 10+ years of competitive play. Ankit specialises in opening theory and endgame mastery, and has personally trained 50+ students across all levels. He co-founded Gupta Chess Academy with a vision to bring world-class chess coaching to Bangalore.',
       quote: '"Chess isn\'t about winning every game. It\'s about learning to think clearly under pressure — a skill that stays with a child long after the board is put away."'
@@ -497,7 +497,7 @@
     if(d.avatar){
       avatarBox.innerHTML = '<img src="'+d.avatar+'" alt="'+nameText+'" loading="lazy">';
     } else {
-      avatarBox.innerHTML = '♚';
+      avatarBox.innerHTML = '♞';
     }
     document.getElementById('cm-name').textContent = nameText;
     document.getElementById('cm-role').textContent = d.role;
