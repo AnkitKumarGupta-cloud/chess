@@ -237,13 +237,14 @@ section{position:relative;}
   background:var(--red); color:#fff;
   font-weight:700; font-size:0.92rem; letter-spacing:0.02em;
   padding:16px 32px; border:none; border-radius:2px;
-  transition:transform .22s ease, box-shadow .22s ease, background .22s ease;
+  border-bottom:2px solid var(--gold);
+  transition:transform .22s ease, box-shadow .22s ease, background .22s ease, border-color .22s ease;
   box-shadow:0 18px 40px -18px rgba(217,74,61,0.6);
   text-transform:uppercase;
 }
-.cta-btn:hover{transform:translateY(-2px); background:var(--red-bright); box-shadow:0 22px 46px -16px rgba(217,74,61,0.75);}
+.cta-btn:hover{transform:translateY(-2px); background:var(--red-bright); border-bottom-color:var(--gold-bright); box-shadow:0 22px 46px -16px rgba(217,74,61,0.75), 0 0 0 1px rgba(224,181,100,0.25);}
 .cta-btn.ghost{
-  background:transparent; color:var(--ivory); border:1px solid var(--line-strong);
+  background:transparent; color:var(--ivory); border:1px solid var(--line-strong); border-bottom:1px solid var(--line-strong);
   box-shadow:none;
 }
 .cta-btn.ghost:hover{border-color:var(--gold); color:var(--gold-bright); transform:translateY(-2px);}
@@ -425,11 +426,13 @@ section{position:relative;}
   position:absolute; width:min(560px, 78vw); border-radius:8px; overflow:hidden;
   border:1px solid var(--line); background:var(--slate);
   box-shadow:0 30px 60px -28px rgba(0,0,0,0.65);
-  transition:transform .6s cubic-bezier(.22,.8,.2,1), opacity .6s ease, filter .6s ease;
+  transition:transform .6s cubic-bezier(.22,.8,.2,1), opacity .6s ease, filter .6s ease, box-shadow .35s ease, border-color .35s ease;
   will-change:transform, opacity;
 }
-.pyramid-card .pc-img{position:relative; overflow:hidden;}
-.pyramid-card img{width:100%; height:230px; object-fit:cover; display:block;}
+.pyramid-card:hover{box-shadow:0 34px 68px -24px rgba(0,0,0,0.75), 0 0 0 1px rgba(201,154,74,0.3); border-color:rgba(201,154,74,0.4);}
+.pyramid-card .pc-img{position:relative; overflow:hidden; aspect-ratio:5/3.6;}
+.pyramid-card img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease;}
+.pyramid-card:hover img{transform:scale(1.05);}
 .pyramid-card .pc-img::after{
   content:''; position:absolute; left:0; right:0; bottom:0; height:80px;
   background:linear-gradient(to bottom, transparent, var(--slate) 92%);
@@ -860,4 +863,32 @@ section{position:relative;}
   align-items: center;
   gap: 8px;
   text-decoration: none;
+}
+
+/* ---------- floating WhatsApp button ---------- */
+.wa-float{
+  position:fixed; bottom:22px; right:22px; z-index:120;
+  width:58px; height:58px; border-radius:50%;
+  background:#25D366; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 12px 28px -6px rgba(0,0,0,0.55), 0 0 0 0 rgba(37,211,102,0.55);
+  transition:transform .25s ease, box-shadow .25s ease;
+  animation:waPulse 2.6s ease-in-out infinite;
+}
+.wa-float:hover{transform:translateY(-3px) scale(1.05); box-shadow:0 16px 34px -6px rgba(0,0,0,0.6);}
+.wa-float svg{width:30px; height:30px; fill:#fff;}
+.wa-float-tooltip{
+  position:absolute; right:68px; top:50%; transform:translateY(-50%);
+  background:var(--slate); color:var(--ivory); font-family:var(--mono); font-size:11px;
+  letter-spacing:0.04em; padding:8px 12px; border-radius:6px; border:1px solid var(--line-strong);
+  white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease;
+}
+.wa-float:hover .wa-float-tooltip{opacity:1; transform:translateY(-50%) translateX(-4px);}
+@keyframes waPulse{
+  0%,100%{box-shadow:0 12px 28px -6px rgba(0,0,0,0.55), 0 0 0 0 rgba(37,211,102,0.45);}
+  50%{box-shadow:0 12px 28px -6px rgba(0,0,0,0.55), 0 0 0 10px rgba(37,211,102,0);}
+}
+@media (max-width:600px){
+  .wa-float{width:52px; height:52px; bottom:16px; right:16px;}
+  .wa-float svg{width:26px; height:26px;}
+  .wa-float-tooltip{display:none;}
 }
