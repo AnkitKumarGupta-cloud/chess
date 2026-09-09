@@ -4,7 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact Us | Gupta Chess Academy</title>
+<meta name="description" content="Book a free demo class or get in touch with Gupta Chess Academy — Bangalore (Singasandra, HSR Layout, Kudlu Gate) and Mughalsarai.">
+<meta property="og:title" content="Contact Us | Gupta Chess Academy">
+<meta property="og:description" content="Book a free demo class or get in touch with Gupta Chess Academy — Bangalore (Singasandra, HSR Layout, Kudlu Gate) and Mughalsarai.">
+<meta property="og:image" content="images/og-image.jpg">
+<meta property="og:url" content="https://ankitkumargupta-cloud.github.io/chess/contact.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contact Us | Gupta Chess Academy">
+<meta name="twitter:description" content="Book a free demo class or get in touch with Gupta Chess Academy — Bangalore (Singasandra, HSR Layout, Kudlu Gate) and Mughalsarai.">
+<meta name="twitter:image" content="images/og-image.jpg">
 <link rel="icon" type="image/png" href="favicon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +30,7 @@
 <header class="site-header">
   <div class="wrap nav-row">
     <a class="brand" href="index.html">
-      <img class="brand-logo-img" src="images/gupta-chess-academy-logo.png" alt="Gupta Chess Academy Logo">
+      <img class="brand-logo-img" src="images/gupta-chess-academy-logo.png" alt="Gupta Chess Academy Logo" loading="lazy">
       <span class="brand-name">Gupta Chess Academy</span>
     </a>
     <nav class="primary-nav">
@@ -49,7 +63,7 @@
 <main id="page-contact" class="page">
   <section class="section-pad" style="text-align:center;">
     <div class="wrap-tight">
-      <img src="images/decor/speech-pawn.png" alt="" aria-hidden="true" style="width:130px; margin:0 auto 18px;">
+      <img src="images/decor/speech-pawn.png" alt="" aria-hidden="true" style="width:130px; margin:0 auto 18px;" loading="lazy">
       <span class="eyebrow">Let's talk chess</span>
       <h1 class="h-display fs-h2" style="margin-top:10px;">Get in touch</h1>
       <p class="lede" style="margin-top:14px; max-width:440px; margin-left:auto; margin-right:auto;">Tell us about your child and we'll match them to the right batch — online, Bangalore, or Mughalsarai.</p>
@@ -180,7 +194,7 @@
     <div class="footer-grid">
       <div class="footer-col footer-brand-block">
         <a class="brand" href="index.html">
-          <img class="brand-logo-img" src="images/gupta-chess-academy-logo.png" alt="Gupta Chess Academy Logo">
+          <img class="brand-logo-img" src="images/gupta-chess-academy-logo.png" alt="Gupta Chess Academy Logo" loading="lazy">
           <span class="brand-name">Gupta Chess Academy</span>
         </a>
         <p class="footer-tagline">Nurturing strategic minds and champions across Bangalore and Mughalsarai. Your journey to chess mastery starts here.</p>
@@ -361,7 +375,7 @@
       }
       const readMoreHint = (offset === 0 && key === 'blog' && item.blogId)
         ? `<span class="pc-read-more">Read Article →</span>` : '';
-      card.innerHTML = `<div class="pc-img"><img src="${item.img}" alt="${item.title}"></div><div class="pc-body"><span class="pc-tag">${item.tag}</span><h3 class="pc-title">${item.title}</h3>${readMoreHint}</div>`;
+      card.innerHTML = `<div class="pc-img"><img src="${item.img}" alt="${item.title}" loading="lazy"></div><div class="pc-body"><span class="pc-tag">${item.tag}</span><h3 class="pc-title">${item.title}</h3>${readMoreHint}</div>`;
       if(offset !== 0){
         card.addEventListener('click', ()=>{ pyramidState[key] = i; renderPyramid(key); });
       } else if(key === 'blog' && item.blogId){

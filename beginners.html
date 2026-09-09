@@ -4,7 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Beginners — The Playground | Gupta Chess Academy</title>
+<meta name="description" content="Rules, notation, and the first ten tactical patterns every young player needs — taught through play, not lectures.">
+<meta property="og:title" content="Beginners — The Playground | Gupta Chess Academy">
+<meta property="og:description" content="Rules, notation, and the first ten tactical patterns every young player needs — taught through play, not lectures.">
+<meta property="og:image" content="images/og-image.jpg">
+<meta property="og:url" content="https://ankitkumargupta-cloud.github.io/chess/beginners.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Beginners — The Playground | Gupta Chess Academy">
+<meta name="twitter:description" content="Rules, notation, and the first ten tactical patterns every young player needs — taught through play, not lectures.">
+<meta name="twitter:image" content="images/og-image.jpg">
 <link rel="icon" type="image/png" href="favicon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +30,7 @@
 <header class="site-header">
   <div class="wrap nav-row">
     <a class="brand" href="index.html">
-      <img class="brand-logo-img" src="images/gupta-chess-academy-logo.png" alt="Gupta Chess Academy Logo">
+      <img class="brand-logo-img" src="images/gupta-chess-academy-logo.png" alt="Gupta Chess Academy Logo" loading="lazy">
       <span class="brand-name">Gupta Chess Academy</span>
     </a>
     <nav class="primary-nav">
@@ -58,9 +72,9 @@
   <section class="section-pad bordered">
     <div class="wrap">
       <div class="theme-grid">
-        <div class="theme-point"><img class="tp-icon" src="images/decor/icon-bulb.png" alt=""><div class="tp-num">01</div><h3>Focus, in short bursts</h3><p>Attention span is built like a muscle. Sessions are structured in short, rewarding stretches so young players stay locked in without burning out.</p></div>
-        <div class="theme-point"><img class="tp-icon" src="images/decor/storybook-castle.png" alt=""><div class="tp-num">02</div><h3>Notation from day one</h3><p>Reading and writing moves — e4, Nf3, O-O — becomes second nature early, so the language of chess never feels foreign later.</p></div>
-        <div class="theme-point"><img class="tp-icon" src="images/decor/icon-puzzle.png" alt=""><div class="tp-num">03</div><h3>Ten patterns, not theory</h3><p>Rather than memorised openings, beginners learn the ten tactical shapes — forks, pins, back-rank ideas — that decide most games at this level.</p></div>
+        <div class="theme-point"><img class="tp-icon" src="images/decor/icon-bulb.png" alt="" loading="lazy"><div class="tp-num">01</div><h3>Focus, in short bursts</h3><p>Attention span is built like a muscle. Sessions are structured in short, rewarding stretches so young players stay locked in without burning out.</p></div>
+        <div class="theme-point"><img class="tp-icon" src="images/decor/storybook-castle.png" alt="" loading="lazy"><div class="tp-num">02</div><h3>Notation from day one</h3><p>Reading and writing moves — e4, Nf3, O-O — becomes second nature early, so the language of chess never feels foreign later.</p></div>
+        <div class="theme-point"><img class="tp-icon" src="images/decor/icon-puzzle.png" alt="" loading="lazy"><div class="tp-num">03</div><h3>Ten patterns, not theory</h3><p>Rather than memorised openings, beginners learn the ten tactical shapes — forks, pins, back-rank ideas — that decide most games at this level.</p></div>
       </div>
     </div>
   </section>
@@ -156,7 +170,7 @@
     <div class="footer-grid">
       <div class="footer-col footer-brand-block">
         <a class="brand" href="index.html">
-          <img class="brand-logo-img" src="images/gupta-chess-academy-logo.png" alt="Gupta Chess Academy Logo">
+          <img class="brand-logo-img" src="images/gupta-chess-academy-logo.png" alt="Gupta Chess Academy Logo" loading="lazy">
           <span class="brand-name">Gupta Chess Academy</span>
         </a>
         <p class="footer-tagline">Nurturing strategic minds and champions across Bangalore and Mughalsarai. Your journey to chess mastery starts here.</p>
@@ -337,7 +351,7 @@
       }
       const readMoreHint = (offset === 0 && key === 'blog' && item.blogId)
         ? `<span class="pc-read-more">Read Article →</span>` : '';
-      card.innerHTML = `<div class="pc-img"><img src="${item.img}" alt="${item.title}"></div><div class="pc-body"><span class="pc-tag">${item.tag}</span><h3 class="pc-title">${item.title}</h3>${readMoreHint}</div>`;
+      card.innerHTML = `<div class="pc-img"><img src="${item.img}" alt="${item.title}" loading="lazy"></div><div class="pc-body"><span class="pc-tag">${item.tag}</span><h3 class="pc-title">${item.title}</h3>${readMoreHint}</div>`;
       if(offset !== 0){
         card.addEventListener('click', ()=>{ pyramidState[key] = i; renderPyramid(key); });
       } else if(key === 'blog' && item.blogId){

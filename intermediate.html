@@ -4,7 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Intermediate — The Strategy Lab | Gupta Chess Academy</title>
+<meta name="description" content="Opening repertoires, middlegame planning, and endgame technique — the toolkit for consistent tournament wins.">
+<meta property="og:title" content="Intermediate — The Strategy Lab | Gupta Chess Academy">
+<meta property="og:description" content="Opening repertoires, middlegame planning, and endgame technique — the toolkit for consistent tournament wins.">
+<meta property="og:image" content="images/og-image.jpg">
+<meta property="og:url" content="https://ankitkumargupta-cloud.github.io/chess/intermediate.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Intermediate — The Strategy Lab | Gupta Chess Academy">
+<meta name="twitter:description" content="Opening repertoires, middlegame planning, and endgame technique — the toolkit for consistent tournament wins.">
+<meta name="twitter:image" content="images/og-image.jpg">
 <link rel="icon" type="image/png" href="favicon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +30,7 @@
 <header class="site-header">
   <div class="wrap nav-row">
     <a class="brand" href="index.html">
-      <img class="brand-logo-img" src="images/gupta-chess-academy-logo.png" alt="Gupta Chess Academy Logo">
+      <img class="brand-logo-img" src="images/gupta-chess-academy-logo.png" alt="Gupta Chess Academy Logo" loading="lazy">
       <span class="brand-name">Gupta Chess Academy</span>
     </a>
     <nav class="primary-nav">
@@ -58,9 +72,9 @@
   <section class="section-pad bordered">
     <div class="wrap">
       <div class="theme-grid">
-        <div class="xray-card theme-point" onmousemove="xraySpot(event)"><img class="tp-icon" src="images/decor/book-knight.png" alt=""><div class="tp-num">01</div><h3>Opening repertoires</h3><p>A small, well-understood set of openings for both colours — built for the club player, not memorised for a database.</p></div>
-        <div class="xray-card theme-point" onmousemove="xraySpot(event)"><img class="tp-icon" src="images/decor/icon-checklist.png" alt=""><div class="tp-num">02</div><h3>Middlegame planning</h3><p>Reading a position's imbalances and choosing a plan before calculating a single line — the skill that separates intermediate from advanced.</p></div>
-        <div class="xray-card theme-point" onmousemove="xraySpot(event)"><img class="tp-icon" src="images/decor/icon-magnifier-king.png" alt=""><div class="tp-num">03</div><h3>Endgame technique</h3><p>Rook endings, opposition, and conversion — the technical foundation that turns a winning position into an actual win.</p></div>
+        <div class="xray-card theme-point" onmousemove="xraySpot(event)"><img class="tp-icon" src="images/decor/book-knight.png" alt="" loading="lazy"><div class="tp-num">01</div><h3>Opening repertoires</h3><p>A small, well-understood set of openings for both colours — built for the club player, not memorised for a database.</p></div>
+        <div class="xray-card theme-point" onmousemove="xraySpot(event)"><img class="tp-icon" src="images/decor/icon-checklist.png" alt="" loading="lazy"><div class="tp-num">02</div><h3>Middlegame planning</h3><p>Reading a position's imbalances and choosing a plan before calculating a single line — the skill that separates intermediate from advanced.</p></div>
+        <div class="xray-card theme-point" onmousemove="xraySpot(event)"><img class="tp-icon" src="images/decor/icon-magnifier-king.png" alt="" loading="lazy"><div class="tp-num">03</div><h3>Endgame technique</h3><p>Rook endings, opposition, and conversion — the technical foundation that turns a winning position into an actual win.</p></div>
       </div>
     </div>
   </section>
@@ -155,7 +169,7 @@
     <div class="footer-grid">
       <div class="footer-col footer-brand-block">
         <a class="brand" href="index.html">
-          <img class="brand-logo-img" src="images/gupta-chess-academy-logo.png" alt="Gupta Chess Academy Logo">
+          <img class="brand-logo-img" src="images/gupta-chess-academy-logo.png" alt="Gupta Chess Academy Logo" loading="lazy">
           <span class="brand-name">Gupta Chess Academy</span>
         </a>
         <p class="footer-tagline">Nurturing strategic minds and champions across Bangalore and Mughalsarai. Your journey to chess mastery starts here.</p>
@@ -336,7 +350,7 @@
       }
       const readMoreHint = (offset === 0 && key === 'blog' && item.blogId)
         ? `<span class="pc-read-more">Read Article →</span>` : '';
-      card.innerHTML = `<div class="pc-img"><img src="${item.img}" alt="${item.title}"></div><div class="pc-body"><span class="pc-tag">${item.tag}</span><h3 class="pc-title">${item.title}</h3>${readMoreHint}</div>`;
+      card.innerHTML = `<div class="pc-img"><img src="${item.img}" alt="${item.title}" loading="lazy"></div><div class="pc-body"><span class="pc-tag">${item.tag}</span><h3 class="pc-title">${item.title}</h3>${readMoreHint}</div>`;
       if(offset !== 0){
         card.addEventListener('click', ()=>{ pyramidState[key] = i; renderPyramid(key); });
       } else if(key === 'blog' && item.blogId){
