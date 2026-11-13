@@ -731,8 +731,9 @@ const durText=s=>s>=3600?`${Math.floor(s/3600)} hr ${Math.round(s%3600/60)} min`
 const ROLE_NAME={teacher:"Teacher",student:"Student",parent:"Parent"};
 
 async function authCheck(){
-  if(!S.liveToken){AUTH={state:"out",user:null,msg:""};return render()}
   AUTH.state="check";render();
+  try{await liveApi("/me")}catch(e){if(e.code==="setup"||e.code==="offline"&&!S.liveToken){AUTH={state:"guest",user:null,msg:""};return render()}}
+  if(!S.liveToken){AUTH={state:"out",user:null,msg:""};return render()}
   try{AUTH={state:"in",user:(await liveApi("/me")).user,msg:""}}
   catch(e){
     if(e.code==="signin"||e.status===401){S.liveToken="";save();AUTH={state:"out",user:null,msg:""}}
@@ -801,8 +802,9 @@ function openPwDialog(){
 }
 
 /* ----- Live page ----- */
-function vLive(){const u=AUTH.user;return `<section class="stack view"><div class="eyebrow">Live classes</div><h1>${u.role==="teacher"?"Your classroom":u.role==="parent"?`${esc(u.name)}'s classes`:`Hi ${esc(u.name.split(" ")[0])}!`}</h1></section><div id="liveRoot" class="stack"><p class="li-m">Loading…</p></div>`}
+function vLive(){const u=AUTH.user;if(!u)return `<section class="stack view"><div class="eyebrow">Live classes</div><h1>Coming soon</h1><p class="li-m">Live classes and sign-in are not switched on yet. Lessons, puzzles and the test all work.</p></section><div id="liveRoot"></div>`;return `<section class="stack view"><div class="eyebrow">Live classes</div><h1>${u.role==="teacher"?"Your classroom":u.role==="parent"?`${esc(u.name)}'s classes`:`Hi ${esc(u.name.split(" ")[0])}!`}</h1></section><div id="liveRoot" class="stack"><p class="li-m">Loading…</p></div>`}
 async function afterLive(){
+  if(!AUTH.user)return;
   const root=$("#liveRoot"),teacher=AUTH.user.role==="teacher";
   try{
     if(!LV.classes){const r=await liveApi("/classes");LV.classes=r.classes;LV.recReady=r.recordingReady}
@@ -886,8 +888,8 @@ function liveHome(root){
 const VIEWS={live:[vLive,afterLive],home:[vHome,afterHome],courses:[vCourses],lesson:[vLesson,afterLesson],puzzles:[vPuzzles,afterPuzzles],tests:[vTests,afterTests],progress:[vProgress,afterProgress]};
 function route(){const h=(location.hash||"#home").slice(1);return VIEWS[h]?h:"home"}
 function render(){
-  document.body.classList.toggle("gated",AUTH.state!=="in");renderWho();
-  if(AUTH.state!=="in"){stopLesson();$("#app").innerHTML=authView();bindAuth();return}
+  document.body.classList.toggle("gated",AUTH.state!=="in"&&AUTH.state!=="guest");renderWho();
+  if(AUTH.state!=="in"&&AUTH.state!=="guest"){stopLesson();$("#app").innerHTML=authView();bindAuth();return}
   if(!HAS_CHESS){$("#app").innerHTML=`<div class="card"><h2>The chess engine didn't load</h2><p class="li-m" style="margin-top:8px">Check your connection and reload the page.</p></div>`;return}
   const r=route();if(r!=="lesson")stopLesson();
   const [v,a]=VIEWS[r];$("#app").innerHTML=v();a&&a();
