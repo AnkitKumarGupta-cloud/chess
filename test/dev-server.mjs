@@ -1,23 +1,10 @@
-// Local preview with a FAKE video service, to click through the Live page without a 100ms account.
-//   npm run build && node test/dev-server.mjs   -> http://localhost:4173  (teacher password: demo-teacher)
+// Local preview with a FAKE database and FAKE LiveKit, to click through the site without any account.
+//   npm run build && node test/dev-server.mjs   -> http://localhost:4173  (teacher: teacher / demo-teacher)
 import http from "node:http"; import fs from "node:fs"; import path from "node:path"; import { fileURLToPath } from "node:url";
-process.env.HMS_ACCESS_KEY ||= "demo"; process.env.HMS_SECRET ||= "demo-secret-demo-secret"; process.env.TEACHER_PASSWORD ||= "demo-teacher"; process.env.SESSION_SECRET ||= "demo-session-secret";
-const rooms = new Map(); let n = 0; const realFetch = globalThis.fetch;
-globalThis.fetch = async (url, o = {}) => {
-  if (!String(url).startsWith("https://api.100ms.live")) return realFetch(url, o);
-  const u = new URL(url), p = u.pathname.replace("/v2", ""), m = o.method || "GET"; const J = (s, b) => ({ ok: s < 300, status: s, json: async () => b });
-  if (p === "/rooms" && m === "POST") { const id = "demoroom" + String(++n).padStart(4, "0"); rooms.set(id, { id, enabled: true, ...JSON.parse(o.body) }); return J(200, rooms.get(id)); }
-  if (p === "/rooms") return J(200, { data: [...rooms.values()].filter((r) => r.enabled) });
-  const r = p.match(/^\/rooms\/(\w+)$/);
-  if (r && m === "GET") return rooms.has(r[1]) ? J(200, rooms.get(r[1])) : J(404, {});
-  if (r) { Object.assign(rooms.get(r[1]), JSON.parse(o.body)); return J(200, {}); }
-  if (p.startsWith("/active-rooms/")) return J(404, {});
-  if (p === "/recording-assets") return J(200, { data: [{ id: "demoasset1", type: "room-composite", path: "x.mp4", status: "completed", duration: 2710, size: 1, created_at: new Date().toISOString() }] });
-  if (p.endsWith("/presigned-url")) return J(200, { url: "/voice/f1.mp3" });
-  return J(200, {});
-};
+import { useEnv } from "./fakes.mjs";
+useEnv({ TEACHER_PASSWORD: "demo-teacher" });
 const dist = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "dist");
-const types = { ".html": "text/html", ".js": "text/javascript", ".mp3": "audio/mpeg", ".png": "image/png", ".svg": "image/svg+xml", ".css": "text/css" };
+const types = { ".html": "text/html", ".js": "text/javascript", ".mp3": "audio/mpeg", ".png": "image/png", ".jpg": "image/jpeg", ".svg": "image/svg+xml", ".css": "text/css" };
 http.createServer(async (req, res) => {
   const u = new URL(req.url, "http://x");
   if (u.pathname.startsWith("/api/")) {

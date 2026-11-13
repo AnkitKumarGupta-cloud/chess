@@ -1,48 +1,37 @@
-import { handler, HttpError, whoIs, mustBeTeacher, listClasses, canSee, isLive, hms, cfg, slug } from "./_lib.js";
+import crypto from "node:crypto";
+import { handler, HttpError, whoIs, mustBeTeacher, listClasses, getClassFor, putClass, removeClass, liveRooms, slug, recordingReady, stopRecording } from "./_lib.js";
 
 export default handler(async ({ req, body, query }) => {
-  const user = whoIs(req);
-
+  const me = await whoIs(req);
   if (req.method === "GET") {
+    const all = await listClasses();
+    const mine = all.filter((c) => me.role === "teacher" || c.batch === me.batch);
+    let rooms = {};
+    try { rooms = await liveRooms(); } catch (e) { if (!(e instanceof HttpError)) throw e; if (e.code === "setup" && me.role === "teacher") throw e; }
     const now = Date.now();
-    const mine = (await listClasses()).filter((c) => canSee(user, c));
-    // Only ask the video service about classes that could be running right now.
-    await Promise.all(mine.map(async (c) => {
-      const start = new Date(c.startsAt).getTime();
-      const near = now > start - 45 * 60000 && now < start + (c.durationMin + 120) * 60000;
-      c.live = near ? await isLive(c.id) : false;
-      c.ended = !c.live && now > start + c.durationMin * 60000;
-    }));
-    return { classes: mine };
+    return {
+      recordingReady: recordingReady(),
+      classes: mine.map((c) => ({
+        id: c.id, title: c.title, batch: c.batch, batchName: c.batchName, startsAt: c.startsAt, durationMin: c.durationMin,
+        live: (rooms[c.roomName] || 0) > 0, ended: now > new Date(c.startsAt).getTime() + (c.durationMin + 30) * 60000,
+      })),
+    };
   }
-
+  mustBeTeacher(me);
   if (req.method === "POST") {
-    mustBeTeacher(user);
-    const title = String(body.title || "").trim().slice(0, 80);
-    const batchName = String(body.batch || "").trim().slice(0, 40);
-    const batch = slug(batchName);
-    const at = new Date(body.startsAt);
-    const d = Math.max(15, Math.min(240, parseInt(body.durationMin, 10) || 60));
-    if (title.length < 2) throw new HttpError(400, "Give the class a title.");
-    if (!batch) throw new HttpError(400, "Enter the batch name.");
-    if (isNaN(at)) throw new HttpError(400, "Pick a date and time.");
-    const room = await hms("/rooms", {
-      method: "POST",
-      body: {
-        name: `cs-${batch}-${Date.now().toString(36)}`,
-        description: JSON.stringify({ t: title, b: batch, bn: batchName, at: at.toISOString(), d }),
-        ...(cfg().templateId ? { template_id: cfg().templateId } : {}),
-      },
-    });
-    return { class: { id: room.id, title, batch, batchName, startsAt: at.toISOString(), durationMin: d, live: false, ended: false } };
+    const title = String(body.title || "").trim().slice(0, 80), batchName = String(body.batch || "").trim().slice(0, 40);
+    const startsAt = new Date(body.startsAt), dur = Math.round(Number(body.durationMin) || 60);
+    if (!title || !slug(batchName) || isNaN(startsAt) || dur < 15 || dur > 240) throw new HttpError(400, "Please fill in the title, batch, date and minutes (15 to 240).");
+    const id = crypto.randomBytes(6).toString("hex");
+    const cls = { id, title, batch: slug(batchName), batchName, startsAt: startsAt.toISOString(), durationMin: dur, roomName: "cs-" + id };
+    await putClass(cls);
+    return { class: cls };
   }
-
   if (req.method === "DELETE") {
-    mustBeTeacher(user);
-    const id = String(query.id || "");
-    if (!/^[a-zA-Z0-9]{8,40}$/.test(id)) throw new HttpError(400, "That class was not found.");
-    await hms(`/rooms/${id}`, { method: "POST", body: { enabled: false } });
+    const cls = await getClassFor(me, query.id);
+    await stopRecording(cls).catch(() => {});
+    await removeClass(cls.id);
     return { ok: true };
   }
-  throw new HttpError(405, "Method not allowed.");
-});
+  throw new HttpError(405, "Use GET, POST or DELETE.");
+}, { needs: ["base", "db"] });

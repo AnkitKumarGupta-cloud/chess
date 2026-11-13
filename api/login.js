@@ -1,10 +1,6 @@
-import { handler, HttpError, checkTeacherPassword, teacherToken } from "./_lib.js";
-// Teacher sign-in. Students and parents don't call this: their personal code is their sign-in.
+import { handler, HttpError, checkLogin, sessionToken } from "./_lib.js";
 export default handler(async ({ req, body }) => {
   if (req.method !== "POST") throw new HttpError(405, "Use POST.");
-  if (!checkTeacherPassword(body.password)) {
-    await new Promise((r) => setTimeout(r, 800)); // slow down guessing
-    throw new HttpError(401, "Wrong password.");
-  }
-  return { token: teacherToken(), user: { role: "teacher", name: "Teacher" } };
+  const user = await checkLogin(body.username, body.password);
+  return { token: sessionToken(user), user };
 });

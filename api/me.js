@@ -1,5 +1,2 @@
-import { handler, whoIs } from "./_lib.js";
-export default handler(async ({ req }) => {
-  const u = whoIs(req);
-  return { user: { role: u.role, name: u.name, batch: u.batch } };
-});
+import { handler, whoIs, publicUser } from "./_lib.js";
+export default handler(async ({ req }) => ({ user: publicUser(await whoIs(req)) }));

@@ -200,6 +200,76 @@ nav.tabs + .toggles{margin-left:8px}
 .codes{border-top:1px solid var(--line);padding-top:12px}
 a.btn{text-decoration:none;display:inline-block}
 @media (max-width:720px){nav.tabs a{padding:6px 4px!important;font-size:.64rem!important}}
+
+/* ===== Design polish, sign-in screen, account menu ===== */
+:root{--shadow:0 1px 2px rgba(22,32,43,.06),0 8px 24px rgba(22,32,43,.06);--shadow-up:0 2px 4px rgba(22,32,43,.08),0 14px 34px rgba(22,32,43,.12);--glow:rgba(200,50,60,.14)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.28);--shadow-up:0 2px 4px rgba(0,0,0,.5),0 14px 34px rgba(0,0,0,.4);--glow:rgba(229,82,91,.16)}}
+:root[data-theme="dark"]{--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.28);--shadow-up:0 2px 4px rgba(0,0,0,.5),0 14px 34px rgba(0,0,0,.4);--glow:rgba(229,82,91,.16)}
+body{background:radial-gradient(900px 420px at 85% -80px,var(--glow),transparent 70%),var(--bg);background-attachment:fixed}
+/* no backdrop-filter here: it would trap the fixed phone tab bar inside the header */
+.topbar{box-shadow:0 1px 0 var(--line),0 6px 18px rgba(22,32,43,.04)}
+.card{box-shadow:var(--shadow);border-radius:16px;transition:transform .18s ease,box-shadow .18s ease}
+.course.card:hover,.grid>.card.stack:hover{box-shadow:var(--shadow-up)}
+.btn{border-radius:10px;padding:11px 18px;box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 2px 6px color-mix(in srgb,var(--accent) 35%,transparent);transition:transform .12s ease,filter .12s ease,box-shadow .12s ease}
+.btn:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+.btn:active:not(:disabled){transform:translateY(0)}
+.btn.ghost{box-shadow:none;background:var(--surface)}
+.btn.ghost:hover:not(:disabled){border-color:var(--ink)}
+.btn.sm{padding:6px 10px;font-size:.8rem;border-radius:8px}
+nav.tabs a{transition:background .15s,color .15s}
+nav.tabs a:hover{color:var(--ink)}
+nav.tabs a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+.hero{background:linear-gradient(135deg,var(--surface),color-mix(in srgb,var(--accent-soft) 55%,var(--surface)));border:1px solid var(--line);border-radius:24px;padding:clamp(20px,4vw,40px);box-shadow:var(--shadow)}
+.hero h1{font-size:clamp(1.7rem,4.6vw,2.6rem)}
+.stat{border-left:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.pill.live{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 50%,transparent)}50%{box-shadow:0 0 0 6px transparent}}
+@media (prefers-reduced-motion:reduce){.pill.live{animation:none}}
+.eyebrow{color:var(--accent)}
+.reclist button,.course li button{transition:color .12s}
+.classcard{border-left:4px solid var(--line)}
+.classcard:has(.pill.live){border-left-color:var(--accent)}
+
+/* Sign-in screen */
+body.gated nav.tabs,body.gated .toggles{display:none}
+.login{display:grid;grid-template-columns:1.05fr .95fr;gap:32px;align-items:center;min-height:calc(100dvh - 140px)}
+@media (max-width:820px){.login{grid-template-columns:1fr;min-height:0;gap:20px}.login-art{display:none}}
+.login-art{padding:clamp(8px,2vw,24px)}
+.login-art h1{font-size:clamp(2rem,5vw,3.2rem);max-width:14ch}
+.login-art ul{list-style:none;padding:0;margin:22px 0 0;display:flex;flex-direction:column;gap:10px;color:var(--muted);font-size:1.02rem}
+.login-art li::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:10px;vertical-align:middle}
+.login-glyph{font-size:clamp(4rem,9vw,6.5rem);line-height:1;color:var(--accent);margin-bottom:8px;filter:drop-shadow(0 10px 24px var(--glow))}
+.login-card{max-width:440px;width:100%;justify-self:center;padding:clamp(20px,4vw,32px);gap:16px}
+.pwrow{display:flex;gap:8px;align-items:stretch;font-weight:400}
+.pwrow input{flex:1}
+.pwtog{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:8px;padding:0 12px;font-weight:600;font-size:.8rem}
+.fld input{border-radius:10px;padding:12px 13px;font-size:1rem}
+.chk{display:flex;gap:8px;align-items:center;font-size:.9rem;font-weight:500}
+.spin{width:28px;height:28px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);margin:0 auto;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Account menu */
+.who{position:relative;margin-left:8px}
+.chipbtn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:4px 12px 4px 4px;font-weight:600;font-size:.86rem}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.menu{position:absolute;right:0;top:calc(100% + 8px);min-width:210px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-up);padding:6px;z-index:30;display:flex;flex-direction:column}
+.menu[hidden]{display:none}
+.menu-h{padding:8px 10px 10px;border-bottom:1px solid var(--line);margin-bottom:4px;display:flex;flex-direction:column}
+.menu button{background:none;border:0;text-align:left;padding:9px 10px;border-radius:8px;color:var(--ink);font-weight:600}
+.menu button:hover{background:var(--bg)}
+@media (max-width:720px){.whoname{display:none}.chipbtn{padding:3px}.who{margin-left:6px}.topbar-in{gap:12px!important}}
+body.gated .who{display:none}
+.overlay{position:fixed;inset:0;background:rgba(10,15,22,.55);display:grid;place-items:center;z-index:50;padding:16px}
+.dialog{width:min(420px,100%);box-shadow:var(--shadow-up)}
+.feedback[hidden]{display:none}
+
+/* Teacher tools */
+.acct{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.acct-cred{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center}
+.acct-cred code{font-family:var(--f-mono);font-size:.95rem;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:3px 8px;justify-self:start;user-select:all}
+.tablewrap{overflow-x:auto}
+td.acts{white-space:nowrap;text-align:right}
+td.acts .btn{margin-left:6px}
 </style>
 
 </head>
@@ -221,6 +291,7 @@ a.btn{text-decoration:none;display:inline-block}
     <button class="tog" id="togSound" aria-pressed="true" title="Move sounds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H3v6h3l5 4zM16 9a4 4 0 010 6M19 6a8 8 0 010 12"/></svg><span>Sound</span></button>
     <button class="tog" id="togVoice" aria-pressed="true" title="Lesson voiceover"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg><span>Voice</span></button>
   </div>
+  <div class="who" id="who"></div>
 </div></header>
 
 <main id="app"></main>
@@ -350,7 +421,7 @@ function vHome(){
   const daily=PUZZLES.filter(p=>p.level==="Advanced")[new Date().getDate()%13];
   return `<section class="hero view">
     <div>
-      <div class="eyebrow">Learn chess step by step</div>
+      <div class="eyebrow">${AUTH.user?`Hi ${esc(AUTH.user.name.split(" ")[0])}, learn chess step by step`:"Learn chess step by step"}</div>
       <h1 style="margin-top:8px">Learn one chess idea a day.</h1>
       <p class="lead">${ALL_LESSONS.length} short video lessons, ${PUZZLES.length} puzzles from easy to hard, and a test to check what you learned.</p>
       <div class="row" style="margin-top:20px">
@@ -639,62 +710,119 @@ function vProgress(){
 function afterProgress(){let armed=false;$("#resetAll").onclick=e=>{if(!armed){armed=true;e.target.textContent="Tap again to erase everything";return}
   S={lessons:{},puzzles:{},tests:[],sound:S.sound,voice:S.voice,liveToken:S.liveToken};save();PZ=null;toast("Progress reset");render()}}
 
-/* ---------- Live classes (needs the hosted site: talks to /api) ---------- */
-let LV={user:null,classes:null,error:null,busy:false,codes:null,recs:{},player:null};
+/* ---------- Sign-in and live classes (talk to the site's /api) ---------- */
+let AUTH={state:S.liveToken?"check":"out",user:null,msg:""};
+let LV={classes:null,users:null,accounts:null,recs:{},player:null,recReady:true};
+function resetLive(){LV={classes:null,users:null,accounts:null,recs:{},player:null,recReady:true}}
 async function liveApi(path,opts={}){
   let r;
   try{r=await fetch("/api"+path,{method:opts.method||"GET",headers:Object.assign({"Content-Type":"application/json"},S.liveToken?{Authorization:"Bearer "+S.liveToken}:{}),body:opts.body?JSON.stringify(opts.body):undefined})}
   catch(e){throw Object.assign(new Error("offline"),{code:"offline"})}
   let j=null;try{j=await r.json()}catch(e){}
-  if(!r.ok||!j)throw Object.assign(new Error((j&&j.error)||"Something went wrong. Please try again."),{code:(j&&j.code)||(r.status===404?"offline":""),status:r.status});
+  if(!r.ok||!j){
+    const err=Object.assign(new Error((j&&j.error)||"Something went wrong. Please try again."),{code:(j&&j.code)||(r.status===404?"offline":""),status:r.status});
+    if(err.code==="signin"&&AUTH.state==="in"){S.liveToken="";save();AUTH={state:"out",user:null,msg:err.message};resetLive();setTimeout(render,0)}
+    throw err;
+  }
   return j;
 }
 const whenText=iso=>new Date(iso).toLocaleString([], {weekday:"short",day:"numeric",month:"short",hour:"numeric",minute:"2-digit"});
 const durText=s=>s>=3600?`${Math.floor(s/3600)} hr ${Math.round(s%3600/60)} min`:`${Math.max(1,Math.round(s/60))} min`;
-function liveSignOut(){S.liveToken="";save();LV={user:null,classes:null,error:null,busy:false,codes:null,recs:{},player:null};render()}
-function vLive(){return `<section class="stack view"><div class="eyebrow">Live classes</div><h1>${LV.user?(LV.user.role==="teacher"?"Your classroom":LV.user.role==="parent"?`${esc(LV.user.name)}'s classes`:`Hi ${esc(LV.user.name)}!`):"Join your live class"}</h1></section><div id="liveRoot" class="stack"><p class="li-m">Loading…</p></div>`}
-async function afterLive(){
-  const root=$("#liveRoot");
-  if(!S.liveToken){LV.user=null;return liveSignIn(root)}
-  try{
-    if(!LV.user){LV.user=(await liveApi("/me")).user;if(route()==="live")return render()}
-    if(!LV.classes){LV.classes=(await liveApi("/classes")).classes}
-  }catch(e){
-    if(route()!=="live")return;
-    if(e.code==="signin"){S.liveToken="";save();LV.user=null;return liveSignIn(root,e.message)}
-    return liveProblem(root,e);
+const ROLE_NAME={teacher:"Teacher",student:"Student",parent:"Parent"};
+
+async function authCheck(){
+  if(!S.liveToken){AUTH={state:"out",user:null,msg:""};return render()}
+  AUTH.state="check";render();
+  try{AUTH={state:"in",user:(await liveApi("/me")).user,msg:""}}
+  catch(e){
+    if(e.code==="signin"||e.status===401){S.liveToken="";save();AUTH={state:"out",user:null,msg:""}}
+    else AUTH={state:"error",user:null,msg:e.code==="offline"?"We can't reach the Chess Sathi server right now. Check your internet and try again.":e.message}
   }
+  render();
+}
+function signOut(){S.liveToken="";save();AUTH={state:"out",user:null,msg:""};resetLive();stopLesson();location.hash="#home";render()}
+
+function authView(){
+  if(AUTH.state==="check")return `<section class="login"><div class="card login-card stack" style="text-align:center"><div class="spin" aria-hidden="true"></div><p class="li-m" role="status">Opening Chess Sathi…</p></div></section>`;
+  if(AUTH.state==="error")return `<section class="login"><div class="card login-card stack"><h2>Can't open the app</h2><p class="li-m">${esc(AUTH.msg)}</p><button class="btn" id="lgRetry">Try again</button></div></section>`;
+  return `<section class="login view">
+    <div class="login-art" aria-hidden="true">
+      <div class="login-glyph">♞</div>
+      <h1>Learn chess the easy way.</h1>
+      <ul><li>Short video lessons on the board</li><li>Puzzles from easy to hard</li><li>Live classes with your teacher</li></ul>
+    </div>
+    <form class="card login-card stack" id="loginForm" novalidate>
+      <svg width="40" height="40" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="var(--accent)"/><circle cx="14" cy="9.2" r="3.6" fill="#FFFFFF"/><path d="M10.4 20.6c0-3.3 1.6-5.7 3.6-7.3 2 1.6 3.6 4 3.6 7.3z" fill="#FFFFFF"/><rect x="8.4" y="20.2" width="11.2" height="2.8" rx="1.4" fill="#FFFFFF"/></svg>
+      <div><h2>Sign in to Chess Sathi</h2><p class="li-m" style="margin-top:4px">Use the username and password your teacher gave you.</p></div>
+      ${AUTH.msg?`<div class="feedback no" role="alert">${esc(AUTH.msg)}</div>`:""}
+      <label class="fld"><span>Username</span><input id="lgUser" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" required></label>
+      <label class="fld"><span>Password</span><span class="pwrow"><input id="lgPw" type="password" autocomplete="current-password" required><button type="button" class="pwtog" id="lgShow" aria-pressed="false">Show</button></span></label>
+      <div class="feedback no" id="lgMsg" role="alert" hidden></div>
+      <button class="btn" type="submit" id="lgGo">Sign in</button>
+      <p class="li-m">Teachers: your username is <b>teacher</b>. Forgot your password? Ask your teacher for a new one.</p>
+    </form></section>`;
+}
+function bindAuth(){
+  const retry=$("#lgRetry");if(retry)retry.onclick=authCheck;
+  const f=$("#loginForm");if(!f)return;
+  const u=$("#lgUser");u.focus();
+  $("#lgShow").onclick=e=>{const p=$("#lgPw"),show=p.type==="password";p.type=show?"text":"password";e.currentTarget.textContent=show?"Hide":"Show";e.currentTarget.setAttribute("aria-pressed",show)};
+  f.onsubmit=async e=>{e.preventDefault();const m=$("#lgMsg"),b=$("#lgGo");m.hidden=true;
+    if(!u.value.trim()||!$("#lgPw").value){m.textContent="Please enter your username and password.";m.hidden=false;return}
+    b.disabled=true;b.textContent="Signing in…";
+    try{const r=await liveApi("/login",{method:"POST",body:{username:u.value,password:$("#lgPw").value}});S.liveToken=r.token;save();AUTH={state:"in",user:r.user,msg:""};resetLive();location.hash="#home";render()}
+    catch(err){m.textContent=err.code==="offline"?"We can't reach the Chess Sathi server. Check your internet.":err.code==="setup"?"The website is not set up yet. Please tell your teacher.":err.message;m.hidden=false;b.disabled=false;b.textContent="Sign in"}};
+}
+function renderWho(){
+  const w=$("#who");if(!w)return;const u=AUTH.state==="in"&&AUTH.user;
+  if(!u){w.innerHTML="";return}
+  w.innerHTML=`<button class="chipbtn" id="whoBtn" aria-haspopup="menu" aria-expanded="false"><span class="avatar" aria-hidden="true">${esc(u.name.trim()[0]||"?").toUpperCase()}</span><span class="whoname">${esc(u.name.split(" ")[0])}</span></button>
+    <div class="menu" id="whoMenu" role="menu" hidden><div class="menu-h"><b>${esc(u.name)}</b><span class="li-m">${ROLE_NAME[u.role]||""}${u.batchName?" · "+esc(u.batchName):""}</span></div>
+    ${u.role==="teacher"?"":`<button role="menuitem" id="whoPw">Change password</button>`}<button role="menuitem" id="whoOut">Sign out</button></div>`;
+  const btn=$("#whoBtn"),menu=$("#whoMenu");
+  btn.onclick=e=>{e.stopPropagation();menu.hidden=!menu.hidden;btn.setAttribute("aria-expanded",!menu.hidden)};
+  $("#whoOut").onclick=signOut;
+  const pw=$("#whoPw");if(pw)pw.onclick=()=>{menu.hidden=true;openPwDialog()};
+}
+document.addEventListener("click",()=>{const m=$("#whoMenu");if(m&&!m.hidden){m.hidden=true;const b=$("#whoBtn");b&&b.setAttribute("aria-expanded","false")}});
+function openPwDialog(){
+  const d=document.createElement("div");d.className="overlay";
+  d.innerHTML=`<form class="card stack dialog" role="dialog" aria-modal="true" aria-label="Change password"><h2>Change password</h2>
+    <label class="fld"><span>Current password</span><input id="pwOld" type="password" autocomplete="current-password" required></label>
+    <label class="fld"><span>New password (6 or more characters)</span><input id="pwNew" type="password" autocomplete="new-password" minlength="6" required></label>
+    <p class="feedback no" id="pwMsg" role="alert" hidden></p>
+    <div class="row"><button class="btn" type="submit">Save</button><button class="btn ghost" type="button" id="pwCancel">Cancel</button></div></form>`;
+  document.body.appendChild(d);$("#pwOld").focus();
+  const close=()=>d.remove();$("#pwCancel").onclick=close;d.onclick=e=>{if(e.target===d)close()};
+  d.onkeydown=e=>{if(e.key==="Escape")close()};
+  d.querySelector("form").onsubmit=async e=>{e.preventDefault();const m=$("#pwMsg");m.hidden=true;
+    try{await liveApi("/password",{method:"POST",body:{oldPassword:$("#pwOld").value,newPassword:$("#pwNew").value}});close();toast("Password changed")}
+    catch(err){m.textContent=err.message;m.hidden=false}};
+}
+
+/* ----- Live page ----- */
+function vLive(){const u=AUTH.user;return `<section class="stack view"><div class="eyebrow">Live classes</div><h1>${u.role==="teacher"?"Your classroom":u.role==="parent"?`${esc(u.name)}'s classes`:`Hi ${esc(u.name.split(" ")[0])}!`}</h1></section><div id="liveRoot" class="stack"><p class="li-m">Loading…</p></div>`}
+async function afterLive(){
+  const root=$("#liveRoot"),teacher=AUTH.user.role==="teacher";
+  try{
+    if(!LV.classes){const r=await liveApi("/classes");LV.classes=r.classes;LV.recReady=r.recordingReady}
+    if(teacher&&!LV.users)LV.users=(await liveApi("/users")).users;
+  }catch(e){if(e.code==="signin"||route()!=="live")return;return liveProblem(root,e)}
   if(route()!=="live"||!$("#liveRoot"))return;
   liveHome($("#liveRoot"));
 }
 function liveProblem(root,e){
-  const msg=e.code==="offline"?"Live classes work on the Chess Sathi website and in the mobile app. This preview can't connect to the class server.":e.code==="setup"?"Live classes are not switched on yet. The teacher needs to finish the setup (see SETUP.md).":e.message;
-  root.innerHTML=`<div class="card stack"><h2>Live classes aren't available here</h2><p class="li-m">${esc(msg)}</p><div class="row"><button class="btn ghost" id="lvRetry">Try again</button>${S.liveToken?`<button class="btn ghost" id="lvOut">Sign out</button>`:""}</div></div>`;
-  $("#lvRetry").onclick=()=>{LV.classes=null;render()};const o=$("#lvOut");if(o)o.onclick=liveSignOut;
+  const msg=e.code==="offline"?"Live classes need the Chess Sathi server. Check your internet and try again.":e.code==="setup"?(AUTH.user.role==="teacher"?e.message+". See SETUP.md to finish the setup.":"Live classes are not switched on yet. Please ask your teacher."):e.message;
+  root.innerHTML=`<div class="card stack"><h2>Live classes aren't available right now</h2><p class="li-m">${esc(msg)}</p><div class="row"><button class="btn ghost" id="lvRetry">Try again</button></div></div>`;
+  $("#lvRetry").onclick=()=>{LV.classes=null;LV.users=null;render()};
 }
-function liveSignIn(root,msg){
-  root.innerHTML=`${msg?`<div class="feedback no">${esc(msg)}</div>`:""}
-  <div class="grid g2">
-    <form class="card stack" id="lvCodeForm"><h2>Students and parents</h2>
-      <p class="li-m">Paste the sign-in code your teacher sent you. You only need to do this once on this device.</p>
-      <label class="fld"><span>Your sign-in code</span><input id="lvCode" autocomplete="off" autocapitalize="off" spellcheck="false" required></label>
-      <button class="btn" type="submit">Sign in</button></form>
-    <form class="card stack" id="lvTeachForm"><h2>Teacher</h2>
-      <p class="li-m">Sign in to schedule classes, add students and start a live class.</p>
-      <label class="fld"><span>Teacher password</span><input id="lvPw" type="password" autocomplete="current-password" required></label>
-      <button class="btn ghost" type="submit">Teacher sign in</button><p class="li-m" id="lvTeachMsg" role="status"></p></form>
-  </div>`;
-  $("#lvCodeForm").onsubmit=e=>{e.preventDefault();const c=$("#lvCode").value.trim().replace(/^.*[?&]invite=/,"");if(!c)return;S.liveToken=c;save();LV.user=null;LV.classes=null;render()};
-  $("#lvTeachForm").onsubmit=async e=>{e.preventDefault();const m=$("#lvTeachMsg");m.textContent="Signing in…";
-    try{const r=await liveApi("/login",{method:"POST",body:{password:$("#lvPw").value}});S.liveToken=r.token;save();LV.user=null;LV.classes=null;render()}
-    catch(err){m.textContent=err.code==="offline"?"Can't reach the class server from here.":err.message}};
-}
+const waText=a=>`Chess Sathi login\nWebsite: ${location.origin}\nUsername: ${a.username}\nPassword: ${a.password}`;
 function classCard(c,u){
   const teacher=u.role==="teacher",parent=u.role==="parent";
   const state=c.live?`<span class="pill live">● Live now</span>`:c.ended?`<span class="pill">Finished</span>`:`<span class="pill level">Upcoming</span>`;
   const join=parent?"":(c.live||!c.ended||teacher)?`<a class="btn ${c.live||teacher?"":"ghost"}" href="/class.html?c=${encodeURIComponent(c.id)}">${teacher?(c.live?"Rejoin class":"Start class"):(c.live?"Join now":"Enter classroom")}</a>`:"";
   const recs=LV.recs[c.id];
-  return `<div class="card stack" data-class="${esc(c.id)}">
+  return `<div class="card stack classcard" data-class="${esc(c.id)}">
     <div class="row">${state}<span class="pill">${esc(c.batchName||c.batch)}</span><span class="pill mono">${c.durationMin} min</span></div>
     <h2>${esc(c.title)}</h2><p class="li-m">${esc(whenText(c.startsAt))}</p>
     <div class="row">${join}<button class="btn ghost" data-recs="${esc(c.id)}">${recs?"Refresh recordings":"Show recordings"}</button>${teacher?`<button class="btn ghost" data-del="${esc(c.id)}">Delete</button>`:""}</div>
@@ -702,57 +830,64 @@ function classCard(c,u){
     ${LV.player&&LV.player.classId===c.id?`<video class="recvideo" controls autoplay playsinline src="${esc(LV.player.url)}"></video>`:""}
   </div>`;
 }
+function accountCard(a){return `<div class="acct"><div><b>${esc(a.name)}</b> <span class="pill">${ROLE_NAME[a.role]}</span></div>
+  <div class="acct-cred"><span class="li-m">Username</span><code>${esc(a.username)}</code><span class="li-m">Password</span><code>${esc(a.password)}</code></div>
+  <button class="btn ghost" type="button" data-copy="${esc(waText(a))}">Copy message for WhatsApp</button></div>`}
 function liveHome(root){
-  const u=LV.user,teacher=u.role==="teacher",cs=LV.classes||[];
+  const u=AUTH.user,teacher=u.role==="teacher",cs=LV.classes||[],users=LV.users||[];
   const now=cs.filter(c=>c.live),next=cs.filter(c=>!c.live&&!c.ended).reverse(),past=cs.filter(c=>!c.live&&c.ended);
   const group=(t,list,empty)=>`<section class="stack"><h2>${t}</h2>${list.length?`<div class="grid g2">${list.map(c=>classCard(c,u)).join("")}</div>`:`<p class="li-m">${empty}</p>`}</section>`;
+  const batches=[...new Set([...cs.map(c=>c.batchName||c.batch),...users.map(x=>x.batchName||x.batch)].filter(Boolean))];
   root.innerHTML=`
-  <div class="row" style="justify-content:space-between"><p class="li-m">${teacher?"Signed in as teacher.":u.role==="parent"?`Parent view. You can see the schedule and watch recordings of ${esc(u.name)}'s classes.`:`You're in batch “${esc(u.batch)}”. Join when your class is live.`}</p>
-    <div class="row"><button class="btn ghost" id="lvRefresh">Refresh</button><button class="btn ghost" id="lvOut">Sign out</button></div></div>
+  <div class="row" style="justify-content:space-between"><p class="li-m">${teacher?"Signed in as teacher.":u.role==="parent"?`Parent view. You can see the schedule and watch recordings of ${esc(u.name)}'s classes.`:`You're in batch “${esc(u.batchName||u.batch)}”. Join when your class is live.`}</p>
+    <button class="btn ghost" id="lvRefresh">Refresh</button></div>
+  ${teacher&&!LV.recReady?`<div class="feedback no">Recording is not set up yet, so classes will not be saved. See SETUP.md (step 5).</div>`:""}
   ${teacher?`<div class="grid g2">
     <form class="card stack" id="lvNew"><h2>Schedule a class</h2>
       <label class="fld"><span>Class title</span><input id="lvTitle" placeholder="Knight forks practice" required maxlength="80"></label>
       <label class="fld"><span>Batch</span><input id="lvBatch" placeholder="Beginners Saturday" required maxlength="40" list="lvBatches"></label>
-      <datalist id="lvBatches">${[...new Set(cs.map(c=>c.batchName||c.batch))].map(b=>`<option value="${esc(b)}">`).join("")}</datalist>
+      <datalist id="lvBatches">${batches.map(b=>`<option value="${esc(b)}">`).join("")}</datalist>
       <div class="row"><label class="fld" style="flex:2;min-width:180px"><span>Date and time</span><input id="lvAt" type="datetime-local" required></label>
       <label class="fld" style="flex:1;min-width:110px"><span>Minutes</span><input id="lvDur" type="number" min="15" max="240" step="5" value="60" required></label></div>
       <button class="btn" type="submit">Add class</button><p class="li-m" id="lvNewMsg" role="status"></p></form>
     <form class="card stack" id="lvInv"><h2>Add a student</h2>
-      <p class="li-m">You get two sign-in links: one for the student and one for the parent. Send them on WhatsApp.</p>
+      <p class="li-m">This makes a username and password for the student, and one for a parent. Send them on WhatsApp.</p>
       <label class="fld"><span>Student's name</span><input id="lvSName" required maxlength="40"></label>
       <label class="fld"><span>Batch</span><input id="lvSBatch" required maxlength="40" list="lvBatches"></label>
-      <button class="btn" type="submit">Create sign-in links</button><p class="li-m" id="lvInvMsg" role="status"></p>
-      ${LV.codes?`<div class="stack codes"><b>${esc(LV.codes.name)} · ${esc(LV.codes.batch)}</b>
-        ${[["Student link",LV.codes.studentCode],["Parent link",LV.codes.parentCode]].map(([l,c])=>`<label class="fld"><span>${l}</span><div class="row"><input readonly value="${esc(location.origin+"/?invite="+c)}" style="flex:1;min-width:0"><button class="btn ghost" type="button" data-copy="${esc(location.origin+"/?invite="+c)}">Copy</button></div></label>`).join("")}
-        <p class="li-m">Save these now. For safety they are not stored, but you can create new ones any time.</p></div>`:""}</form>
-  </div>`:""}
+      <label class="chk"><input type="checkbox" id="lvSParent" checked> Also make a parent login</label>
+      <button class="btn" type="submit">Create logins</button><p class="li-m" id="lvInvMsg" role="status"></p>
+      ${LV.accounts?`<div class="stack codes"><b>Save these now. Passwords are only shown once.</b>${LV.accounts.map(accountCard).join("")}</div>`:""}</form>
+  </div>
+  <section class="card stack"><h2>Students and parents</h2>${users.length?`<div class="tablewrap"><table><thead><tr><th>Name</th><th>Batch</th><th>Username</th><th>Who</th><th></th></tr></thead><tbody>${users.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.batchName||x.batch)}</td><td class="mono">${esc(x.username)}</td><td>${ROLE_NAME[x.role]}</td><td class="acts"><button class="btn ghost sm" data-reset="${esc(x.username)}">New password</button><button class="btn ghost sm" data-rm="${esc(x.username)}">Remove</button></td></tr>`).join("")}</tbody></table></div>`:`<p class="li-m">No students yet. Add the first one above.</p>`}</section>`:""}
   ${now.length?group("Live now",now,""):""}
   ${group("Upcoming classes",next,teacher?"No classes scheduled. Add one above.":"No upcoming classes yet. Your teacher will add them here.")}
   ${group(u.role==="parent"?"Past classes and recordings":"Past classes",past,"Finished classes and their recordings will show up here.")}`;
-  $("#lvOut").onclick=liveSignOut;
-  $("#lvRefresh").onclick=()=>{LV.classes=null;render()};
+  $("#lvRefresh").onclick=()=>{LV.classes=null;LV.users=null;render()};
+  root.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>{navigator.clipboard.writeText(b.dataset.copy).then(()=>toast("Copied")).catch(()=>toast("Press and hold to copy"))});
   if(teacher){
     const at=$("#lvAt");if(!at.value){const d=new Date(Date.now()+3600000);d.setMinutes(0,0,0);at.value=new Date(d-d.getTimezoneOffset()*60000).toISOString().slice(0,16)}
     $("#lvNew").onsubmit=async e=>{e.preventDefault();const m=$("#lvNewMsg");m.textContent="Adding…";
       try{await liveApi("/classes",{method:"POST",body:{title:$("#lvTitle").value,batch:$("#lvBatch").value,startsAt:new Date($("#lvAt").value).toISOString(),durationMin:+$("#lvDur").value}});LV.classes=null;toast("Class added");render()}catch(err){m.textContent=err.message}};
     $("#lvInv").onsubmit=async e=>{e.preventDefault();const m=$("#lvInvMsg");m.textContent="Creating…";
-      try{LV.codes=await liveApi("/invite",{method:"POST",body:{name:$("#lvSName").value,batch:$("#lvSBatch").value}});liveHome(root)}catch(err){m.textContent=err.message}};
-    root.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>{const inp=b.parentElement.querySelector("input");navigator.clipboard.writeText(b.dataset.copy).then(()=>toast("Link copied")).catch(()=>{inp.focus();inp.select();toast("Press Ctrl+C to copy")})});
+      try{LV.accounts=(await liveApi("/users",{method:"POST",body:{name:$("#lvSName").value,batch:$("#lvSBatch").value,withParent:$("#lvSParent").checked}})).accounts;LV.users=null;LV.classes=null;render()}catch(err){m.textContent=err.message}};
     root.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{if(b.dataset.armed!=="1"){b.dataset.armed="1";b.textContent="Tap again to delete";return}
       try{await liveApi("/classes?id="+encodeURIComponent(b.dataset.del),{method:"DELETE"});LV.classes=null;toast("Class deleted");render()}catch(err){toast(err.message)}});
+    root.querySelectorAll("[data-reset]").forEach(b=>b.onclick=async()=>{if(b.dataset.armed!=="1"){b.dataset.armed="1";b.textContent="Tap again";return}
+      try{LV.accounts=[await liveApi("/users",{method:"POST",body:{action:"reset",username:b.dataset.reset}})];render()}catch(err){toast(err.message)}});
+    root.querySelectorAll("[data-rm]").forEach(b=>b.onclick=async()=>{if(b.dataset.armed!=="1"){b.dataset.armed="1";b.textContent="Tap again to remove";return}
+      try{await liveApi("/users?username="+encodeURIComponent(b.dataset.rm),{method:"DELETE"});LV.users=null;toast("Account removed");render()}catch(err){toast(err.message)}});
   }
   root.querySelectorAll("[data-recs]").forEach(b=>b.onclick=async()=>{const id=b.dataset.recs;b.textContent="Loading…";
     try{LV.recs[id]={list:(await liveApi("/recordings?classId="+encodeURIComponent(id))).recordings}}catch(err){LV.recs[id]={error:err.message,list:[]}}liveHome(root)});
-  root.querySelectorAll("[data-play]").forEach(b=>b.onclick=async()=>{const [cid,aid]=b.dataset.play.split("|");b.disabled=true;
-    try{const r=await liveApi(`/recordings?classId=${encodeURIComponent(cid)}&assetId=${encodeURIComponent(aid)}`);LV.player={classId:cid,url:r.url};liveHome(root)}catch(err){toast(err.message);b.disabled=false}});
+  root.querySelectorAll("[data-play]").forEach(b=>b.onclick=()=>{const [cid,rid]=b.dataset.play.split("|");const r=(LV.recs[cid]&&LV.recs[cid].list||[]).find(x=>x.id===rid);if(r){LV.player={classId:cid,url:r.url};liveHome(root)}});
 }
-// A sign-in link (…/?invite=CODE) signs this device in and opens the Live page.
-(function(){try{const c=new URLSearchParams(location.search).get("invite");if(c){S.liveToken=c;save();history.replaceState(null,"",location.pathname+"#live")}}catch(e){}})();
 
 /* ---------- Router ---------- */
 const VIEWS={live:[vLive,afterLive],home:[vHome,afterHome],courses:[vCourses],lesson:[vLesson,afterLesson],puzzles:[vPuzzles,afterPuzzles],tests:[vTests,afterTests],progress:[vProgress,afterProgress]};
 function route(){const h=(location.hash||"#home").slice(1);return VIEWS[h]?h:"home"}
 function render(){
+  document.body.classList.toggle("gated",AUTH.state!=="in");renderWho();
+  if(AUTH.state!=="in"){stopLesson();$("#app").innerHTML=authView();bindAuth();return}
   if(!HAS_CHESS){$("#app").innerHTML=`<div class="card"><h2>The chess engine didn't load</h2><p class="li-m" style="margin-top:8px">Check your connection and reload the page.</p></div>`;return}
   const r=route();if(r!=="lesson")stopLesson();
   const [v,a]=VIEWS[r];$("#app").innerHTML=v();a&&a();
@@ -768,7 +903,7 @@ function setupToggles(){const sb=$("#togSound"),vb=$("#togVoice");
 setupToggles();
 window.addEventListener("hashchange",()=>{if(route()==="lesson"&&!curLesson)curLesson=ALL_LESSONS[0].id;render();window.scrollTo(0,0)});
 if(route()==="lesson")curLesson=ALL_LESSONS[0].id;
-render();
+authCheck();
 </script>
 </body>
 </html>

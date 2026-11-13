@@ -1,29 +1,7 @@
-// Runs the API against a fake 100ms so the logic can be checked without an account: npm test
+// Runs the API against a fake Redis and a fake LiveKit so the logic is checked without any account: npm test
 import assert from "node:assert/strict";
-process.env.HMS_ACCESS_KEY = "test-key"; process.env.HMS_SECRET = "test-secret-test-secret";
-process.env.TEACHER_PASSWORD = "chess-teacher-pw"; process.env.SESSION_SECRET = "session-secret-0123456789";
-
-const rooms = new Map(); const calls = [];
-const assets = [{ id: "asset1", room_id: null, type: "room-composite", path: "a/b.mp4", status: "completed", duration: 1800, size: 5e7, created_at: "2026-11-10T11:00:00Z" },
-                { id: "chat1", room_id: null, type: "chat", path: "a/chat.csv", status: "completed", created_at: "2026-11-10T11:00:00Z" }];
-let n = 0;
-globalThis.fetch = async (url, opts = {}) => {
-  const u = new URL(url); const p = u.pathname.replace("/v2", ""); const method = opts.method || "GET";
-  calls.push(method + " " + p);
-  assert.match(opts.headers.Authorization, /^Bearer .+\..+\..+$/);
-  const json = (status, body) => ({ ok: status < 300, status, json: async () => body });
-  if (p === "/rooms" && method === "POST") { const b = JSON.parse(opts.body); const id = "room" + String(++n).padStart(8, "0"); rooms.set(id, { id, enabled: true, ...b }); return json(200, rooms.get(id)); }
-  if (p === "/rooms" && method === "GET") return json(200, { data: [...rooms.values()].filter((r) => r.enabled).concat([{ id: "other0000001", name: "someone-elses-room", description: "hi", enabled: true }]) });
-  const m = p.match(/^\/rooms\/(\w+)$/);
-  if (m && method === "GET") return rooms.has(m[1]) ? json(200, rooms.get(m[1])) : json(404, {});
-  if (m && method === "POST") { Object.assign(rooms.get(m[1]), JSON.parse(opts.body)); return json(200, rooms.get(m[1])); }
-  if (p.startsWith("/active-rooms/")) return p.endsWith(liveRoom) ? json(200, { id: liveRoom, session: { id: "s1", peers: [] } }) : json(404, {});
-  if (p.startsWith("/recordings/room/")) return json(200, {});
-  if (p === "/recording-assets") return json(200, { data: assets.filter((a) => a.room_id === u.searchParams.get("room_id")) });
-  if (p.match(/^\/recording-assets\/\w+\/presigned-url$/)) return json(200, { url: "https://storage.example/rec.mp4?sig=1" });
-  return json(500, { message: "unexpected " + p });
-};
-let liveRoom = "none";
+import { useEnv, db, lk, decodeLk } from "./fakes.mjs";
+useEnv();
 
 const load = async (f) => (await import("../api/" + f + ".js")).default;
 async function call(file, { method = "GET", body, query = {}, auth } = {}) {
@@ -32,59 +10,91 @@ async function call(file, { method = "GET", body, query = {}, auth } = {}) {
   await h({ method, body, query, headers: auth ? { authorization: "Bearer " + auth } : {} }, res);
   return { status, ...out };
 }
-const { verifyJwt } = await import("../api/_lib.js");
+const login = async (username, password) => call("login", { method: "POST", body: { username, password } });
 
-// teacher login
-assert.equal((await call("login", { method: "POST", body: { password: "nope" } })).status, 401);
-const T = (await call("login", { method: "POST", body: { password: "chess-teacher-pw" } })).token; assert.ok(T);
+// --- sign in ---
+assert.equal((await login("teacher", "nope")).status, 401);
+assert.equal((await login("", "")).status, 400);
+const t = await login("Teacher", "chess-teacher-pw"); assert.equal(t.status, 200); const T = t.token;
 assert.equal((await call("me", { auth: T })).user.role, "teacher");
-assert.equal((await call("classes")).status, 401);
+assert.equal((await call("me")).status, 401);
+assert.equal((await call("me", { auth: "a.b.c" })).status, 401);
 
-// add students in two batches
-const A = await call("invite", { method: "POST", auth: T, body: { name: "Aarav", batch: "Beginners Sat" } });
-const B = await call("invite", { method: "POST", auth: T, body: { name: "Meera", batch: "Advanced" } });
-assert.equal((await call("me", { auth: A.parentCode })).user.role, "parent");
-assert.equal((await call("me", { auth: A.studentCode })).user.name, "Aarav");
-assert.equal((await call("me", { auth: A.studentCode.slice(0, -2) + "xx" })).status, 401, "tampered code rejected");
-assert.equal((await call("invite", { method: "POST", auth: A.studentCode, body: { name: "X y", batch: "b" } })).status, 403);
+// --- teacher adds a student + parent ---
+assert.equal((await call("users", { method: "POST", body: { name: "Rohan" } })).status, 401);
+const made = await call("users", { method: "POST", auth: T, body: { name: "Rohan Gupta", batch: "Beginners Saturday" } });
+assert.equal(made.status, 200); const [stu, par] = made.accounts;
+assert.equal(stu.username, "rohangupta"); assert.equal(par.username, "rohangupta-parent"); assert.match(stu.password, /^[a-z2-9]{8}$/);
+const stored = db.get("u:rohangupta"); assert.ok(!stored.includes(stu.password), "password must be stored hashed");
+const S = (await login(stu.username, stu.password)).token, P = (await login(par.username, par.password)).token;
+assert.equal((await login(stu.username, "wrong")).status, 401);
+assert.equal((await call("me", { auth: S })).user.batch, "beginners-saturday");
+// same name again gets a different username
+const again = await call("users", { method: "POST", auth: T, body: { name: "Rohan Gupta", batch: "Beginners Saturday", withParent: false } });
+assert.notEqual(again.accounts[0].username, "rohangupta"); assert.equal(again.accounts.length, 1);
+// students cannot manage accounts or classes
+assert.equal((await call("users", { auth: S })).status, 403);
+assert.equal((await call("users", { method: "POST", auth: S, body: { name: "x", batch: "y" } })).status, 403);
+assert.equal((await call("classes", { method: "POST", auth: S, body: {} })).status, 403);
+assert.equal((await call("users", { auth: T })).users.length, 3);
 
-// schedule classes
-const soon = new Date(Date.now() + 5 * 60000).toISOString();
-const c1 = (await call("classes", { method: "POST", auth: T, body: { title: "Forks practice", batch: "Beginners Sat", startsAt: soon, durationMin: 60 } })).class;
-const c2 = (await call("classes", { method: "POST", auth: T, body: { title: "Rook endings", batch: "Advanced", startsAt: soon } })).class;
-assert.equal((await call("classes", { method: "POST", auth: A.studentCode, body: { title: "Hack", batch: "x", startsAt: soon } })).status, 403);
-liveRoom = c1.id; assets[0].room_id = c1.id; assets[1].room_id = c1.id;
+// --- lock after too many wrong passwords ---
+for (let i = 0; i < 8; i++) await login("rohangupta-parent", "bad" + i);
+assert.equal((await login("rohangupta-parent", par.password)).status, 429);
+db.delete("rl:rohangupta-parent");
 
-// who sees what
-assert.equal((await call("classes", { auth: T })).classes.length, 2);
-const aList = (await call("classes", { auth: A.parentCode })).classes;
-assert.deepEqual(aList.map((c) => c.title), ["Forks practice"]); assert.equal(aList[0].live, true);
-assert.deepEqual((await call("classes", { auth: B.studentCode })).classes.map((c) => c.title), ["Rook endings"]);
+// --- change password ---
+assert.equal((await call("password", { method: "POST", auth: S, body: { oldPassword: "wrong", newPassword: "newpass99" } })).status, 401);
+assert.equal((await call("password", { method: "POST", auth: S, body: { oldPassword: stu.password, newPassword: "abc" } })).status, 400);
+assert.equal((await call("password", { method: "POST", auth: S, body: { oldPassword: stu.password, newPassword: "newpass99" } })).status, 200);
+assert.equal((await login(stu.username, stu.password)).status, 401); assert.equal((await login(stu.username, "newpass99")).status, 200);
+const rs = await call("users", { method: "POST", auth: T, body: { action: "reset", username: stu.username } });
+assert.equal((await login(stu.username, rs.password)).status, 200);
 
-// joining
-const j = await call("join", { method: "POST", auth: A.studentCode, body: { classId: c1.id } });
-const claims = verifyJwt(j.authToken, process.env.HMS_SECRET);
-assert.equal(claims.role, "guest"); assert.equal(claims.room_id, c1.id); assert.equal(claims.type, "app"); assert.equal(claims.version, 2); assert.equal(claims.access_key, "test-key");
-assert.equal(verifyJwt((await call("join", { method: "POST", auth: T, body: { classId: c1.id } })).authToken, process.env.HMS_SECRET).role, "host");
-assert.equal((await call("join", { method: "POST", auth: A.parentCode, body: { classId: c1.id } })).status, 403, "parents don't join live");
-assert.equal((await call("join", { method: "POST", auth: B.studentCode, body: { classId: c1.id } })).status, 404, "other batch can't join");
-assert.equal((await call("join", { method: "POST", auth: T, body: { classId: "other0000001" } })).status, 404, "non-class rooms hidden");
+// --- classes ---
+const mk = (batch, at = "2026-11-20T11:00:00Z") => call("classes", { method: "POST", auth: T, body: { title: "Knight forks", batch, startsAt: at, durationMin: 60 } });
+assert.equal((await call("classes", { method: "POST", auth: T, body: { title: "", batch: "x" } })).status, 400);
+const c1 = (await mk("Beginners Saturday")).class, c2 = (await mk("Advanced Sunday")).class;
+assert.equal(c1.roomName, "cs-" + c1.id);
+const tl = await call("classes", { auth: T }); assert.equal(tl.classes.length, 2); assert.equal(tl.recordingReady, true);
+const sl = await call("classes", { auth: S }); assert.deepEqual(sl.classes.map((c) => c.id), [c1.id]);
+assert.equal((await call("classes", { auth: P })).classes.length, 1);
 
-// recording
-assert.equal((await call("record", { method: "POST", auth: A.studentCode, body: { classId: c1.id } })).status, 403);
-assert.equal((await call("record", { method: "POST", auth: T, body: { classId: c1.id, action: "start" } })).ok, true);
-assert.ok(calls.includes(`POST /recordings/room/${c1.id}/start`));
-const recs = (await call("recordings", { auth: A.parentCode, query: { classId: c1.id } })).recordings;
-assert.equal(recs.length, 1, "only the video, not the chat file"); assert.equal(recs[0].durationSec, 1800);
-assert.match((await call("recordings", { auth: A.parentCode, query: { classId: c1.id, assetId: "asset1" } })).url, /^https:/);
-assert.equal((await call("recordings", { auth: B.parentCode, query: { classId: c1.id } })).status, 404, "other family can't see it");
-assert.equal((await call("recordings", { auth: A.parentCode, query: { classId: c1.id, assetId: "chat1" } })).status, 404);
+// --- joining ---
+assert.equal((await call("join", { method: "POST", auth: P, body: { classId: c1.id } })).status, 403);
+assert.equal((await call("join", { method: "POST", auth: S, body: { classId: c2.id } })).status, 404);
+assert.equal((await call("join", { method: "POST", auth: S, body: { classId: "../etc" } })).status, 400);
+const js = await call("join", { method: "POST", auth: S, body: { classId: c1.id } });
+assert.equal(js.serverUrl, "wss://demo.livekit.cloud"); assert.equal(js.isTeacher, false);
+const sg = decodeLk(js.token); assert.equal(sg.video.room, c1.roomName); assert.equal(sg.video.roomAdmin, undefined); assert.deepEqual(sg.video.canPublishSources, ["camera", "microphone"]); assert.equal(sg.sub, "rohangupta");
+const jt = await call("join", { method: "POST", auth: T, body: { classId: c1.id } });
+const tg = decodeLk(jt.token); assert.equal(tg.video.roomAdmin, true); assert.equal(tg.video.canPublishSources, undefined); assert.equal(jt.isTeacher, true);
 
-// delete
+// --- live status + recording ---
+lk.rooms[c1.roomName] = 3;
+assert.equal((await call("classes", { auth: S })).classes[0].live, true);
+assert.equal((await call("record", { method: "POST", auth: S, body: { classId: c1.id, action: "start" } })).status, 403);
+assert.equal((await call("record", { method: "POST", auth: T, body: { classId: c1.id, action: "start" } })).started, true);
+assert.equal((await call("record", { method: "POST", auth: T, body: { classId: c1.id, action: "start" } })).already, true);
+assert.equal(Object.keys(lk.egress).length, 1);
+assert.deepEqual((await call("recordings", { query: { classId: c1.id }, auth: S })).recordings, []);   // still recording
+assert.equal((await call("record", { method: "POST", auth: T, body: { classId: c1.id, action: "stop" } })).stopped, true);
+const recs = (await call("recordings", { query: { classId: c1.id }, auth: P })).recordings;
+assert.equal(recs.length, 1); assert.match(recs[0].url, /^https:\/\/pub-demo\.r2\.dev\/recordings\/[a-f0-9]{12}\/\d+-[a-f0-9]{16}\.mp4$/);
+assert.equal((await call("recordings", { query: { classId: c2.id }, auth: P })).status, 404);   // other batch
+// teacher left without pressing stop: recording is wrapped up once the room is empty
+await call("record", { method: "POST", auth: T, body: { classId: c1.id, action: "start" } }); lk.rooms[c1.roomName] = 0;
+assert.equal((await call("recordings", { query: { classId: c1.id }, auth: S })).recordings.length, 2);
+assert.ok(Object.values(lk.egress).every((e) => e.stopped));
+
+// --- delete ---
 assert.equal((await call("classes", { method: "DELETE", auth: T, query: { id: c2.id } })).ok, true);
 assert.equal((await call("classes", { auth: T })).classes.length, 1);
+assert.equal((await call("users", { method: "DELETE", auth: T, query: { username: stu.username } })).ok, true);
+assert.equal((await call("me", { auth: S })).status, 401);   // deleted account is cut off
 
-// setup guard
-delete process.env.HMS_SECRET;
-const g = await call("classes", { auth: T }); assert.equal(g.status, 503); assert.equal(g.code, "setup");
+// --- missing settings give a friendly message ---
+delete process.env.LIVEKIT_API_KEY;
+const noLive = await call("join", { method: "POST", auth: P, body: { classId: c1.id } });
+assert.equal(noLive.status, 503); assert.match(noLive.error, /LIVEKIT_API_KEY/);
 console.log("All API checks passed.");

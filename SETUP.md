@@ -1,70 +1,57 @@
-# Chess Sathi website: live classes setup
+# Chess Sathi website: setup
 
-This folder is the Chess Sathi website: the lessons, puzzles and quiz, plus **live classes**
-(video call, chat, screen share, backgrounds, recording) and the parent recordings page.
+The website has the lessons, puzzles and test, a **sign-in with username and password**, and **live classes**
+(video call, chat, screen share, raise hand, backgrounds, recording). Parents can watch recordings.
 
-Live video is provided by **100ms**. You need a free 100ms account and a free Vercel account.
+Everything runs on free plans to start. You need 4 small accounts' worth of settings. Never paste these keys into a chat or into GitHub.
+Put them only in **Vercel → your project → Settings → Environment Variables**.
 
-## 1. Create your 100ms account (5 minutes)
+## 1. Teacher password and secret
+Add two settings:
+- `TEACHER_PASSWORD`: the password you will use to sign in. Your username is `teacher`.
+- `SESSION_SECRET`: a long random text (30+ characters). Never share it.
 
-1. Sign up at https://dashboard.100ms.live
-2. When it asks what you are building, choose **Video Conferencing**. This creates a template with two roles: `host` (you) and `guest` (students).
-3. Open **Developer** in the dashboard and copy the **App Access Key** and **App Secret**. Keep the secret private.
-4. Optional but recommended, in the template's **Prebuilt** settings:
-   - turn on **Virtual Background** for both roles,
-   - check that **Chat**, **Screen share** and **Raise hand** are on,
-   - for `guest`, decide whether students may share their screen.
+## 2. Database (stores students, parents and classes) — free
+In Vercel open **Storage → Create → Upstash (Redis)**, pick the free plan, and **connect it to this project**.
+Vercel adds the settings by itself (`KV_REST_API_URL` and `KV_REST_API_TOKEN`). The site accepts those names.
 
-## 2. Put the website online with Vercel
+## 3. LiveKit Cloud (the live video) — free 5,000 minutes a month
+1. Make an account at cloud.livekit.io and create a project.
+2. In the project open **Settings → Keys** and create a key.
+3. Add three settings:
+   - `LIVEKIT_URL`: the project address, like `wss://your-project.livekit.cloud`
+   - `LIVEKIT_API_KEY`
+   - `LIVEKIT_API_SECRET`
 
-On your computer, inside this folder:
+## 4. Recording storage (Cloudflare R2) — free 10 GB
+1. At dash.cloudflare.com open **R2** and create a bucket, for example `chess-sathi-recordings`.
+2. In the bucket's **Settings → Public access**, turn on the `r2.dev` address. Copy it.
+3. In **R2 → Manage API tokens** create a token with **Object Read & Write** for that bucket. Copy the Access Key ID and the Secret.
+4. Add five settings:
+   - `RECORD_S3_ENDPOINT`: `https://<your-account-id>.r2.cloudflarestorage.com`
+   - `RECORD_S3_BUCKET`: the bucket name
+   - `RECORD_S3_ACCESS_KEY` and `RECORD_S3_SECRET`
+   - `RECORD_PUBLIC_URL`: the `r2.dev` address, like `https://pub-xxxx.r2.dev`
 
-```
-npm install
-npx vercel
-```
+Recordings use long random file names, so the links can't be guessed, and the website only shows them to the teacher,
+the students of that batch and their parents.
+**Note:** LiveKit's free plan includes only about 60 minutes of recording a month. After that, recording is a few
+rupees per hour on LiveKit's paid plan. Live classes themselves stay within the 5,000 free minutes.
 
-Follow the questions (log in, accept the defaults). Then add these 4 settings in the Vercel dashboard
-under **Project → Settings → Environment Variables**:
+## 5. Deploy
+- Vercel project settings: Framework **Vite**, build command `vite build`, output `dist` (already in `vercel.json`).
+- If your GitHub repo keeps the website on its own branch, set **Settings → Git → Production Branch** to that branch.
+- After adding settings, click **Redeploy**.
 
-| Name | Value |
-|---|---|
-| `HMS_ACCESS_KEY` | App Access Key from 100ms |
-| `HMS_SECRET` | App Secret from 100ms |
-| `TEACHER_PASSWORD` | A long password only you know (your teacher sign-in) |
-| `SESSION_SECRET` | Any long random text, 32+ characters. Don't change it later, or all student and parent sign-in links stop working. |
+## 6. First test
+1. Open the website, sign in as `teacher` with your `TEACHER_PASSWORD`.
+2. **Live** tab → **Add a student** → send the username and password to the family (there is a copy button for WhatsApp).
+3. **Schedule a class** for that batch, press **Start class**, then join from a second phone as the student.
+4. Leave the class, wait a few minutes, and open the recording from the parent login.
 
-Optional: `HMS_TEMPLATE_ID` (if you have more than one 100ms template), `HMS_TEACHER_ROLE` (default `host`), `HMS_STUDENT_ROLE` (default `guest`).
+## The mobile app
+Put the website address in the app's `src/config.js` (`SITE_URL`). Everyone signs in with the same username and password.
 
-Finally run `npx vercel --prod`. Your site is now live at the address Vercel shows.
-
-## 3. Use it
-
-1. Open the site → **Live** → sign in with your teacher password.
-2. **Add a student**: type the name and batch. You get a student link and a parent link. Send them on WhatsApp.
-3. **Schedule a class** for a batch.
-4. At class time press **Start class**. Recording starts by itself when you join.
-5. A few minutes after the class ends, the recording appears under the class for you, the students of that batch, and their parents.
-
-## 4. Connect the mobile app
-
-In the mobile app project, open `src/config.js` and set `SITE_URL` to your website address, for example
-`"https://chess-sathi.vercel.app"`. The app's **Live** tab then shows the schedule, opens the classroom, and plays recordings.
-
-## Try it without any account
-
-```
-npm install
-npm run build
-node test/dev-server.mjs
-```
-
-Open http://localhost:4173 and sign in as teacher with the password `demo-teacher`. This uses a fake
-video service, so you can click through everything except the video call itself. `npm test` checks the sign-in and permission rules.
-
-## Good to know
-
-- **Costs**: 100ms includes a free monthly allowance (at the time of writing: 10,000 call minutes and 300 recording minutes). A 60-minute class with 10 students uses about 660 call minutes and 60 recording minutes. Check https://www.100ms.live/pricing for current prices.
-- **Who sees what**: students and parents only see classes of their own batch. Parents can't join the live call; they watch recordings.
-- **Sign-in links** are personal. They are not stored anywhere, so save them when you create them. To cancel every link at once, change `SESSION_SECRET` and send new links.
-- **Recordings** are stored by 100ms. Watch links expire after 2 hours and are created fresh each time someone presses play.
+## Run the checks (developers)
+`npm test` checks the whole API against a fake database and a fake LiveKit. `npm run build && node test/dev-server.mjs`
+opens a demo at http://localhost:4173 (teacher password `demo-teacher`) that needs no accounts.
