@@ -15,7 +15,7 @@ async function create(role, name, batch, base) {
   return { username, password: pw, role, name, batch };
 }
 
-// Teacher only: list accounts, add a student (and parent), reset a password, delete an account.
+// Teacher only: list accounts, add a student, reset a password, delete an account.
 export default handler(async ({ req, body, query }) => {
   mustBeTeacher(await whoIs(req));
   if (req.method === "GET") return { users: await listUsers() };
@@ -36,6 +36,5 @@ export default handler(async ({ req, body, query }) => {
   if (!name || !slug(batch)) throw new HttpError(400, "Please enter the student's name and the batch.");
   const base = slug(name).replace(/-/g, "");
   const accounts = [await create("student", name, batch, base)];
-  if (body.withParent !== false) accounts.push(await create("parent", name, batch, base + "-parent"));
   return { accounts };
 }, { needs: ["base", "db"] });

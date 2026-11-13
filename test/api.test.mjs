@@ -20,11 +20,14 @@ assert.equal((await call("me", { auth: T })).user.role, "teacher");
 assert.equal((await call("me")).status, 401);
 assert.equal((await call("me", { auth: "a.b.c" })).status, 401);
 
-// --- teacher adds a student + parent ---
+// --- teacher adds a student ---
 assert.equal((await call("users", { method: "POST", body: { name: "Rohan" } })).status, 401);
 const made = await call("users", { method: "POST", auth: T, body: { name: "Rohan Gupta", batch: "Beginners Saturday" } });
-assert.equal(made.status, 200); const [stu, par] = made.accounts;
-assert.equal(stu.username, "rohangupta"); assert.equal(par.username, "rohangupta-parent"); assert.match(stu.password, /^[a-z2-9]{8}$/);
+assert.equal(made.status, 200); assert.equal(made.accounts.length, 1, "no parent login any more"); const [stu] = made.accounts;
+assert.equal(stu.username, "rohangupta");
+// older parent accounts (made before parent logins were removed) keep working for recordings
+const lib = await import("../api/_lib.js"); const par = { username: "rohangupta-parent", password: "parentpw1" };
+await lib.putUser({ username: par.username, name: "Rohan Gupta", role: "parent", batch: "beginners-saturday", batchName: "Beginners Saturday", pw: lib.hashPassword(par.password), createdAt: Date.now() }); assert.match(stu.password, /^[a-z2-9]{8}$/);
 const stored = db.get("u:rohangupta"); assert.ok(!stored.includes(stu.password), "password must be stored hashed");
 const S = (await login(stu.username, stu.password)).token, P = (await login(par.username, par.password)).token;
 assert.equal((await login(stu.username, "wrong")).status, 401);

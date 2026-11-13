@@ -843,7 +843,7 @@ function liveHome(root){
   root.innerHTML=`
   <div class="row" style="justify-content:space-between"><p class="li-m">${teacher?"Signed in as teacher.":u.role==="parent"?`Parent view. You can see the schedule and watch recordings of ${esc(u.name)}'s classes.`:`You're in batch “${esc(u.batchName||u.batch)}”. Join when your class is live.`}</p>
     <button class="btn ghost" id="lvRefresh">Refresh</button></div>
-  ${teacher&&!LV.recReady?`<div class="feedback no">Recording is not set up yet, so classes will not be saved. See SETUP.md (step 5).</div>`:""}
+  ${teacher&&!LV.recReady?`<div class="feedback">Recording is off for now, so classes will not be saved for students to watch later. Live classes work normally.</div>`:""}
   ${teacher?`<div class="grid g2">
     <form class="card stack" id="lvNew"><h2>Schedule a class</h2>
       <label class="fld"><span>Class title</span><input id="lvTitle" placeholder="Knight forks practice" required maxlength="80"></label>
@@ -853,17 +853,16 @@ function liveHome(root){
       <label class="fld" style="flex:1;min-width:110px"><span>Minutes</span><input id="lvDur" type="number" min="15" max="240" step="5" value="60" required></label></div>
       <button class="btn" type="submit">Add class</button><p class="li-m" id="lvNewMsg" role="status"></p></form>
     <form class="card stack" id="lvInv"><h2>Add a student</h2>
-      <p class="li-m">This makes a username and password for the student, and one for a parent. Send them on WhatsApp.</p>
+      <p class="li-m">This makes a username and password for the student. Send it to them on WhatsApp.</p>
       <label class="fld"><span>Student's name</span><input id="lvSName" required maxlength="40"></label>
       <label class="fld"><span>Batch</span><input id="lvSBatch" required maxlength="40" list="lvBatches"></label>
-      <label class="chk"><input type="checkbox" id="lvSParent" checked> Also make a parent login</label>
       <button class="btn" type="submit">Create logins</button><p class="li-m" id="lvInvMsg" role="status"></p>
       ${LV.accounts?`<div class="stack codes"><b>Save these now. Passwords are only shown once.</b>${LV.accounts.map(accountCard).join("")}</div>`:""}</form>
   </div>
-  <section class="card stack"><h2>Students and parents</h2>${users.length?`<div class="tablewrap"><table><thead><tr><th>Name</th><th>Batch</th><th>Username</th><th>Who</th><th></th></tr></thead><tbody>${users.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.batchName||x.batch)}</td><td class="mono">${esc(x.username)}</td><td>${ROLE_NAME[x.role]}</td><td class="acts"><button class="btn ghost sm" data-reset="${esc(x.username)}">New password</button><button class="btn ghost sm" data-rm="${esc(x.username)}">Remove</button></td></tr>`).join("")}</tbody></table></div>`:`<p class="li-m">No students yet. Add the first one above.</p>`}</section>`:""}
+  <section class="card stack"><h2>Students</h2>${users.length?`<div class="tablewrap"><table><thead><tr><th>Name</th><th>Batch</th><th>Username</th><th>Who</th><th></th></tr></thead><tbody>${users.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.batchName||x.batch)}</td><td class="mono">${esc(x.username)}</td><td>${ROLE_NAME[x.role]}</td><td class="acts"><button class="btn ghost sm" data-reset="${esc(x.username)}">New password</button><button class="btn ghost sm" data-rm="${esc(x.username)}">Remove</button></td></tr>`).join("")}</tbody></table></div>`:`<p class="li-m">No students yet. Add the first one above.</p>`}</section>`:""}
   ${now.length?group("Live now",now,""):""}
   ${group("Upcoming classes",next,teacher?"No classes scheduled. Add one above.":"No upcoming classes yet. Your teacher will add them here.")}
-  ${group(u.role==="parent"?"Past classes and recordings":"Past classes",past,"Finished classes and their recordings will show up here.")}`;
+  ${group(teacher?"Past classes":"Past classes and recordings",past,"Finished classes and their recordings will show up here.")}`;
   $("#lvRefresh").onclick=()=>{LV.classes=null;LV.users=null;render()};
   root.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>{navigator.clipboard.writeText(b.dataset.copy).then(()=>toast("Copied")).catch(()=>toast("Press and hold to copy"))});
   if(teacher){
@@ -871,7 +870,7 @@ function liveHome(root){
     $("#lvNew").onsubmit=async e=>{e.preventDefault();const m=$("#lvNewMsg");m.textContent="Adding…";
       try{await liveApi("/classes",{method:"POST",body:{title:$("#lvTitle").value,batch:$("#lvBatch").value,startsAt:new Date($("#lvAt").value).toISOString(),durationMin:+$("#lvDur").value}});LV.classes=null;toast("Class added");render()}catch(err){m.textContent=err.message}};
     $("#lvInv").onsubmit=async e=>{e.preventDefault();const m=$("#lvInvMsg");m.textContent="Creating…";
-      try{LV.accounts=(await liveApi("/users",{method:"POST",body:{name:$("#lvSName").value,batch:$("#lvSBatch").value,withParent:$("#lvSParent").checked}})).accounts;LV.users=null;LV.classes=null;render()}catch(err){m.textContent=err.message}};
+      try{LV.accounts=(await liveApi("/users",{method:"POST",body:{name:$("#lvSName").value,batch:$("#lvSBatch").value,withParent:false}})).accounts;LV.users=null;LV.classes=null;render()}catch(err){m.textContent=err.message}};
     root.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{if(b.dataset.armed!=="1"){b.dataset.armed="1";b.textContent="Tap again to delete";return}
       try{await liveApi("/classes?id="+encodeURIComponent(b.dataset.del),{method:"DELETE"});LV.classes=null;toast("Class deleted");render()}catch(err){toast(err.message)}});
     root.querySelectorAll("[data-reset]").forEach(b=>b.onclick=async()=>{if(b.dataset.armed!=="1"){b.dataset.armed="1";b.textContent="Tap again";return}
