@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chess Sathi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: app shell — top bar on desktop, bottom tab bar on phones; content column max 1080px; boards are the hero object */
+:root{
+  --bg:#F3F5F8; --surface:#FFFFFF; --ink:#16202B; --muted:#5B6878; --line:#DDE3EA;
+  --accent:#C8323C; --accent-ink:#FFFFFF; --accent-soft:#F8E3E4;
+  --sq-light:#DCE3EA; --sq-dark:#7C93A8; --sq-hi:#E9B949; --sq-sel:#5FA8D3;
+  --good:#2F8A55; --good-soft:#DFF1E6; --warn:#B26B00;
+  --f-display:"Unbounded", "Arial Black", system-ui, sans-serif;
+  --f-body:"Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F151C; --surface:#18212B; --ink:#E7ECF2; --muted:#94A3B4; --line:#2A3542;
+  --accent:#E5525B; --accent-ink:#FFFFFF; --accent-soft:#3A1E22;
+  --sq-light:#9FB1C2; --sq-dark:#4E6378; --sq-hi:#D9A93A; --sq-sel:#3F8FC0;
+  --good:#4CC27F; --good-soft:#163527; --warn:#E3A13A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F151C; --surface:#18212B; --ink:#E7ECF2; --muted:#94A3B4; --line:#2A3542;
+  --accent:#E5525B; --accent-ink:#FFFFFF; --accent-soft:#3A1E22;
+  --sq-light:#9FB1C2; --sq-dark:#4E6378; --sq-hi:#D9A93A; --sq-sel:#3F8FC0;
+  --good:#4CC27F; --good-soft:#163527; --warn:#E3A13A; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(1.5rem,4vw,2.2rem)} h2{font-size:1.15rem} h3{font-size:1rem;font-family:var(--f-body)}
+p{margin:0}
+button{font:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--sq-sel);outline-offset:2px}
+.eyebrow{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:24px;padding-block:12px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;font-size:1.05rem;text-decoration:none;color:var(--ink)}
+.logo b{color:var(--accent);font-weight:700}
+nav.tabs{display:flex;gap:4px;margin-left:auto}
+nav.tabs a{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:8px;color:var(--muted);text-decoration:none;font-weight:600;font-size:.92rem}
+nav.tabs a[aria-current="page"]{color:var(--ink);background:var(--bg)}
+nav.tabs a svg{width:18px;height:18px}
+@media (max-width:720px){
+  nav.tabs{position:fixed;left:0;right:0;bottom:0;margin:0;justify-content:space-around;background:var(--surface);border-top:1px solid var(--line);
+    padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));z-index:6}
+  nav.tabs a{flex-direction:column;gap:2px;font-size:.7rem;padding:6px 8px}
+  main{padding-bottom:90px!important}
+}
+
+main{max-width:1080px;margin:0 auto;padding-block:28px 60px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:28px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.stack{display:flex;flex-direction:column;gap:12px;min-width:0}
+.btn{border:0;border-radius:8px;padding:10px 16px;font-weight:600;background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.pill.done{background:var(--good-soft);color:var(--good);border-color:transparent}
+.pill.level{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+.hero p.lead{color:var(--muted);font-size:1.05rem;max-width:52ch;margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.stat{border-left:3px solid var(--line);padding-left:12px}
+.stat .n{font-family:var(--f-display);font-size:1.5rem;font-variant-numeric:tabular-nums}
+.stat .l{font-size:.78rem;color:var(--muted)}
+.bar{height:6px;background:var(--bg);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+
+/* Board */
+.board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));aspect-ratio:1;container-type:inline-size;width:100%;max-width:440px;border-radius:6px;overflow:hidden;
+  box-shadow:0 0 0 1px var(--line);user-select:none;-webkit-user-select:none;position:relative}
+.sq{position:relative;aspect-ratio:1;min-width:0;min-height:0;overflow:visible;display:flex;align-items:center;justify-content:center;border:0;padding:0;background:var(--sq-light);cursor:default}
+.sq.d{background:var(--sq-dark)}
+.sq.hi::after{content:"";position:absolute;inset:0;background:var(--sq-hi);opacity:.55}
+.sq.sel::after{content:"";position:absolute;inset:0;background:var(--sq-sel);opacity:.6}
+.sq.bad::after{content:"";position:absolute;inset:0;background:var(--accent);opacity:.55}
+.board.live .sq{cursor:pointer}
+.pc{position:relative;z-index:1;font-size:9.5cqw;line-height:1;pointer-events:none}
+.pc.w{color:#FFFFFF;text-shadow:0 0 1px #111,0 0 1px #111,0 1px 2px rgba(0,0,0,.5)}
+.pc.b{color:#11151A;text-shadow:0 0 1px rgba(255,255,255,.35)}
+.coord{position:absolute;font-size:.6rem;font-family:var(--f-mono);font-weight:500;opacity:.75;z-index:1;pointer-events:none}
+.coord.f{right:3px;bottom:1px} .coord.r{left:3px;top:1px}
+.sq .coord{color:var(--sq-dark)} .sq.d .coord{color:var(--sq-light)}
+
+/* Courses */
+.course{display:flex;flex-direction:column;gap:12px}
+.course .meta{display:flex;gap:8px;flex-wrap:wrap}
+.course ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.course li button{width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:11px 2px;display:flex;align-items:center;gap:10px;color:var(--ink)}
+.course li button:hover{color:var(--accent)}
+.tick{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center}
+.tick.on{background:var(--good);border-color:var(--good)}
+.tick.on::after{content:"";width:6px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.li-t{flex:1;min-width:0} .li-m{font-size:.78rem;color:var(--muted)}
+
+.lesson{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:32px;align-items:start}
+@media (max-width:820px){.lesson{grid-template-columns:1fr}}
+.lesson .body{display:flex;flex-direction:column;gap:14px;max-width:62ch}
+.lesson .body p{font-size:1rem}
+.caption{font-size:.85rem;color:var(--muted);margin-top:10px;max-width:440px}
+.back{background:none;border:0;color:var(--muted);font-weight:600;padding:0;display:inline-flex;gap:6px;align-items:center}
+.keypoint{border-left:3px solid var(--accent);padding:4px 0 4px 14px;font-weight:500}
+
+/* Puzzles */
+.pz{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:820px){.pz{grid-template-columns:1fr}}
+.feedback{padding:12px 14px;border-radius:8px;font-weight:600;background:var(--bg);border:1px solid var(--line)}
+.feedback.ok{background:var(--good-soft);color:var(--good);border-color:transparent}
+.feedback.no{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.pzlist{display:flex;gap:8px;flex-wrap:wrap}
+.pzlist button{width:40px;height:40px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-family:var(--f-mono)}
+.pzlist button.cur{border-color:var(--accent);color:var(--accent);border-width:2px}
+.pzlist button.solved{background:var(--good-soft);color:var(--good);border-color:transparent}
+.tomove{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.tomove i{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink)}
+.tomove i.w{background:#fff} .tomove i.b{background:#11151A}
+
+/* Test */
+.q{display:flex;flex-direction:column;gap:10px}
+.opt{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt.right{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.opt.wrong{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.opt:disabled{cursor:default}
+.score{font-family:var(--f-display);font-size:3rem;font-variant-numeric:tabular-nums}
+
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+td,th{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}
+th{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--f-mono)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:600;z-index:20}
+@media (max-width:720px){.toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
+@media (prefers-reduced-motion:no-preference){.view{animation:fade .25s ease}@keyframes fade{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}}
+
+/* Video player */
+.player{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.screen .board{max-width:none}
+.subtitle{min-height:72px;background:var(--bg);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;font-size:1rem}
+.subtitle b{color:var(--accent)}
+.scrub{display:flex;gap:3px}
+.scrub button{flex:1;background:none;border:0;padding:8px 0}
+.scrub i{display:block;height:4px;border-radius:2px;background:var(--line)}
+.scrub i{position:relative;overflow:hidden}.scrub i::after{content:"";position:absolute;inset:0;background:var(--accent);transform-origin:left;transform:scaleX(var(--p,0))}
+.scrub button.on i{background:var(--accent)}
+.scrub button.on i::after{display:none}
+.controls{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ctl{width:42px;height:42px;border-radius:50%;border:0;background:var(--bg);color:var(--ink);font-weight:800}
+.ctl.big{width:54px;height:54px;background:var(--accent);color:var(--accent-ink);font-size:1.1rem}
+.ctl.txt{width:auto;padding:0 12px;border-radius:99px;font-family:var(--f-mono)}
+.transcript{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:420px;overflow:auto;border-top:1px solid var(--line)}
+.transcript button{width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:9px 6px;color:var(--muted);font-size:.92rem;line-height:1.45}
+.transcript button.cur{color:var(--ink);background:var(--accent-soft)}
+.transcript b{color:var(--accent)}
+.lesson{grid-template-columns:minmax(0,520px) minmax(0,1fr)!important}
+@media (max-width:820px){.lesson{grid-template-columns:1fr!important}}
+.tick.play{border-color:var(--accent)}
+.tick.play::after{content:"";border-left:7px solid var(--accent);border-top:4px solid transparent;border-bottom:4px solid transparent;margin-left:2px}
+.sq.dot::before{content:"";position:absolute;width:26%;height:26%;border-radius:50%;background:rgba(0,0,0,.28);z-index:2}
+.chips{gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:7px 13px;font-weight:600;font-size:.88rem}
+.chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.chip .mono{font-size:.75rem;opacity:.8}
+
+.sq.moving{z-index:5}
+.pc.slide{transition:transform .24s cubic-bezier(.3,.7,.3,1)}
+@media (prefers-reduced-motion:reduce){.pc.slide{transition:none}}
+.toggles{display:flex;gap:6px}
+nav.tabs + .toggles{margin-left:8px}
+.tog{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:99px;padding:6px 10px;font-weight:600;font-size:.8rem}
+.tog svg{width:16px;height:16px}
+.tog[aria-pressed="true"]{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+@media (max-width:720px){.toggles{margin-left:auto!important}.tog span{display:none}}
+.voice-note{font-size:.8rem;color:var(--muted)}
+
+/* Live classes */
+.fld{display:flex;flex-direction:column;gap:5px;font-size:.85rem;font-weight:600;min-width:0}
+.fld input{font:inherit;font-weight:400;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-width:0;width:100%}
+.fld input:focus-visible{outline:3px solid var(--sq-sel);outline-offset:1px}
+.pill.live{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.reclist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.reclist button{width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 2px;color:var(--ink);font-weight:600;display:flex;justify-content:space-between;gap:10px}
+.reclist button:hover{color:var(--accent)}
+.recvideo{width:100%;max-width:100%;border-radius:10px;background:#000;aspect-ratio:16/9}
+.codes{border-top:1px solid var(--line);padding-top:12px}
+a.btn{text-decoration:none;display:inline-block}
+@media (max-width:720px){nav.tabs a{padding:6px 4px!important;font-size:.64rem!important}}
+</style>
+
+</head>
+<body style="margin:0">
+<header class="topbar"><div class="topbar-in">
+  <a class="logo" href="#home" aria-label="Chess Sathi home">
+    <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="var(--accent)"/><circle cx="14" cy="9.2" r="3.6" fill="#FFFFFF"/><path d="M10.4 20.6c0-3.3 1.6-5.7 3.6-7.3 2 1.6 3.6 4 3.6 7.3z" fill="#FFFFFF"/><rect x="8.4" y="20.2" width="11.2" height="2.8" rx="1.4" fill="#FFFFFF"/></svg>
+    Chess<b>Sathi</b>
+  </a>
+  <nav class="tabs" id="tabs">
+    <a href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Home</a>
+    <a href="#courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h7a2 2 0 012 2v12a2 2 0 00-2-2H4zM20 5h-5a2 2 0 00-2 2v12a2 2 0 012-2h5z"/></svg>Courses</a>
+    <a href="#live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="12" height="12" rx="2"/><path d="M15 10l6-3v10l-6-3z"/></svg>Live</a>
+    <a href="#puzzles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>Puzzles</a>
+    <a href="#tests"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6v3H9zM6 6H5v15h14V6h-1M8 12l2 2 4-4"/></svg>Tests</a>
+    <a href="#progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Progress</a>
+  </nav>
+  <div class="toggles">
+    <button class="tog" id="togSound" aria-pressed="true" title="Move sounds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H3v6h3l5 4zM16 9a4 4 0 010 6M19 6a8 8 0 010 12"/></svg><span>Sound</span></button>
+    <button class="tog" id="togVoice" aria-pressed="true" title="Lesson voiceover"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg><span>Voice</span></button>
+  </div>
+</div></header>
+
+<main id="app"></main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+<script>
+/* ---------- Storage (safe) ---------- */
+const KEY="targetchess.v2";
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+let S=Object.assign({lessons:{},puzzles:{},tests:[],sound:true,voice:true,liveToken:""},load());
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+/* ---------- Content ---------- */
+const DATA={"puzzles":[{"id":"p1","fen":"6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1","line":["d1d8"],"mate":true,"theme":"Back-rank checkmate","level":"Beginner","hint":"Black's king is stuck behind its own pawns.","pts":10},{"id":"p2","fen":"6k1/5ppp/8/8/8/8/5PPP/4Q1K1 w - - 0 1","line":["e1e8"],"mate":true,"theme":"Queen to the back row","level":"Beginner","hint":"Your queen can reach Black's back row in one move.","pts":10},{"id":"p3","fen":"1r4k1/8/8/8/8/8/5PPP/6K1 b - - 0 1","line":["b8b1"],"mate":true,"theme":"Back-rank checkmate","level":"Beginner","hint":"White's king is stuck behind its own pawns too.","pts":10},{"id":"p4","fen":"r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 0 1","line":["h5f7"],"mate":true,"theme":"Attack the weak f7 pawn","level":"Beginner","hint":"Only the king guards f7, and your bishop on c4 helps your queen.","pts":10},{"id":"p5","fen":"rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 1","line":["d8h4"],"mate":true,"theme":"Fastest checkmate","level":"Beginner","hint":"White's pawn moves opened a path straight to the king.","pts":10},{"id":"p6","fen":"k7/8/1K6/8/8/8/7Q/8 w - - 0 1","line":["h2h8"],"mate":true,"theme":"King and queen team-up","level":"Beginner","hint":"Your king already guards a7 and b7. Give check on the back row.","pts":10},{"id":"p7","fen":"k7/2P5/1K6/8/8/8/8/8 w - - 0 1","line":["c7c8q"],"mate":true,"theme":"New queen, checkmate","level":"Beginner","hint":"Push the pawn and make a new queen.","pts":10},{"id":"p8","fen":"k7/7R/8/8/8/8/8/2R3K1 w - - 0 1","line":["c1c8"],"mate":true,"theme":"Two-rook ladder","level":"Beginner","hint":"One rook blocks the 7th row. Use the other rook on the 8th row.","pts":10},{"id":"p9","fen":"7k/8/6K1/8/8/8/Q7/8 w - - 0 1","line":["a2a8"],"mate":true,"theme":"Queen finishes the job","level":"Beginner","hint":"Your king guards g7 and h7. Slide the queen all the way up.","pts":10},{"id":"p10","fen":"2q3k1/5ppp/8/3N4/8/8/5PPP/6K1 w - - 0 1","line":["d5e7"],"mate":false,"theme":"Knight fork","level":"Intermediate","hint":"Find a knight move that attacks the king and the queen together.","pts":15},{"id":"p11","fen":"q7/8/2k5/8/8/8/8/1B4K1 w - - 0 1","line":["b1e4"],"mate":false,"theme":"Skewer: check, then win the queen","level":"Intermediate","hint":"Give check on the same diagonal as the queen.","pts":15},{"id":"p12","fen":"r3k3/8/8/8/8/8/8/1Q2K3 w - - 0 1","line":["b1e4"],"mate":false,"theme":"Queen fork: check and win the rook","level":"Intermediate","hint":"Give a check that also attacks the rook in the corner.","pts":15},{"id":"p13","fen":"6rk/6pp/8/4N3/8/8/8/6K1 w - - 0 1","line":["e5f7"],"mate":true,"theme":"Smothered mate (king boxed in)","level":"Intermediate","hint":"Black's king has no room. Its own pieces block it in.","pts":15},{"id":"p14","fen":"7k/4N1p1/8/8/8/2R5/8/6K1 w - - 0 1","line":["c3h3"],"mate":true,"theme":"Rook and knight team-up","level":"Intermediate","hint":"Your knight guards g8, and the h-file is open for your rook.","pts":15},{"id":"p15","fen":"7k/1R6/5N2/8/8/8/8/6K1 w - - 0 1","line":["b7h7"],"mate":true,"theme":"Rook and knight corner mate","level":"Intermediate","hint":"Your knight guards g8 and can protect a rook on h7.","pts":15},{"id":"p16","fen":"5rk1/5p2/6P1/8/8/8/8/6KQ w - - 0 1","line":["h1h7"],"mate":true,"theme":"Queen guarded by a pawn","level":"Intermediate","hint":"Your pawn on g6 can protect your queen right next to the king.","pts":15},{"id":"p17","fen":"6k1/8/8/8/8/5b1q/7P/6K1 b - - 0 1","line":["h3g2"],"mate":true,"theme":"Queen and bishop team-up","level":"Intermediate","hint":"Your bishop on f3 can protect your queen right next to the king.","pts":15},{"id":"p18","fen":"3rkr2/8/8/8/8/1Q6/8/6K1 w - - 0 1","line":["b3e6"],"mate":true,"theme":"King blocked by its own rooks","level":"Intermediate","hint":"Black's rooks block their own king on both sides.","pts":15},{"id":"p19","fen":"r6k/6pp/7N/8/8/1Q6/6PP/6K1 w - - 0 1","line":["b3g8","a8g8","h6f7"],"mate":true,"theme":"Smothered mate in 2 (king boxed in)","level":"Advanced","hint":"Start with a check. Your queen moves first.","pts":25},{"id":"p20","fen":"1r4k1/q4ppp/8/8/8/8/1Q3PPP/1R4K1 w - - 0 1","line":["b2b8","a7b8","b1b8"],"mate":true,"theme":"Pull the defender away","level":"Advanced","hint":"Start with a check. Your queen moves first.","pts":25},{"id":"p21","fen":"rn1qkbnr/ppp2p1p/3p2p1/4N3/2B1P3/2N5/PPPP1PPP/R1BbK2R w KQkq - 0 6","line":["c4f7","e8e7","c3d5"],"mate":true,"theme":"Opening trap: punish a greedy move","level":"Advanced","hint":"Start with a check. Your bishop moves first.","pts":25},{"id":"p22","fen":"2k5/ppp2R2/3q2Q1/7R/8/8/PPP5/2K5 w - - 0 1","line":["g6d6","c8b8","f7f8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"The first move is not a check, but it sets up a checkmate. Your queen moves first.","pts":25},{"id":"p23","fen":"7k/6p1/1p5p/6Q1/8/2R5/6PP/7K w - - 0 1","line":["g5g6","h8g8","c3c8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"The first move is not a check, but it sets up a checkmate. Your queen moves first.","pts":25},{"id":"p24","fen":"7k/n5pp/8/8/2R5/RQ6/5PPP/6K1 w - - 0 1","line":["b3b8","a7c8","b8c8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your queen moves first.","pts":25},{"id":"p25","fen":"6k1/6pp/Q4p2/2r5/3B4/1N6/6PP/7K w - - 0 1","line":["a6e6","g8h8","e6e8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your queen moves first.","pts":25},{"id":"p26","fen":"6k1/6pp/R4p1p/8/1B4B1/8/PPP5/2K5 w - - 0 1","line":["g4e6","g8h8","a6a8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your bishop moves first.","pts":25},{"id":"p27","fen":"2k5/ppp3r1/3Q4/1Br1q3/8/8/6PP/7K w - - 0 1","line":["d6f8","e5e8","f8e8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your queen moves first.","pts":25},{"id":"p28","fen":"1k6/ppp5/3R4/7R/2b1N3/8/3r1PPP/6K1 w - - 0 1","line":["h5h8","c4g8","h8g8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your rook moves first.","pts":25},{"id":"p29","fen":"2k5/ppp5/4r3/8/R7/7B/3R2PP/7K w - - 0 1","line":["h3e6","c8b8","d2d8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your bishop moves first.","pts":25},{"id":"p30","fen":"6k1/3N1ppp/4r3/rQ6/8/8/5PPP/6K1 w - - 0 1","line":["b5b8","e6e8","b8e8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your queen moves first.","pts":25},{"id":"p31","fen":"2k5/ppp2B2/3R4/8/1p6/R7/6PP/7K w - - 0 1","line":["f7e6","c8b8","d6d8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your bishop moves first.","pts":25},{"id":"p32","fen":"6k1/5pp1/8/2Q1B3/3R4/1r6/6PP/7K w - - 0 1","line":["c5c8","g8h7","d4h4","h7g6","c8g4"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"Start with a check. Your queen moves first.","pts":40},{"id":"p33","fen":"6kn/5p1p/6p1/8/5Q1p/3R4/6PP/7K w - - 0 1","line":["f4f6","h7h6","d3d8","g8h7","d8h8"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"The first move is not a check, but it sets up a checkmate. Your queen moves first.","pts":40},{"id":"p34","fen":"7k/6pp/4N3/3B4/8/1p1R4/PPP5/2K5 w - - 0 1","line":["d5e4","h8g8","d3f3","g8h8","f3f8"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"The first move is not a check, but it sets up a checkmate. Your bishop moves first.","pts":40},{"id":"p35","fen":"2k5/ppp5/2r3R1/b7/8/8/PP5R/1K6 w - - 0 1","line":["h2h8","c8d7","h8h7","d7e8","g6g8"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"Start with a check. Your rook moves first.","pts":40},{"id":"p36","fen":"6k1/5pp1/8/8/p1Q1N3/8/PPP5/2K5 w - - 0 1","line":["e4g5","g7g6","c4f7","g8h8","f7f8"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"The first move is not a check, but it sets up a checkmate. Your knight moves first.","pts":40},{"id":"p37","fen":"2k5/ppp5/1Q6/4b3/1N6/1N6/6PP/7K w - - 0 1","line":["b6e6","c8d8","b3c5","e5h8","e6d7"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"Start with a check. Your queen moves first.","pts":40},{"id":"p38","fen":"6k1/rRr2ppp/8/8/8/1N6/3q2PP/7K w - - 0 1","line":["b7b8","c7c8","b8c8","d2d8","c8d8"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"Start with a check. Your rook moves first.","pts":40},{"id":"p39","fen":"7k/6pp/4r3/1R6/8/6r1/B1q3PP/7K w - - 0 1","line":["b5b8","c2c8","b8c8","e6e8","c8e8"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"Start with a check. Your rook moves first.","pts":40}],"courses":[{"id":"found","title":"Chess Basics","level":"Beginner","blurb":"Learn how each piece moves, how to win a game, and three special moves.","lessons":[{"id":"f1","title":"Meet the Board and the Pieces","minutes":8,"videoUrl":null,"key":"Piece points to remember: pawn 1, knight 3, bishop 3, rook 5, queen 9. The king can never be traded, so keep it safe.","steps":[{"fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","say":"This is the starting position. White always moves first, and each player has a light square in the right-hand corner."},{"say":"Columns are called files, a to h. Rows are ranks, 1 to 8. Every square has a name, like e4."},{"move":"e4","say":"Pawns move straight forward. On its first move a pawn may go two squares."},{"move":"e5","say":"Black answers the same way. Both sides now have a pawn in the centre."},{"move":"Nf3","say":"The knight moves in an L shape and is the only piece that can jump over others."},{"move":"Nc6","say":"Black develops a knight too, defending the e5 pawn."},{"move":"Bb5","say":"Bishops move diagonally and stay on one colour for the whole game."},{"move":"a6","say":"Pawns capture diagonally, so this pawn now attacks the bishop."},{"move":"Ba4","say":"The bishop steps back but keeps its diagonal. Rooks, the queen and the king join the game soon."}]},{"id":"f2","title":"Check and Checkmate: How to Win","minutes":10,"videoUrl":null,"key":"Before every move, ask yourself two questions: Is my king safe? Can my opponent give check?","steps":[{"fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","say":"A king under attack is in check. You must escape by moving the king, blocking, or capturing the attacker."},{"move":"f3","say":"Watch the shortest possible game. White weakens the squares around the king."},{"move":"e5","say":"Black opens a path for the queen."},{"move":"g4","say":"Another weakening move. The diagonal from h4 to e1 is now wide open."},{"move":"Qh4#","say":"Checkmate. The king is attacked and has no way to escape, block or capture. The game is over."},{"fen":"6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1","say":"Here is a second pattern. Black's king is trapped behind its own pawns."},{"move":"Rd8#","say":"The rook reaches the back rank. This is called a back-rank mate."},{"say":"Stalemate is different: the side to move has no legal move but is not in check. Stalemate is a draw."}]},{"id":"f3","title":"3 Special Moves: Castling, En Passant, Promotion","minutes":12,"videoUrl":null,"key":"Castle early. It hides your king and brings your rook into the game.","steps":[{"fen":"r3k2r/pppq1ppp/2n2n2/2bpp3/2B1P3/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 0 1","say":"Castling moves the king two squares toward a rook, and the rook jumps over to the other side."},{"move":"O-O","say":"White castles short. The king lands on g1 and the rook on f1."},{"move":"O-O-O","say":"Black castles long. The king goes to c8 and the rook to d8."},{"say":"You can't castle out of check, through an attacked square, or after the king or that rook has moved."},{"fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","say":"Now en passant, the rule most beginners have never heard of."},{"move":"e4","say":"White pushes the e-pawn."},{"move":"Nf6","say":"Black develops."},{"move":"e5","say":"The pawn advances to the fifth rank."},{"move":"d5","say":"Black's pawn jumps two squares and lands right beside White's pawn."},{"move":"exd6","say":"White captures en passant, as if the black pawn had moved only one square. This is only allowed immediately."},{"fen":"8/4P1k1/8/8/8/8/6K1/8 w - - 0 1","say":"Last, promotion. A pawn that reaches the final rank becomes a new piece."},{"move":"e8=Q","say":"White chooses a queen, which is almost always the best choice."}]}]},{"id":"tac","title":"Winning Tricks","level":"Intermediate","blurb":"Simple tricks to win your opponent's pieces: forks, pins and back-rank traps.","lessons":[{"id":"t1","title":"Knight Fork: Attack Two Pieces at Once","minutes":9,"videoUrl":null,"key":"Look for a square where your knight attacks the king and another piece at the same time.","steps":[{"fen":"2q3k1/5ppp/8/3N4/8/8/5PPP/6K1 w - - 0 1","say":"A fork is one piece attacking two targets at once. Look at the black king and queen."},{"move":"Ne7+","say":"The knight gives check and attacks the queen at the same time."},{"move":"Kf8","say":"Black must deal with the check first."},{"move":"Nxc8","say":"White collects the queen. That is a gain of nine points of material."}]},{"id":"t2","title":"Pins: Freeze a Piece in Place","minutes":8,"videoUrl":null,"key":"A pinned piece can't run away, so attack it with a pawn.","steps":[{"fen":"4k3/7p/2n5/1B6/8/8/3P4/4K3 w - - 0 1","say":"The bishop on b5, the knight on c6 and the king on e8 sit on one diagonal."},{"say":"The knight is pinned. Moving it would expose the king, so it is not allowed."},{"move":"d4","say":"White brings a pawn forward to attack the pinned piece."},{"move":"h6","say":"Black has nothing useful to do."},{"move":"d5","say":"The pawn attacks the knight, and the knight cannot step away."},{"move":"h5","say":"Black waits again."},{"move":"dxc6","say":"White wins the knight with a pawn."}]},{"id":"t3","title":"Back-Rank Mate: Trap the King at Home","minutes":7,"videoUrl":null,"key":"Push one pawn in front of your castled king (like h3) so your king has an escape square.","steps":[{"fen":"6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1","say":"Black's king is castled, but all three pawns in front of it are still at home."},{"move":"Rd8#","say":"The rook arrives and it is mate. The king has no breathing room."},{"fen":"6k1/5pp1/7p/8/8/8/5PPP/3R2K1 w - - 0 1","say":"Same position, but Black played h6 earlier. This escape square is called a luft."},{"move":"Rd8+","say":"Now the check is harmless."},{"move":"Kh7","say":"The king walks to safety through the luft."}]}]},{"id":"open","title":"Starting the Game","level":"Intermediate","blurb":"How to play your first 10 moves well, without memorising anything.","lessons":[{"id":"o1","title":"3 Golden Rules for the Start","minutes":10,"videoUrl":null,"key":"By move 10, check: are your knights and bishops out, and is your king castled?","steps":[{"fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","say":"Three principles: control the centre, develop your pieces, and castle early."},{"move":"e4","say":"A centre pawn takes space and opens lines for the queen and bishop."},{"move":"e5","say":"Black claims an equal share of the centre."},{"move":"Nf3","say":"Knights first. This one attacks e5 and prepares castling."},{"move":"Nc6","say":"Black defends e5 while developing."},{"move":"Bc4","say":"The bishop aims at f7, the weakest square near Black's king."},{"move":"Bc5","say":"Black mirrors the idea."},{"move":"c3","say":"A quiet pawn move that prepares d4 to take the centre."},{"move":"Nf6","say":"Black develops the last knight and hits e4."},{"move":"d3","say":"White calmly defends e4."},{"move":"d6","say":"Black does the same."},{"move":"O-O","say":"White castles. King safe, rook connected."},{"move":"O-O","say":"Black castles too. Both sides followed all three principles."}]},{"id":"o2","title":"Starting with the d-Pawn","minutes":9,"videoUrl":null,"key":"When you start with the d-pawn, push your c-pawn to c4 to fight for the centre.","steps":[{"fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","say":"Now a slower, more strategic start with the queen's pawn."},{"move":"d4","say":"The d-pawn is protected by the queen from the beginning."},{"move":"d5","say":"Black blocks the pawn's advance."},{"move":"c4","say":"White offers a wing pawn to pull Black's central pawn away."},{"move":"e6","say":"Black keeps the centre solid instead of taking."},{"move":"Nc3","say":"More pressure on d5."},{"move":"Nf6","say":"Black defends d5 again."},{"move":"Bg5","say":"The bishop pins the knight to the queen."},{"move":"Be7","say":"Black breaks the pin and gets ready to castle."}]},{"id":"o3","title":"Don't Bring Your Queen Out Too Early","minutes":8,"videoUrl":null,"key":"If your opponent brings out pieces while chasing your queen, she came out too early.","steps":[{"fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","say":"What happens when the queen comes out on move two?"},{"move":"e4","say":"A normal first move."},{"move":"e5","say":"Black mirrors it."},{"move":"Qh5","say":"White's queen jumps out and attacks e5, with ideas against f7."},{"move":"Nc6","say":"Black defends e5 and develops a piece."},{"move":"Bc4","say":"Now White threatens Qxf7, which would be checkmate."},{"move":"g6","say":"Black blocks the queen's path and attacks her at the same time."},{"move":"Qf3","say":"The queen moves again, renewing the threat on f7."},{"move":"Nf6","say":"Black blocks with a developing move. White's queen has made three moves while Black built a solid position."}]}]},{"id":"end","title":"Finishing the Game","level":"Advanced","blurb":"When only a few pieces are left, learn how to turn your advantage into a win.","lessons":[{"id":"e1","title":"Checkmate with King and Queen","minutes":11,"videoUrl":null,"key":"Before a quiet queen move, check the other king still has a move. If it doesn't, the game is a draw.","steps":[{"fen":"k7/8/2K5/8/8/8/8/1Q6 w - - 0 1","say":"The black king is on the edge, and the white king stands close by."},{"say":"Careful: Qb6 here would leave Black with no legal moves and no check. That is stalemate, a draw."},{"say":"Look for a check where your king protects the queen."},{"move":"Qb7#","say":"Checkmate. The white king defends the queen on b7, and every escape square is covered."}]},{"id":"e2","title":"King Face-Off (The Opposition)","minutes":9,"videoUrl":null,"key":"Keep your king in front of your pawn and win the face-off with the other king. Then your pawn can usually become a queen.","steps":[{"fen":"8/8/4k3/8/4K3/4P3/8/8 b - - 0 1","say":"The kings face each other with one square between. Black must move, so White holds the opposition."},{"move":"Kd6","say":"Black has to give way."},{"move":"Kf5","say":"White's king advances to the side."},{"move":"Ke7","say":"Black tries to stay in front of the pawn."},{"move":"Ke5","say":"White takes the opposition again."},{"move":"Kf7","say":"Black must step aside once more."},{"move":"Kd6","say":"White's king moves forward. The pawn will follow and promote."}]},{"id":"e3","title":"Rook Wall: Cut Off the King","minutes":10,"videoUrl":null,"key":"Use your rook from far away to block the enemy king's path. Don't put it in front of your own pawn.","steps":[{"fen":"8/8/2k5/8/8/4K3/4P3/7R w - - 0 1","say":"White has an extra pawn. Black's king wants to get in front of it."},{"move":"Rd1","say":"The rook slides to the d-file and builds a wall. Black's king cannot cross it."},{"move":"Kc5","say":"Black's king looks for a way around."},{"move":"Kf4","say":"White's king steps up first, making room for the pawn."},{"move":"Kc6","say":"Black has nothing better than to wait."},{"move":"e4","say":"The pawn advances behind its king."},{"move":"Kc5","say":"The black king is still stuck on the wrong side of the wall."},{"move":"e5","say":"King and pawn march on together. The rook keeps the door shut from far away."}]}]}]};
+const COURSES=DATA.courses, PUZZLES=DATA.puzzles;
+const QUIZ=[
+ {q:"Which piece can jump over other pieces?",o:["Bishop","Knight","Rook","Queen"],a:1},
+ {q:"It's your turn. You're not in check, but you have no legal move. What happens?",o:["Checkmate, you lose","You lose on time","Stalemate, it's a draw","You skip your turn"],a:2},
+ {q:"How many points is a rook worth?",o:["3","5","9","1"],a:1},
+ {q:"Which of these means you can't castle right now?",o:["Your rook is attacked","You moved your queen","Your king is in check","You castled in an earlier game"],a:2},
+ {q:"When can you make an en passant capture?",o:["Any time later","Only on the very next move","Only in the endgame","Only by the king's pawn"],a:1},
+ {q:"A piece can't move at all because it's pinned. Which piece is hiding behind it?",o:["Queen","Rook","King","Pawn"],a:2},
+ {q:"Why push a pawn like h3 in front of your castled king?",o:["To give the king an escape square","To castle again","To protect the queen","To attack the other king"],a:0},
+ {q:"Which 4 squares are the centre of the board?",o:["a1, h1, a8, h8","c3, f3, c6, f6","d4, e4, d5, e5","e1, e8, d1, d8"],a:2},
+ {q:"A pawn reaches the last row. Which piece can it NOT become?",o:["Queen","Knight","King","Rook"],a:2},
+ {q:"Why is bringing your queen out early often a mistake?",o:["It is against the rules","Enemy pieces develop while chasing it","It can't capture yet","It blocks castling"],a:1},
+ {q:"Two kings face each other with one square between them. The player who does NOT have to move has…",o:["Zugzwang","The opposition","A fortress","The tempo"],a:1},
+ {q:"In a rook ending, where does your rook usually work best?",o:["In front of your king","Cutting off the enemy king along a file","Next to the enemy king","On its starting square"],a:1}
+];
+const ALL_LESSONS=COURSES.flatMap(c=>c.lessons.map(l=>({...l,course:c})));
+const LEVELS=["Beginner","Intermediate","Advanced","Expert"];
+const HAS_CHESS=typeof Chess==="function";
+
+/* ---------- Sound (synthesised, no files) ---------- */
+let AC=null;
+function ac(){try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();return AC}catch(e){return null}}
+function tap(t0,freq,gain,dur){const c=AC;
+  const len=Math.floor(c.sampleRate*dur),buf=c.createBuffer(1,len,c.sampleRate),d=buf.getChannelData(0);
+  for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,6);
+  const n=c.createBufferSource();n.buffer=buf;const bp=c.createBiquadFilter();bp.type="bandpass";bp.frequency.value=freq;bp.Q.value=1.4;
+  const g=c.createGain();g.gain.value=gain;n.connect(bp).connect(g).connect(c.destination);n.start(t0);
+  const o=c.createOscillator();o.type="sine";o.frequency.setValueAtTime(freq/6,t0);o.frequency.exponentialRampToValueAtTime(freq/12,t0+dur);
+  const og=c.createGain();og.gain.setValueAtTime(gain*.6,t0);og.gain.exponentialRampToValueAtTime(.001,t0+dur);o.connect(og).connect(c.destination);o.start(t0);o.stop(t0+dur);}
+function tone(t0,f,dur,gain=.12,type="triangle"){const c=AC,o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=f;
+  g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(gain,t0+.01);g.gain.exponentialRampToValueAtTime(.001,t0+dur);o.connect(g).connect(c.destination);o.start(t0);o.stop(t0+dur+.02)}
+function sfx(kind){if(!S.sound)return;const c=ac();if(!c)return;const t=c.currentTime+.01;
+  if(kind==="move")tap(t,1800,.9,.09);
+  else if(kind==="capture"){tap(t,1500,1,.08);tap(t+.07,2200,.8,.08)}
+  else if(kind==="castle"){tap(t,1800,.8,.08);tap(t+.11,1600,.8,.08)}
+  else if(kind==="check"){tap(t,1800,.9,.08);tone(t+.04,880,.18,.09);tone(t+.12,1175,.22,.08)}
+  else if(kind==="mate"){tap(t,1500,1,.09);[523,659,784,1047].forEach((f,i)=>tone(t+.08+i*.09,f,.35,.1))}
+  else if(kind==="wrong"){tone(t,196,.25,.12,"square");tone(t+.12,165,.3,.1,"square")}
+  else if(kind==="right"){tone(t,784,.15,.1);tone(t+.09,1047,.25,.1)}
+  else if(kind==="solved"){[659,784,988,1319].forEach((f,i)=>tone(t+i*.08,f,.35,.1))}}
+function moveSound(m,g){if(!m)return;if(g&&g.in_checkmate())return sfx("mate");if(g&&g.in_check())return sfx("check");
+  if(m.flags&&(m.flags.includes("k")||m.flags.includes("q")))return sfx("castle");sfx(m.captured?"capture":"move")}
+function sanSound(san){if(!san)return;if(san.includes("#"))sfx("mate");else if(san.includes("+"))sfx("check");else if(san.startsWith("O-O"))sfx("castle");else if(san.includes("x"))sfx("capture");else sfx("move")}
+
+/* ---------- Voiceover (browser speech) ---------- */
+const TTS="speechSynthesis" in window;
+let VOICE=null;
+// Fallback only: prefer the natural-sounding neural voices browsers ship, Indian English first.
+function pickVoice(){if(!TTS)return;const vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));
+  const score=v=>(/natural|neural|online/i.test(v.name)?40:0)+(/google/i.test(v.name)?25:0)+(/en-IN/i.test(v.lang)?12:/en-GB/i.test(v.lang)?6:/en-US/i.test(v.lang)?4:0)-(v.localService&&!/google/i.test(v.name)?5:0);
+  VOICE=vs.sort((a,b)=>score(b)-score(a))[0]||null}
+if(TTS){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+const PW={K:"King",Q:"Queen",R:"Rook",B:"Bishop",N:"Knight"};
+function sanWords(san){if(!san)return"";if(san.startsWith("O-O-O"))return"Castles long.";if(san.startsWith("O-O"))return"Castles short.";
+  let s=san.replace(/[+#]/g,""),out=[];const promo=s.match(/=([QRBN])/);s=s.replace(/=[QRBN]/,"");
+  if(PW[s[0]]){out.push(PW[s[0]]);s=s.slice(1)}else if(!s.includes("x"))out.push("Pawn");const sq=s.slice(-2);const pre=s.slice(0,-2);
+  if(pre.includes("x"))out.push(out.length?"takes":pre[0]+" takes");out.push(sq.split("").join(" "));
+  if(promo)out.push("promotes to "+PW[promo[1]].toLowerCase());if(san.includes("#"))out.push("checkmate");else if(san.includes("+"))out.push("check");
+  return out.join(" ")+"."}
+function speak(text,rate,onend){if(!TTS||!S.voice){onend&&onend(false);return}
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);if(VOICE)u.voice=VOICE;u.lang=VOICE?VOICE.lang:"en-IN";u.rate=Math.min(2,.95*rate);
+  let done=false;const fin=()=>{if(!done){done=true;onend&&onend(true)}};u.onend=fin;u.onerror=fin;speechSynthesis.speak(u);
+  setTimeout(fin,Math.max(6000,text.length*120/rate));}
+function hush(){if(TTS)speechSynthesis.cancel()}
+
+/* ---------- Board ---------- */
+const GLYPH={k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"};
+const FILES="abcdefgh";
+const NAMES={k:"king",q:"queen",r:"rook",b:"bishop",n:"knight",p:"pawn"};
+function parseFen(f){const [rows,turn]=f.split(" ");const b={};rows.split("/").forEach((r,ri)=>{let fi=0;for(const ch of r){if(/\d/.test(ch))fi+=+ch;else{b[FILES[fi]+(8-ri)]=ch;fi++}}});return{b,turn:turn||"w"}}
+function drawBoard(el,fen,o={}){
+  const pos=parseFen(fen),flip=o.flip;el.innerHTML="";el.classList.toggle("live",!!o.onSquare);
+  for(let r=0;r<8;r++)for(let f=0;f<8;f++){
+    const file=flip?7-f:f, rank=flip?r+1:8-r, name=FILES[file]+rank;
+    const s=document.createElement(o.onSquare?"button":"div");
+    s.className="sq"+((file+rank)%2===0?" d":"");
+    if(o.hi&&o.hi.includes(name))s.classList.add("hi");
+    if(o.sel===name)s.classList.add("sel");
+    if(o.bad&&o.bad.includes(name))s.classList.add("bad");
+    if(o.dots&&o.dots.includes(name))s.classList.add("dot");
+    const p=pos.b[name];
+    if(o.onSquare){s.type="button";s.setAttribute("aria-label",name+(p?" "+(p===p.toUpperCase()?"white ":"black ")+NAMES[p.toLowerCase()]:""));s.onclick=()=>o.onSquare(name)}
+    if(p){const g=document.createElement("span");g.className="pc "+(p===p.toUpperCase()?"w":"b");g.textContent=GLYPH[p.toLowerCase()]+"︎";s.appendChild(g)}
+    if(r===7){const c=document.createElement("span");c.className="coord f";c.textContent=FILES[file];s.appendChild(c)}
+    if(f===0){const c=document.createElement("span");c.className="coord r";c.textContent=rank;s.appendChild(c)}
+    el.appendChild(s);
+  }
+  if(o.anim){const [a,b]=o.anim;const to=el.children[idx(b,flip)],pc=to&&to.querySelector(".pc");
+    if(pc){const fa=FILES.indexOf(a[0]),ra=+a[1],fb=FILES.indexOf(b[0]),rb=+b[1];
+      const cs=(flip?-1:1),w=el.clientWidth/8;const dx=(fa-fb)*w*cs,dy=(rb-ra)*w*cs;
+      to.classList.add("moving");pc.style.transform=`translate(${dx}px,${dy}px)`;pc.getBoundingClientRect();
+      requestAnimationFrame(()=>{pc.classList.add("slide");pc.style.transform="";setTimeout(()=>to.classList.remove("moving"),300)})}}
+}
+function idx(sq,flip){const f=FILES.indexOf(sq[0]),r=+sq[1];const col=flip?7-f:f,row=flip?r-1:8-r;return row*8+col}
+
+/* ---------- Helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1800)}
+const lessonsDone=()=>ALL_LESSONS.filter(l=>S.lessons[l.id]).length;
+const puzzlesDone=()=>PUZZLES.filter(p=>S.puzzles[p.id]).length;
+const points=()=>PUZZLES.reduce((a,p)=>a+(S.puzzles[p.id]?p.pts:0),0);
+const bestTest=()=>S.tests.length?Math.max(...S.tests.map(t=>t.score)):null;
+const courseProgress=c=>c.lessons.filter(l=>S.lessons[l.id]).length;
+const movesLeft=p=>Math.ceil(p.line.length/2);
+const label=p=>p.line.length===1?(p.mate?"Checkmate in 1":"Win a piece"):`Checkmate in ${movesLeft(p)}`;
+const fmt=ms=>{const s=Math.round(ms/1000);return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`};
+
+/* ---------- Views ---------- */
+function vHome(){
+  const next=ALL_LESSONS.find(l=>!S.lessons[l.id]);
+  const pct=Math.round(lessonsDone()/ALL_LESSONS.length*100);
+  const daily=PUZZLES.filter(p=>p.level==="Advanced")[new Date().getDate()%13];
+  return `<section class="hero view">
+    <div>
+      <div class="eyebrow">Learn chess step by step</div>
+      <h1 style="margin-top:8px">Learn one chess idea a day.</h1>
+      <p class="lead">${ALL_LESSONS.length} short video lessons, ${PUZZLES.length} puzzles from easy to hard, and a test to check what you learned.</p>
+      <div class="row" style="margin-top:20px">
+        ${next?`<button class="btn" data-open="${next.id}">▶ ${lessonsDone()?"Continue":"Start"}: ${esc(next.title)}</button>`:`<a class="btn" href="#tests" style="text-decoration:none">All lessons done. Take the test</a>`}
+        <a class="btn ghost" href="#puzzles" style="text-decoration:none">Solve puzzles</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="n">${lessonsDone()}/${ALL_LESSONS.length}</div><div class="l">Lessons watched</div></div>
+        <div class="stat"><div class="n">${puzzlesDone()}/${PUZZLES.length}</div><div class="l">Puzzles solved</div></div>
+        <div class="stat"><div class="n">${bestTest()??"–"}${bestTest()!=null?"/"+QUIZ.length:""}</div><div class="l">Best test</div></div>
+      </div>
+      <div style="margin-top:16px" class="stack"><div class="bar" aria-label="Course progress ${pct}%"><i style="width:${pct}%"></i></div><span class="li-m">${pct}% of all courses complete</span></div>
+    </div>
+    <div><div class="board" id="heroBoard"></div><p class="caption">Puzzle of the day: ${label(daily)}. ${daily.fen.split(" ")[1]==="w"?"White":"Black"} to move. Tap the board to solve it.</p></div>
+  </section>
+  <section class="stack view">
+    <div class="row" style="justify-content:space-between"><h2>Courses</h2><a href="#courses" style="color:var(--accent);font-weight:600">See all</a></div>
+    <div class="grid g3">${COURSES.map(c=>`<div class="card stack">
+      <span class="pill level" style="align-self:flex-start">${c.level}</span>
+      <h3>${esc(c.title)}</h3><p class="li-m">${esc(c.blurb)}</p>
+      <div class="bar"><i style="width:${courseProgress(c)/c.lessons.length*100}%"></i></div>
+      <span class="li-m mono">${courseProgress(c)}/${c.lessons.length} video lessons</span>
+      <button class="btn ghost" data-open="${c.lessons[0].id}">▶ Start course</button></div>`).join("")}</div>
+  </section>`;
+}
+function afterHome(){const d=PUZZLES.filter(p=>p.level==="Advanced")[new Date().getDate()%13];drawBoard($("#heroBoard"),d.fen,{flip:d.fen.split(" ")[1]==="b",onSquare:()=>{pzStart=d.id;location.hash="puzzles"}})}
+
+function vCourses(){
+  return `<section class="stack view"><div class="eyebrow">Courses</div><h1>Pick a course</h1>
+  <p class="li-m" style="max-width:60ch">Each lesson is a short video with a teacher's voice. You can pause, go back, or speed it up.</p></section>
+  <section class="grid g2 view">${COURSES.map(c=>`<div class="card course">
+    <div class="meta"><span class="pill level">${c.level}</span><span class="pill">${c.lessons.length} video lessons</span>
+    ${courseProgress(c)===c.lessons.length?`<span class="pill done">Complete</span>`:""}</div>
+    <h2>${esc(c.title)}</h2><p class="li-m">${esc(c.blurb)}</p>
+    <ul>${c.lessons.map((l,i)=>`<li><button data-open="${l.id}"><span class="tick ${S.lessons[l.id]?"on":"play"}" aria-hidden="true"></span>
+      <span class="li-t">${i+1}. ${esc(l.title)}</span><span class="li-m mono">${l.minutes} min</span></button></li>`).join("")}</ul>
+  </div>`).join("")}</section>`;
+}
+
+/* ---------- Lesson video player ---------- */
+let curLesson=null, LP=null;
+function buildFrames(steps){
+  let g=new Chess(); const out=[];
+  for(const s of steps){let last=null;if(s.fen)g=new Chess(s.fen);if(s.move){const m=g.move(s.move);if(m)last=[m.from,m.to]}
+    out.push({fen:g.fen(),last,say:s.say,move:s.move,ms:s.ms||Math.max(3000,s.say.length*68+(s.move?900:0)+500)})}
+  return out;
+}
+function vLesson(){
+  const l=ALL_LESSONS.find(x=>x.id===curLesson)||ALL_LESSONS[0];
+  const idx=l.course.lessons.indexOf(l), nxt=l.course.lessons[idx+1];
+  return `<section class="stack view"><button class="back" data-go="courses">← ${esc(l.course.title)}</button>
+    <div class="row"><span class="pill level">${l.course.level}</span><span class="pill mono">Lesson ${idx+1} of ${l.course.lessons.length}</span><span class="pill mono">${l.minutes} min</span>${S.lessons[l.id]?`<span class="pill done">Watched</span>`:""}</div>
+    <h1>${esc(l.title)}</h1></section>
+  <section class="lesson view">
+    <div class="player">
+      <div class="screen"><div class="board" id="lessonBoard"></div></div>
+      <div class="subtitle" id="lpSay" aria-live="polite"></div>
+      <div class="scrub" id="lpScrub"></div>
+      <div class="controls">
+        <span class="mono li-m" id="lpTime">0:00</span>
+        <div class="row" style="gap:8px">
+          <button class="ctl" id="lpRestart" aria-label="Restart">⏮</button>
+          <button class="ctl" id="lpPrev" aria-label="Previous step">◀</button>
+          <button class="ctl big" id="lpPlay" aria-label="Play">▶</button>
+          <button class="ctl" id="lpNext" aria-label="Next step">▶▏</button>
+        </div>
+        <button class="ctl txt" id="lpSpeed" aria-label="Playback speed">1×</button>
+      </div>
+      <p class="voice-note">${VOICE_T[l.id]?(S.voice?"Narrated by Tripti. Press play to start. Turn the voice off with Voice at the top.":"Voice is off, so the lesson plays silently with subtitles. Turn it on with Voice at the top."):!TTS?"Voiceover isn't supported in this browser. Subtitles are shown instead.":S.voice?"Press play to hear the voiceover.":"Voiceover is off. Turn it on with Voice at the top."}</p>
+    </div>
+    <div class="stack">
+      <div class="keypoint"><div class="eyebrow">Remember this</div><p style="margin-top:4px">${esc(l.key)}</p></div>
+      <div class="eyebrow" style="margin-top:8px">Lesson steps · tap one to jump there</div>
+      <ol class="transcript" id="lpTx">${l.steps.map((s,i)=>`<li><button data-step="${i}">${s.move?`<b class="mono">${esc(s.move)}</b> `:""}${esc(s.say)}</button></li>`).join("")}</ol>
+      <div class="row">
+        <button class="btn ${S.lessons[l.id]?"ghost":""}" id="doneBtn">${S.lessons[l.id]?"Watched ✓":"Mark as watched"}</button>
+        ${nxt?`<button class="btn ghost" data-open="${nxt.id}">Next: ${esc(nxt.title)}</button>`:`<a class="btn ghost" href="#puzzles" style="text-decoration:none">Practise with puzzles</a>`}
+      </div>
+    </div>
+  </section>`;
+}
+/* Recorded ElevenLabs voiceover (voice: Tripti). starts = second each step begins in the clip. */
+const VOICE_T={"f1": {"dur": 70.35, "starts": [0.0, 8.11, 18.39, 26.49, 33.86, 41.62, 47.97, 54.87, 61.69]}, "f2": {"dur": 59.17, "starts": [0.0, 7.68, 14.94, 19.81, 27.61, 37.85, 43.81, 51.43]}, "f3": {"dur": 77.09, "starts": [0.0, 6.45, 14.68, 22.72, 29.82, 34.88, 39.03, 42.71, 47.49, 54.12, 63.92, 70.05]}, "t1": {"dur": 24.76, "starts": [0.0, 6.16, 12.9, 17.89]}, "t2": {"dur": 38.35, "starts": [0.0, 7.31, 13.96, 19.7, 24.24, 30.03, 33.96]}, "t3": {"dur": 29.31, "starts": [0.0, 5.58, 13.15, 20.21, 24.86]}, "o1": {"dur": 72.91, "starts": [0.0, 6.25, 13.18, 18.24, 25.08, 30.25, 36.84, 41.04, 47.11, 52.69, 57.15, 61.02, 66.78]}, "o2": {"dur": 45.79, "starts": [0.0, 4.76, 10.64, 15.48, 21.65, 27.1, 31.41, 36.03, 40.93]}, "o3": {"dur": 52.11, "starts": [0.0, 3.47, 7.47, 11.35, 18.9, 24.39, 30.84, 36.99, 43.01]}, "e1": {"dur": 26.67, "starts": [0.0, 4.74, 13.85, 17.6]}, "e2": {"dur": 36.68, "starts": [0.0, 7.33, 11.7, 16.57, 21.47, 26.07, 30.62]}, "e3": {"dur": 48.77, "starts": [0.0, 5.16, 13.21, 18.28, 24.53, 29.88, 35.04, 41.21]}};
+function afterLesson(){
+  const l=ALL_LESSONS.find(x=>x.id===curLesson)||ALL_LESSONS[0];
+  stopLesson();
+  const T=VOICE_T[l.id];
+  if(!T)return afterLessonTTS();
+  const frames=buildFrames(l.steps), starts=T.starts, n=frames.length;
+  const audio=new Audio(`voice/${l.id}.mp3`);audio.preload="auto";audio.muted=!S.voice;
+  LP={i:0,playing:false,speed:1,frames,audio,timer:null,clockTimer:null,token:0,dur:T.dur,failed:false};
+  $("#lpScrub").innerHTML=frames.map((_,k)=>`<button data-seg="${k}" aria-label="Jump to step ${k+1}"><i></i></button>`).join("");
+  const stepAt=t=>{let k=0;for(let x=0;x<n;x++)if(starts[x]<=t+0.05)k=x;return k};
+  const endOf=k=>k+1<n?starts[k+1]:LP.dur;
+  const drawClock=()=>{const el=$("#lpTime");if(!el)return;const t=audio.currentTime||0;
+    el.textContent=`${fmt(t*1000)} / ${fmt(LP.dur*1000)}`;
+    const seg=document.querySelectorAll("#lpScrub button")[LP.i];
+    if(seg)seg.querySelector("i").style.setProperty("--p",Math.max(0,Math.min(1,(t-starts[LP.i])/(endOf(LP.i)-starts[LP.i]))));};
+  const paint=(animate)=>{const f=frames[LP.i];
+    drawBoard($("#lessonBoard"),f.fen,{hi:f.last||[],anim:animate&&f.last?f.last:null});
+    if(animate&&f.move)sanSound(f.move);
+    $("#lpSay").innerHTML=(f.move?`<b class="mono">${esc(f.move)}</b>`:"")+`<span>${esc(f.say)}</span>`;
+    document.querySelectorAll("#lpScrub button").forEach((b,k)=>b.classList.toggle("on",k<LP.i));
+    document.querySelectorAll("#lpTx button").forEach((b,k)=>b.classList.toggle("cur",k===LP.i));
+    const cur=document.querySelector("#lpTx button.cur");if(cur&&LP.playing)cur.scrollIntoView({block:"nearest"});
+    $("#lpPlay").textContent=LP.playing?"❚❚":"▶";$("#lpPlay").setAttribute("aria-label",LP.playing?"Pause":"Play");drawClock();};
+  // The audio is the clock: every 100ms read its position and move the board to the matching step.
+  LP.clockTimer=setInterval(()=>{if(!$("#lpTime"))return stopLesson();
+    const k=stepAt(audio.currentTime);if(k!==LP.i){const fwd=k===LP.i+1;LP.i=k;paint(fwd)}else drawClock()},100);
+  const finish=()=>{LP.playing=false;LP.i=n-1;paint(false);document.querySelectorAll("#lpScrub button").forEach(b=>b.classList.add("on"));
+    if(!S.lessons[l.id]){S.lessons[l.id]=true;save();toast("Lesson watched");const b=$("#doneBtn");b.textContent="Watched ✓";b.classList.add("ghost")}};
+  audio.addEventListener("ended",finish);
+  audio.addEventListener("error",()=>{if(LP.audio!==audio||LP.failed)return;LP.failed=true;toast("Couldn't load the recorded voice. Using the browser voice instead.");stopLesson();afterLessonTTS()});
+  const play=()=>{ac();audio.playbackRate=LP.speed;const p=audio.play();LP.playing=true;paint(false);
+    if(p&&p.catch)p.catch(()=>{LP.playing=false;paint(false)})};
+  const pause=()=>{audio.pause();LP.playing=false;paint(false)};
+  const go=k=>{k=Math.max(0,Math.min(n-1,k));const fwd=k===LP.i+1;LP.i=k;try{audio.currentTime=starts[k]+0.01}catch(e){}paint(fwd)};
+  $("#lpPlay").onclick=()=>{if(LP.playing)return pause();if(audio.ended||audio.currentTime>=LP.dur-0.1){go(0)}play()};
+  $("#lpPrev").onclick=()=>go(LP.i-1); $("#lpNext").onclick=()=>go(LP.i+1);
+  $("#lpRestart").onclick=()=>{pause();go(0)};
+  $("#lpSpeed").onclick=e=>{LP.speed=LP.speed===1?1.5:LP.speed===1.5?2:1;e.target.textContent=LP.speed+"×";audio.playbackRate=LP.speed};
+  document.querySelectorAll("[data-seg]").forEach(b=>b.onclick=()=>go(+b.dataset.seg));
+  document.querySelectorAll("[data-step]").forEach(b=>b.onclick=()=>go(+b.dataset.step));
+  $("#doneBtn").onclick=()=>{S.lessons[l.id]=!S.lessons[l.id];save();toast(S.lessons[l.id]?"Marked as watched":"Marked as not watched");render()};
+  paint(false);
+}
+function stopLesson(){if(!LP)return;clearTimeout(LP.timer);clearInterval(LP.clockTimer);LP.token++;LP.playing=false;if(LP.audio){LP.audio.pause();LP.audio.src=""}hush()}
+
+function afterLessonTTS(){
+  const l=ALL_LESSONS.find(x=>x.id===curLesson)||ALL_LESSONS[0];
+  stopLesson();
+  const frames=buildFrames(l.steps);
+  if(LP&&LP.clockTimer)clearInterval(LP.clockTimer);
+  LP={i:0,playing:false,speed:1,timer:null,frames,token:0,clock:0,lastT:0};
+  const total=frames.reduce((a,x)=>a+x.ms,0);
+  const starts=frames.map((_,k)=>frames.slice(0,k).reduce((a,x)=>a+x.ms,0));
+  // Real playback clock: ticks while playing, snaps to each step's start when the step changes.
+  const drawClock=()=>{const st=starts[LP.i],end=st+frames[LP.i].ms;const c=Math.min(LP.clock,end-1);
+    const el=$("#lpTime");if(!el){clearInterval(LP.clockTimer);return}
+    el.textContent=`${fmt(c)} / ${fmt(total)}`;
+    const seg=document.querySelectorAll("#lpScrub button")[LP.i];if(seg)seg.querySelector("i").style.setProperty("--p",Math.max(0,Math.min(1,(c-st)/frames[LP.i].ms)));};
+  LP.clockTimer=setInterval(()=>{const now=performance.now();if(LP.playing)LP.clock+=(now-LP.lastT)*LP.speed;LP.lastT=now;drawClock()},200);
+  $("#lpScrub").innerHTML=frames.map((_,k)=>`<button data-seg="${k}" aria-label="Jump to step ${k+1}"><i></i></button>`).join("");
+  const paint=(animate)=>{const f=frames[LP.i];
+    drawBoard($("#lessonBoard"),f.fen,{hi:f.last||[],anim:animate&&f.last?f.last:null});
+    if(animate&&f.move)sanSound(f.move);
+    $("#lpSay").innerHTML=(f.move?`<b class="mono">${esc(f.move)}</b>`:"")+`<span>${esc(f.say)}</span>`;
+    document.querySelectorAll("#lpScrub button").forEach((b,k)=>b.classList.toggle("on",k<=LP.i));
+    document.querySelectorAll("#lpTx button").forEach((b,k)=>b.classList.toggle("cur",k===LP.i));
+    const cur=document.querySelector("#lpTx button.cur");if(cur&&LP.playing)cur.scrollIntoView({block:"nearest"});
+    LP.clock=Math.max(starts[LP.i],Math.min(LP.clock,starts[LP.i]+frames[LP.i].ms-1));if(LP.clock<starts[LP.i]||LP.clock>=starts[LP.i]+frames[LP.i].ms)LP.clock=starts[LP.i];LP.lastT=performance.now();drawClock();
+    $("#lpPlay").textContent=LP.playing?"❚❚":"▶";$("#lpPlay").setAttribute("aria-label",LP.playing?"Pause":"Play");};
+  const finish=()=>{LP.playing=false;LP.clock=total;paint(false);$("#lpTime").textContent=`${fmt(total)} / ${fmt(total)}`;if(!S.lessons[l.id]){S.lessons[l.id]=true;save();toast("Lesson watched");const b=$("#doneBtn");b.textContent="Watched ✓";b.classList.add("ghost")}};
+  // Narrate the current step, then advance when the voice finishes (or after a timer when voice is off).
+  const run=()=>{clearTimeout(LP.timer);const tok=++LP.token;if(!LP.playing){hush();return}
+    const f=frames[LP.i];
+    const advance=()=>{if(tok!==LP.token||!LP.playing)return;if(LP.i>=frames.length-1)return finish();LP.i++;LP.clock=starts[LP.i];paint(true);LP.timer=setTimeout(run,450/LP.speed)};
+    if(S.voice&&TTS){speak((f.move?sanWords(f.move)+" ":"")+f.say,LP.speed,()=>{if(tok===LP.token)LP.timer=setTimeout(advance,500/LP.speed)})}
+    else LP.timer=setTimeout(advance,f.ms/LP.speed)};
+  const go=k=>{const fwd=k===LP.i+1;LP.i=Math.max(0,Math.min(frames.length-1,k));LP.clock=starts[LP.i];paint(fwd);run()};
+  $("#lpPlay").onclick=()=>{ac();if(!LP.playing&&LP.i>=frames.length-1){LP.i=0;LP.clock=0}LP.lastT=performance.now();LP.playing=!LP.playing;paint(false);run()};
+  $("#lpPrev").onclick=()=>go(LP.i-1); $("#lpNext").onclick=()=>go(LP.i+1);
+  $("#lpRestart").onclick=()=>{LP.playing=false;go(0)};
+  $("#lpSpeed").onclick=e=>{LP.speed=LP.speed===1?1.5:LP.speed===1.5?2:1;e.target.textContent=LP.speed+"×";run()};
+  document.querySelectorAll("[data-seg]").forEach(b=>b.onclick=()=>go(+b.dataset.seg));
+  document.querySelectorAll("[data-step]").forEach(b=>b.onclick=()=>go(+b.dataset.step));
+  $("#doneBtn").onclick=()=>{S.lessons[l.id]=!S.lessons[l.id];save();toast(S.lessons[l.id]?"Marked as watched":"Marked as not watched");render()};
+  paint(false);
+}
+
+/* ---------- Puzzles ---------- */
+let pzLevel="All", pzStart=null;
+let PZ=null; // {id, g, ply, sel, state:'idle'|'ok'|'no'|'wait', bad, last, hint}
+function pzLoad(id){const p=PUZZLES.find(x=>x.id===id)||PUZZLES[0];PZ={id:p.id,g:new Chess(p.fen),ply:0,sel:null,state:"idle",bad:[],last:[],hint:false}}
+function vPuzzles(){
+  if(pzStart){pzLoad(pzStart);pzStart=null}
+  if(!PZ)pzLoad(PUZZLES.find(p=>!S.puzzles[p.id])?.id||PUZZLES[0].id);
+  const p=PUZZLES.find(x=>x.id===PZ.id), turn=p.fen.split(" ")[1];
+  const list=PUZZLES.filter(x=>pzLevel==="All"||x.level===pzLevel);
+  const left=Math.ceil((p.line.length-PZ.ply)/2);
+  let fb=`<div class="feedback">${p.line.length>1?`Checkmate in ${movesLeft(p)} moves. Find your first move. The computer plays the other side.`:"Tap a piece, then tap where it should go."}</div>`;
+  if(PZ.state==="ok")fb=`<div class="feedback ok">Solved. +${p.pts} points</div>`;
+  else if(PZ.state==="no")fb=`<div class="feedback no">Not this move. Try again!</div>`;
+  else if(PZ.state==="wait")fb=`<div class="feedback">Good move! The computer is replying…</div>`;
+  else if(PZ.ply>0)fb=`<div class="feedback ok">Correct! ${left>1?`Keep going: checkmate in ${left} more moves.`:"Now finish it: checkmate in 1 move."}</div>`;
+  return `<section class="stack view"><div class="eyebrow">Puzzle trainer · ${points()} points</div><h1>Find the best move</h1>
+    <div class="row chips">${["All",...LEVELS].map(l=>`<button class="chip ${pzLevel===l?"on":""}" data-lvl="${l}">${l}${l!=="All"?` <span class="mono">${PUZZLES.filter(x=>x.level===l&&S.puzzles[x.id]).length}/${PUZZLES.filter(x=>x.level===l).length}</span>`:""}</button>`).join("")}</div></section>
+  <section class="pz view">
+    <div><div class="board" id="pzBoard"></div></div>
+    <div class="stack">
+      <div class="row"><span class="pill level">${esc(label(p))}</span><span class="pill">${p.level}</span><span class="pill mono">${p.pts} pts</span>${S.puzzles[p.id]?`<span class="pill done">Solved</span>`:""}</div>
+      <h2>Puzzle ${PUZZLES.indexOf(p)+1} · ${esc(p.theme)}</h2>
+      <span class="tomove"><i class="${turn}"></i>${turn==="w"?"White":"Black"} to move</span>
+      ${fb}
+      ${PZ.hint&&PZ.state!=="ok"?`<p class="keypoint">${esc(p.hint)}</p>`:""}
+      <div class="row">
+        <button class="btn ghost" id="hintBtn" ${PZ.hint||PZ.state==="ok"?"disabled":""}>Show hint</button>
+        <button class="btn ghost" id="resetBtn">Reset</button>
+        <button class="btn ghost" id="showBtn" ${PZ.state==="ok"?"disabled":""}>Show solution</button>
+        <button class="btn" id="nextBtn">Next puzzle</button>
+      </div>
+      <div class="eyebrow" style="margin-top:12px">${pzLevel==="All"?"All":pzLevel} puzzles · ${list.length}</div>
+      <div class="pzlist">${list.map(x=>`<button data-pz="${x.id}" class="${x.id===PZ.id?"cur ":""}${S.puzzles[x.id]?"solved":""}" aria-label="Puzzle ${PUZZLES.indexOf(x)+1}">${PUZZLES.indexOf(x)+1}</button>`).join("")}</div>
+    </div>
+  </section>`;
+}
+function afterPuzzles(){
+  const p=PUZZLES.find(x=>x.id===PZ.id), g=PZ.g, flip=p.fen.split(" ")[1]==="b";
+  const dots=PZ.sel?g.moves({square:PZ.sel,verbose:true}).map(m=>m.to):[];
+  const live=PZ.state!=="ok"&&PZ.state!=="wait";
+  const anim=PZ.anim;PZ.anim=null;
+  drawBoard($("#pzBoard"),g.fen(),{flip,anim,sel:PZ.sel,dots,bad:PZ.bad,hi:PZ.last.length?PZ.last:(PZ.hint?[p.line[PZ.ply].slice(0,2)]:[]),
+    onSquare:live?sq=>{
+      const pc=g.get(sq);
+      if(pc&&pc.color===g.turn()){PZ.sel=PZ.sel===sq?null:sq;PZ.bad=[];if(PZ.state==="no")PZ.state="idle";render();return}
+      if(!PZ.sel)return;
+      ac();const m=g.move({from:PZ.sel,to:sq,promotion:"q"});PZ.sel=null;
+      if(!m){render();return}
+      const want=p.line[PZ.ply], isLast=PZ.ply===p.line.length-1;
+      const ok=(m.from+m.to)===want.slice(0,4)||(isLast&&p.mate&&g.in_checkmate());
+      if(!ok){g.undo();sfx("wrong");PZ.state="no";PZ.bad=[m.from,m.to];PZ.last=[];render();return}
+      moveSound(m,g);PZ.anim=[m.from,m.to];
+      PZ.bad=[];PZ.last=[m.from,m.to];PZ.ply++;
+      if(PZ.ply>=p.line.length){PZ.state="ok";setTimeout(()=>sfx("solved"),g.in_checkmate()?450:120);if(!S.puzzles[p.id]){S.puzzles[p.id]=true;save()}render();return}
+      PZ.state="wait";render();
+      setTimeout(()=>{const r=p.line[PZ.ply];const rm=g.move({from:r.slice(0,2),to:r.slice(2,4),promotion:"q"});moveSound(rm,g);PZ.anim=rm?[rm.from,rm.to]:null;PZ.last=rm?[rm.from,rm.to]:[];PZ.ply++;PZ.state="idle";render()},650);
+    }:null});
+  $("#hintBtn").onclick=()=>{PZ.hint=true;render()};
+  $("#resetBtn").onclick=()=>{pzLoad(p.id);render()};
+  $("#showBtn").onclick=()=>{ac();pzLoad(p.id);const g2=PZ.g;let i=0;PZ.state="wait";render();
+    const step=()=>{if(i>=p.line.length){PZ.state="idle";PZ.ply=0;PZ.g=new Chess(p.fen);PZ.last=[];toast("Your turn: now play it yourself");render();return}
+      const u=p.line[i++];const m=g2.move({from:u.slice(0,2),to:u.slice(2,4),promotion:"q"});moveSound(m,g2);PZ.anim=m?[m.from,m.to]:null;PZ.last=m?[m.from,m.to]:[];render();setTimeout(step,900)};
+    setTimeout(step,400)};
+  $("#nextBtn").onclick=()=>{const list=PUZZLES.filter(x=>pzLevel==="All"||x.level===pzLevel);const i=list.findIndex(x=>x.id===p.id);pzLoad((list[(i+1)%list.length]||PUZZLES[0]).id);render()};
+  document.querySelectorAll("[data-pz]").forEach(b=>b.onclick=()=>{pzLoad(b.dataset.pz);render()});
+  document.querySelectorAll("[data-lvl]").forEach(b=>b.onclick=()=>{pzLevel=b.dataset.lvl;const list=PUZZLES.filter(x=>pzLevel==="All"||x.level===pzLevel);if(!list.some(x=>x.id===PZ.id))pzLoad((list.find(x=>!S.puzzles[x.id])||list[0]).id);render()});
+}
+
+/* ---------- Tests ---------- */
+let tq=0,tAns=[],tDone=false;
+function vTests(){
+  if(tDone){const sc=tAns.filter((a,i)=>a===QUIZ[i].a).length;
+    return `<section class="card stack view" style="max-width:680px">
+      <div class="eyebrow">Chess quiz · result</div><div class="score">${sc}/${QUIZ.length}</div>
+      <p>${sc===QUIZ.length?"Perfect score! Try the Expert puzzles next.":sc>=9?"Good job! Look at the ones you missed below.":"Watch the Chess Basics lessons again, then try once more."}</p>
+      <div style="overflow-x:auto"><table><thead><tr><th>Question</th><th>Your answer</th></tr></thead><tbody>
+      ${QUIZ.map((q,i)=>`<tr><td>${esc(q.q)}</td><td style="color:${tAns[i]===q.a?"var(--good)":"var(--accent)"}">${esc(q.o[tAns[i]])}${tAns[i]!==q.a?`<br><span class="li-m">Answer: ${esc(q.o[q.a])}</span>`:""}</td></tr>`).join("")}
+      </tbody></table></div>
+      <div class="row"><button class="btn" id="retry">Retake test</button><a class="btn ghost" href="#progress" style="text-decoration:none">See progress</a></div></section>`}
+  const q=QUIZ[tq],ans=tAns[tq];
+  return `<section class="stack view" style="max-width:640px"><div class="eyebrow">Chess quiz</div><h1>Question ${tq+1} of ${QUIZ.length}</h1>
+    <div class="bar"><i style="width:${tq/QUIZ.length*100}%"></i></div></section>
+  <section class="card q view" style="max-width:640px"><h2 style="font-family:var(--f-body);font-size:1.15rem">${esc(q.q)}</h2>
+    ${q.o.map((o,i)=>`<button class="opt ${ans!=null?(i===q.a?"right":i===ans?"wrong":""):""}" data-opt="${i}" ${ans!=null?"disabled":""}>${String.fromCharCode(65+i)}. ${esc(o)}</button>`).join("")}
+    <div class="row" style="justify-content:flex-end"><button class="btn" id="tnext" ${ans==null?"disabled":""}>${tq===QUIZ.length-1?"See result":"Next question"}</button></div>
+  </section>`;
+}
+function afterTests(){
+  if(tDone){$("#retry").onclick=()=>{tq=0;tAns=[];tDone=false;render()};return}
+  document.querySelectorAll("[data-opt]").forEach(b=>b.onclick=()=>{tAns[tq]=+b.dataset.opt;sfx(tAns[tq]===QUIZ[tq].a?"right":"wrong");render()});
+  $("#tnext").onclick=()=>{if(tq<QUIZ.length-1){tq++}else{tDone=true;S.tests.push({score:tAns.filter((a,i)=>a===QUIZ[i].a).length,at:new Date().toISOString()});save()}render()};
+}
+
+/* ---------- Progress ---------- */
+function vProgress(){
+  return `<section class="stack view"><div class="eyebrow">Progress</div><h1>Your report card</h1></section>
+  <section class="grid g3 view">
+    <div class="card stack"><span class="eyebrow">Lessons watched</span><div class="score" style="font-size:2rem">${lessonsDone()}<span class="li-m">/${ALL_LESSONS.length}</span></div><div class="bar"><i style="width:${lessonsDone()/ALL_LESSONS.length*100}%"></i></div></div>
+    <div class="card stack"><span class="eyebrow">Puzzle points</span><div class="score" style="font-size:2rem">${points()}</div><span class="li-m">${puzzlesDone()} of ${PUZZLES.length} puzzles solved</span></div>
+    <div class="card stack"><span class="eyebrow">Best test</span><div class="score" style="font-size:2rem">${bestTest()??"–"}<span class="li-m">${bestTest()!=null?"/"+QUIZ.length:""}</span></div><span class="li-m">${S.tests.length} attempt${S.tests.length===1?"":"s"}</span></div>
+  </section>
+  <section class="grid g2 view">
+    <div class="card" style="overflow-x:auto"><h2 style="margin-bottom:8px">By course</h2>
+      <table><thead><tr><th>Course</th><th>Level</th><th style="text-align:right">Watched</th></tr></thead><tbody>
+      ${COURSES.map(c=>`<tr><td>${esc(c.title)}</td><td>${c.level}</td><td class="num">${courseProgress(c)}/${c.lessons.length}</td></tr>`).join("")}
+      </tbody></table></div>
+    <div class="card" style="overflow-x:auto"><h2 style="margin-bottom:8px">Puzzles by level</h2>
+      <table><thead><tr><th>Level</th><th>Type</th><th style="text-align:right">Solved</th></tr></thead><tbody>
+      ${LEVELS.map(l=>{const all=PUZZLES.filter(x=>x.level===l);return `<tr><td>${l}</td><td class="li-m">${{Beginner:"Checkmate in 1",Intermediate:"Tricks and patterns",Advanced:"Checkmate in 2",Expert:"Checkmate in 3"}[l]}</td><td class="num">${all.filter(x=>S.puzzles[x.id]).length}/${all.length}</td></tr>`}).join("")}
+      </tbody></table></div>
+  </section>
+  ${S.tests.length?`<section class="card view" style="overflow-x:auto"><h2 style="margin-bottom:8px">Test history</h2><table><thead><tr><th>Date</th><th style="text-align:right">Score</th></tr></thead><tbody>
+    ${S.tests.slice().reverse().map(t=>`<tr><td>${new Date(t.at).toLocaleString()}</td><td class="num">${t.score}/${QUIZ.length}</td></tr>`).join("")}</tbody></table></section>`:""}
+  <section class="row view"><button class="btn ghost" id="resetAll">Reset all progress</button><span class="li-m">Progress is saved in this browser only.</span></section>`;
+}
+function afterProgress(){let armed=false;$("#resetAll").onclick=e=>{if(!armed){armed=true;e.target.textContent="Tap again to erase everything";return}
+  S={lessons:{},puzzles:{},tests:[],sound:S.sound,voice:S.voice,liveToken:S.liveToken};save();PZ=null;toast("Progress reset");render()}}
+
+/* ---------- Live classes (needs the hosted site: talks to /api) ---------- */
+let LV={user:null,classes:null,error:null,busy:false,codes:null,recs:{},player:null};
+async function liveApi(path,opts={}){
+  let r;
+  try{r=await fetch("/api"+path,{method:opts.method||"GET",headers:Object.assign({"Content-Type":"application/json"},S.liveToken?{Authorization:"Bearer "+S.liveToken}:{}),body:opts.body?JSON.stringify(opts.body):undefined})}
+  catch(e){throw Object.assign(new Error("offline"),{code:"offline"})}
+  let j=null;try{j=await r.json()}catch(e){}
+  if(!r.ok||!j)throw Object.assign(new Error((j&&j.error)||"Something went wrong. Please try again."),{code:(j&&j.code)||(r.status===404?"offline":""),status:r.status});
+  return j;
+}
+const whenText=iso=>new Date(iso).toLocaleString([], {weekday:"short",day:"numeric",month:"short",hour:"numeric",minute:"2-digit"});
+const durText=s=>s>=3600?`${Math.floor(s/3600)} hr ${Math.round(s%3600/60)} min`:`${Math.max(1,Math.round(s/60))} min`;
+function liveSignOut(){S.liveToken="";save();LV={user:null,classes:null,error:null,busy:false,codes:null,recs:{},player:null};render()}
+function vLive(){return `<section class="stack view"><div class="eyebrow">Live classes</div><h1>${LV.user?(LV.user.role==="teacher"?"Your classroom":LV.user.role==="parent"?`${esc(LV.user.name)}'s classes`:`Hi ${esc(LV.user.name)}!`):"Join your live class"}</h1></section><div id="liveRoot" class="stack"><p class="li-m">Loading…</p></div>`}
+async function afterLive(){
+  const root=$("#liveRoot");
+  if(!S.liveToken){LV.user=null;return liveSignIn(root)}
+  try{
+    if(!LV.user){LV.user=(await liveApi("/me")).user;if(route()==="live")return render()}
+    if(!LV.classes){LV.classes=(await liveApi("/classes")).classes}
+  }catch(e){
+    if(route()!=="live")return;
+    if(e.code==="signin"){S.liveToken="";save();LV.user=null;return liveSignIn(root,e.message)}
+    return liveProblem(root,e);
+  }
+  if(route()!=="live"||!$("#liveRoot"))return;
+  liveHome($("#liveRoot"));
+}
+function liveProblem(root,e){
+  const msg=e.code==="offline"?"Live classes work on the Chess Sathi website and in the mobile app. This preview can't connect to the class server.":e.code==="setup"?"Live classes are not switched on yet. The teacher needs to finish the setup (see SETUP.md).":e.message;
+  root.innerHTML=`<div class="card stack"><h2>Live classes aren't available here</h2><p class="li-m">${esc(msg)}</p><div class="row"><button class="btn ghost" id="lvRetry">Try again</button>${S.liveToken?`<button class="btn ghost" id="lvOut">Sign out</button>`:""}</div></div>`;
+  $("#lvRetry").onclick=()=>{LV.classes=null;render()};const o=$("#lvOut");if(o)o.onclick=liveSignOut;
+}
+function liveSignIn(root,msg){
+  root.innerHTML=`${msg?`<div class="feedback no">${esc(msg)}</div>`:""}
+  <div class="grid g2">
+    <form class="card stack" id="lvCodeForm"><h2>Students and parents</h2>
+      <p class="li-m">Paste the sign-in code your teacher sent you. You only need to do this once on this device.</p>
+      <label class="fld"><span>Your sign-in code</span><input id="lvCode" autocomplete="off" autocapitalize="off" spellcheck="false" required></label>
+      <button class="btn" type="submit">Sign in</button></form>
+    <form class="card stack" id="lvTeachForm"><h2>Teacher</h2>
+      <p class="li-m">Sign in to schedule classes, add students and start a live class.</p>
+      <label class="fld"><span>Teacher password</span><input id="lvPw" type="password" autocomplete="current-password" required></label>
+      <button class="btn ghost" type="submit">Teacher sign in</button><p class="li-m" id="lvTeachMsg" role="status"></p></form>
+  </div>`;
+  $("#lvCodeForm").onsubmit=e=>{e.preventDefault();const c=$("#lvCode").value.trim().replace(/^.*[?&]invite=/,"");if(!c)return;S.liveToken=c;save();LV.user=null;LV.classes=null;render()};
+  $("#lvTeachForm").onsubmit=async e=>{e.preventDefault();const m=$("#lvTeachMsg");m.textContent="Signing in…";
+    try{const r=await liveApi("/login",{method:"POST",body:{password:$("#lvPw").value}});S.liveToken=r.token;save();LV.user=null;LV.classes=null;render()}
+    catch(err){m.textContent=err.code==="offline"?"Can't reach the class server from here.":err.message}};
+}
+function classCard(c,u){
+  const teacher=u.role==="teacher",parent=u.role==="parent";
+  const state=c.live?`<span class="pill live">● Live now</span>`:c.ended?`<span class="pill">Finished</span>`:`<span class="pill level">Upcoming</span>`;
+  const join=parent?"":(c.live||!c.ended||teacher)?`<a class="btn ${c.live||teacher?"":"ghost"}" href="/class.html?c=${encodeURIComponent(c.id)}">${teacher?(c.live?"Rejoin class":"Start class"):(c.live?"Join now":"Enter classroom")}</a>`:"";
+  const recs=LV.recs[c.id];
+  return `<div class="card stack" data-class="${esc(c.id)}">
+    <div class="row">${state}<span class="pill">${esc(c.batchName||c.batch)}</span><span class="pill mono">${c.durationMin} min</span></div>
+    <h2>${esc(c.title)}</h2><p class="li-m">${esc(whenText(c.startsAt))}</p>
+    <div class="row">${join}<button class="btn ghost" data-recs="${esc(c.id)}">${recs?"Refresh recordings":"Show recordings"}</button>${teacher?`<button class="btn ghost" data-del="${esc(c.id)}">Delete</button>`:""}</div>
+    ${recs?(recs.error?`<p class="feedback no">${esc(recs.error)}</p>`:recs.list.length?`<ul class="reclist">${recs.list.map(r=>`<li><button data-play="${esc(c.id)}|${esc(r.id)}">▶ Recording${recs.list.length>1?` part ${r.part}`:""} <span class="li-m">${durText(r.durationSec)}</span></button></li>`).join("")}</ul>`:`<p class="li-m">No recording yet. It appears a few minutes after the class ends.</p>`):""}
+    ${LV.player&&LV.player.classId===c.id?`<video class="recvideo" controls autoplay playsinline src="${esc(LV.player.url)}"></video>`:""}
+  </div>`;
+}
+function liveHome(root){
+  const u=LV.user,teacher=u.role==="teacher",cs=LV.classes||[];
+  const now=cs.filter(c=>c.live),next=cs.filter(c=>!c.live&&!c.ended).reverse(),past=cs.filter(c=>!c.live&&c.ended);
+  const group=(t,list,empty)=>`<section class="stack"><h2>${t}</h2>${list.length?`<div class="grid g2">${list.map(c=>classCard(c,u)).join("")}</div>`:`<p class="li-m">${empty}</p>`}</section>`;
+  root.innerHTML=`
+  <div class="row" style="justify-content:space-between"><p class="li-m">${teacher?"Signed in as teacher.":u.role==="parent"?`Parent view. You can see the schedule and watch recordings of ${esc(u.name)}'s classes.`:`You're in batch “${esc(u.batch)}”. Join when your class is live.`}</p>
+    <div class="row"><button class="btn ghost" id="lvRefresh">Refresh</button><button class="btn ghost" id="lvOut">Sign out</button></div></div>
+  ${teacher?`<div class="grid g2">
+    <form class="card stack" id="lvNew"><h2>Schedule a class</h2>
+      <label class="fld"><span>Class title</span><input id="lvTitle" placeholder="Knight forks practice" required maxlength="80"></label>
+      <label class="fld"><span>Batch</span><input id="lvBatch" placeholder="Beginners Saturday" required maxlength="40" list="lvBatches"></label>
+      <datalist id="lvBatches">${[...new Set(cs.map(c=>c.batchName||c.batch))].map(b=>`<option value="${esc(b)}">`).join("")}</datalist>
+      <div class="row"><label class="fld" style="flex:2;min-width:180px"><span>Date and time</span><input id="lvAt" type="datetime-local" required></label>
+      <label class="fld" style="flex:1;min-width:110px"><span>Minutes</span><input id="lvDur" type="number" min="15" max="240" step="5" value="60" required></label></div>
+      <button class="btn" type="submit">Add class</button><p class="li-m" id="lvNewMsg" role="status"></p></form>
+    <form class="card stack" id="lvInv"><h2>Add a student</h2>
+      <p class="li-m">You get two sign-in links: one for the student and one for the parent. Send them on WhatsApp.</p>
+      <label class="fld"><span>Student's name</span><input id="lvSName" required maxlength="40"></label>
+      <label class="fld"><span>Batch</span><input id="lvSBatch" required maxlength="40" list="lvBatches"></label>
+      <button class="btn" type="submit">Create sign-in links</button><p class="li-m" id="lvInvMsg" role="status"></p>
+      ${LV.codes?`<div class="stack codes"><b>${esc(LV.codes.name)} · ${esc(LV.codes.batch)}</b>
+        ${[["Student link",LV.codes.studentCode],["Parent link",LV.codes.parentCode]].map(([l,c])=>`<label class="fld"><span>${l}</span><div class="row"><input readonly value="${esc(location.origin+"/?invite="+c)}" style="flex:1;min-width:0"><button class="btn ghost" type="button" data-copy="${esc(location.origin+"/?invite="+c)}">Copy</button></div></label>`).join("")}
+        <p class="li-m">Save these now. For safety they are not stored, but you can create new ones any time.</p></div>`:""}</form>
+  </div>`:""}
+  ${now.length?group("Live now",now,""):""}
+  ${group("Upcoming classes",next,teacher?"No classes scheduled. Add one above.":"No upcoming classes yet. Your teacher will add them here.")}
+  ${group(u.role==="parent"?"Past classes and recordings":"Past classes",past,"Finished classes and their recordings will show up here.")}`;
+  $("#lvOut").onclick=liveSignOut;
+  $("#lvRefresh").onclick=()=>{LV.classes=null;render()};
+  if(teacher){
+    const at=$("#lvAt");if(!at.value){const d=new Date(Date.now()+3600000);d.setMinutes(0,0,0);at.value=new Date(d-d.getTimezoneOffset()*60000).toISOString().slice(0,16)}
+    $("#lvNew").onsubmit=async e=>{e.preventDefault();const m=$("#lvNewMsg");m.textContent="Adding…";
+      try{await liveApi("/classes",{method:"POST",body:{title:$("#lvTitle").value,batch:$("#lvBatch").value,startsAt:new Date($("#lvAt").value).toISOString(),durationMin:+$("#lvDur").value}});LV.classes=null;toast("Class added");render()}catch(err){m.textContent=err.message}};
+    $("#lvInv").onsubmit=async e=>{e.preventDefault();const m=$("#lvInvMsg");m.textContent="Creating…";
+      try{LV.codes=await liveApi("/invite",{method:"POST",body:{name:$("#lvSName").value,batch:$("#lvSBatch").value}});liveHome(root)}catch(err){m.textContent=err.message}};
+    root.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>{const inp=b.parentElement.querySelector("input");navigator.clipboard.writeText(b.dataset.copy).then(()=>toast("Link copied")).catch(()=>{inp.focus();inp.select();toast("Press Ctrl+C to copy")})});
+    root.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{if(b.dataset.armed!=="1"){b.dataset.armed="1";b.textContent="Tap again to delete";return}
+      try{await liveApi("/classes?id="+encodeURIComponent(b.dataset.del),{method:"DELETE"});LV.classes=null;toast("Class deleted");render()}catch(err){toast(err.message)}});
+  }
+  root.querySelectorAll("[data-recs]").forEach(b=>b.onclick=async()=>{const id=b.dataset.recs;b.textContent="Loading…";
+    try{LV.recs[id]={list:(await liveApi("/recordings?classId="+encodeURIComponent(id))).recordings}}catch(err){LV.recs[id]={error:err.message,list:[]}}liveHome(root)});
+  root.querySelectorAll("[data-play]").forEach(b=>b.onclick=async()=>{const [cid,aid]=b.dataset.play.split("|");b.disabled=true;
+    try{const r=await liveApi(`/recordings?classId=${encodeURIComponent(cid)}&assetId=${encodeURIComponent(aid)}`);LV.player={classId:cid,url:r.url};liveHome(root)}catch(err){toast(err.message);b.disabled=false}});
+}
+// A sign-in link (…/?invite=CODE) signs this device in and opens the Live page.
+(function(){try{const c=new URLSearchParams(location.search).get("invite");if(c){S.liveToken=c;save();history.replaceState(null,"",location.pathname+"#live")}}catch(e){}})();
+
+/* ---------- Router ---------- */
+const VIEWS={live:[vLive,afterLive],home:[vHome,afterHome],courses:[vCourses],lesson:[vLesson,afterLesson],puzzles:[vPuzzles,afterPuzzles],tests:[vTests,afterTests],progress:[vProgress,afterProgress]};
+function route(){const h=(location.hash||"#home").slice(1);return VIEWS[h]?h:"home"}
+function render(){
+  if(!HAS_CHESS){$("#app").innerHTML=`<div class="card"><h2>The chess engine didn't load</h2><p class="li-m" style="margin-top:8px">Check your connection and reload the page.</p></div>`;return}
+  const r=route();if(r!=="lesson")stopLesson();
+  const [v,a]=VIEWS[r];$("#app").innerHTML=v();a&&a();
+  const tab=r==="lesson"?"courses":r;
+  document.querySelectorAll("#tabs a").forEach(x=>{if(x.getAttribute("href")==="#"+tab)x.setAttribute("aria-current","page");else x.removeAttribute("aria-current")});
+  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{curLesson=b.dataset.open;if(location.hash==="#lesson")render();else location.hash="lesson";window.scrollTo(0,0)});
+  document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>location.hash=b.dataset.go);
+}
+function setupToggles(){const sb=$("#togSound"),vb=$("#togVoice");
+  const sync=()=>{sb.setAttribute("aria-pressed",S.sound);vb.setAttribute("aria-pressed",S.voice&&TTS);vb.disabled=!TTS};
+  sb.onclick=()=>{S.sound=!S.sound;save();sync();if(S.sound)sfx("move");toast(S.sound?"Sound on":"Sound off")};
+  vb.onclick=()=>{S.voice=!S.voice;save();sync();if(!S.voice)hush();toast(S.voice?"Voiceover on":"Voiceover off");if(route()==="lesson")render()};sync()}
+setupToggles();
+window.addEventListener("hashchange",()=>{if(route()==="lesson"&&!curLesson)curLesson=ALL_LESSONS[0].id;render();window.scrollTo(0,0)});
+if(route()==="lesson")curLesson=ALL_LESSONS[0].id;
+render();
+</script>
+</body>
+</html>
