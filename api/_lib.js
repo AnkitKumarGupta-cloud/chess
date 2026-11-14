@@ -64,6 +64,16 @@ export async function kv(...cmd) {
   if (!r.ok || !j || j.error) throw new HttpError(502, "The database returned an error. Please try again.", "db");
   return j.result;
 }
+// Several commands in one trip to the database (Upstash pipeline).
+export async function kvPipe(cmds) {
+  const miss = missing(["db"]);
+  if (miss.length) throw new HttpError(503, "The database is not connected yet. Missing settings: " + miss.join(", "), "setup");
+  const { dbUrl, dbToken } = cfg();
+  const r = await fetch(dbUrl.replace(/\/+$/, "") + "/pipeline", { method: "POST", headers: { Authorization: "Bearer " + dbToken, "Content-Type": "application/json" }, body: JSON.stringify(cmds) });
+  let j = null; try { j = await r.json(); } catch {}
+  if (!r.ok || !Array.isArray(j) || j.some((x) => x && x.error)) throw new HttpError(502, "The database returned an error. Please try again.", "db");
+  return j.map((x) => x.result);
+}
 const jparse = (s) => { try { return s ? JSON.parse(s) : null; } catch { return null; } };
 
 /* ---------- People ---------- */
@@ -91,7 +101,7 @@ export const publicUser = (u) => ({ username: u.username, name: u.name, role: u.
 export const TEACHER = { username: "teacher", name: "Teacher", role: "teacher", batch: null, batchName: null };
 
 export async function getUser(username) { return jparse(await kv("GET", "u:" + normUser(username))); }
-export async function putUser(u) { await kv("SET", "u:" + u.username, JSON.stringify(u)); await kv("SADD", "users", u.username); }
+export async function putUser(u) { await kvPipe([["SET", "u:" + u.username, JSON.stringify(u)], ["SADD", "users", u.username]]); }
 export async function listUsers() {
   const names = (await kv("SMEMBERS", "users")) || [];
   if (!names.length) return [];
@@ -151,8 +161,8 @@ export async function getClassFor(user, id) {
   if (!cls || !canSee(user, cls)) throw new HttpError(404, "That class was not found.");
   return cls;
 }
-export async function putClass(cls) { await kv("SET", "c:" + cls.id, JSON.stringify(cls)); await kv("SADD", "classes", cls.id); }
-export async function removeClass(id) { await kv("SREM", "classes", id); await kv("DEL", "c:" + id); }
+export async function putClass(cls) { await kvPipe([["SET", "c:" + cls.id, JSON.stringify(cls)], ["SADD", "classes", cls.id]]); }
+export async function removeClass(id) { await kvPipe([["SREM", "classes", id], ["DEL", "c:" + id]]); }
 
 /* ---------- LiveKit ---------- */
 const lkHttp = () => cfg().lkUrl.replace(/^wss:/i, "https:").replace(/^ws:/i, "http:").replace(/\/+$/, "");

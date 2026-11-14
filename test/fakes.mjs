@@ -40,6 +40,7 @@ globalThis.fetch = async (url, opts = {}) => {
   const u = new URL(url), json = (status, body) => ({ ok: status < 300, status, json: async () => body });
   if (u.origin === "https://redis.test") {
     assert.equal(opts.headers.Authorization, "Bearer redis-token");
+    if (u.pathname === "/pipeline") return json(200, JSON.parse(opts.body).map((c) => ({ result: redis(c) })));
     return json(200, { result: redis(JSON.parse(opts.body)) });
   }
   if (u.origin === "https://demo.livekit.cloud") {

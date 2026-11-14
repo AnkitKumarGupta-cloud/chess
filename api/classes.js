@@ -4,10 +4,12 @@ import { handler, HttpError, whoIs, mustBeTeacher, listClasses, getClassFor, put
 export default handler(async ({ req, body, query }) => {
   const me = await whoIs(req);
   if (req.method === "GET") {
-    const all = await listClasses();
+    // The class list and LiveKit's "who is in which room" are fetched at the same time.
+    const [all, roomsOrErr] = await Promise.all([listClasses(), liveRooms().catch((e) => e)]);
     const mine = all.filter((c) => me.role === "teacher" || c.batch === me.batch);
     let rooms = {};
-    try { rooms = await liveRooms(); } catch (e) { if (!(e instanceof HttpError)) throw e; if (e.code === "setup" && me.role === "teacher") throw e; }
+    if (roomsOrErr instanceof Error) { const e = roomsOrErr; if (!(e instanceof HttpError)) throw e; if (e.code === "setup" && me.role === "teacher") throw e; }
+    else rooms = roomsOrErr;
     const now = Date.now();
     return {
       recordingReady: recordingReady(),

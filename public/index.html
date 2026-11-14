@@ -1050,8 +1050,10 @@ async function afterLive(){
   if(!AUTH.user)return;
   const root=$("#liveRoot"),teacher=AUTH.user.role==="teacher";
   try{
-    if(!LV.classes){const r=await liveApi("/classes");LV.classes=r.classes;LV.recReady=r.recordingReady}
-    if(teacher&&!LV.users)LV.users=(await liveApi("/users")).users;
+    // Both lists load at the same time.
+    const [cr,ur]=await Promise.all([LV.classes?null:liveApi("/classes"),teacher&&!LV.users?liveApi("/users"):null]);
+    if(cr){LV.classes=cr.classes;LV.recReady=cr.recordingReady}
+    if(ur)LV.users=ur.users;
   }catch(e){if(e.code==="signin"||route()!=="live")return;return liveProblem(root,e)}
   if(route()!=="live"||!$("#liveRoot"))return;
   liveHome($("#liveRoot"));
@@ -1111,15 +1113,15 @@ function liveHome(root){
   if(teacher){
     const at=$("#lvAt");if(!at.value){const d=new Date(Date.now()+3600000);d.setMinutes(0,0,0);at.value=new Date(d-d.getTimezoneOffset()*60000).toISOString().slice(0,16)}
     $("#lvNew").onsubmit=async e=>{e.preventDefault();const m=$("#lvNewMsg");m.textContent="Adding…";
-      try{await liveApi("/classes",{method:"POST",body:{title:$("#lvTitle").value,batch:$("#lvBatch").value,startsAt:new Date($("#lvAt").value).toISOString(),durationMin:+$("#lvDur").value}});LV.classes=null;toast("Class added");render()}catch(err){m.textContent=err.message}};
+      try{const r=await liveApi("/classes",{method:"POST",body:{title:$("#lvTitle").value,batch:$("#lvBatch").value,startsAt:new Date($("#lvAt").value).toISOString(),durationMin:+$("#lvDur").value}});const nc=r.class,end=new Date(nc.startsAt).getTime()+(nc.durationMin+30)*60000;LV.classes=[{...nc,live:false,ended:Date.now()>end},...(LV.classes||[])].sort((a,b)=>new Date(b.startsAt)-new Date(a.startsAt));toast("Class added");render()}catch(err){m.textContent=err.message}};
     $("#lvInv").onsubmit=async e=>{e.preventDefault();const m=$("#lvInvMsg");m.textContent="Creating…";
-      try{LV.accounts=(await liveApi("/users",{method:"POST",body:{name:$("#lvSName").value,batch:$("#lvSBatch").value,withParent:false}})).accounts;LV.users=null;LV.classes=null;render()}catch(err){m.textContent=err.message}};
+      try{LV.accounts=(await liveApi("/users",{method:"POST",body:{name:$("#lvSName").value,batch:$("#lvSBatch").value,withParent:false}})).accounts;LV.users=[...(LV.users||[]),...LV.accounts.map(a=>({username:a.username,name:a.name,role:a.role,batch:(a.batch||"").toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,""),batchName:a.batch}))];render()}catch(err){m.textContent=err.message}};
     root.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{if(b.dataset.armed!=="1"){b.dataset.armed="1";b.textContent="Tap again to delete";return}
-      try{await liveApi("/classes?id="+encodeURIComponent(b.dataset.del),{method:"DELETE"});LV.classes=null;toast("Class deleted");render()}catch(err){toast(err.message)}});
+      try{await liveApi("/classes?id="+encodeURIComponent(b.dataset.del),{method:"DELETE"});LV.classes=(LV.classes||[]).filter(c=>c.id!==b.dataset.del);toast("Class deleted");render()}catch(err){toast(err.message)}});
     root.querySelectorAll("[data-reset]").forEach(b=>b.onclick=async()=>{if(b.dataset.armed!=="1"){b.dataset.armed="1";b.textContent="Tap again";return}
       try{LV.accounts=[await liveApi("/users",{method:"POST",body:{action:"reset",username:b.dataset.reset}})];render()}catch(err){toast(err.message)}});
     root.querySelectorAll("[data-rm]").forEach(b=>b.onclick=async()=>{if(b.dataset.armed!=="1"){b.dataset.armed="1";b.textContent="Tap again to remove";return}
-      try{await liveApi("/users?username="+encodeURIComponent(b.dataset.rm),{method:"DELETE"});LV.users=null;toast("Account removed");render()}catch(err){toast(err.message)}});
+      try{await liveApi("/users?username="+encodeURIComponent(b.dataset.rm),{method:"DELETE"});LV.users=(LV.users||[]).filter(u=>u.username!==b.dataset.rm);toast("Account removed");render()}catch(err){toast(err.message)}});
   }
   root.querySelectorAll("[data-recs]").forEach(b=>b.onclick=async()=>{const id=b.dataset.recs;b.textContent="Loading…";
     try{LV.recs[id]={list:(await liveApi("/recordings?classId="+encodeURIComponent(id))).recordings}}catch(err){LV.recs[id]={error:err.message,list:[]}}liveHome(root)});

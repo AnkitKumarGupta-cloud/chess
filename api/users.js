@@ -1,4 +1,4 @@
-import { handler, HttpError, whoIs, mustBeTeacher, kv, getUser, putUser, listUsers, hashPassword, newPassword, slug, normUser, validUsername } from "./_lib.js";
+import { handler, HttpError, whoIs, mustBeTeacher, kv, kvPipe, getUser, putUser, listUsers, hashPassword, newPassword, slug, normUser, validUsername } from "./_lib.js";
 
 async function freeUsername(base) {
   let u = base.slice(0, 24);
@@ -22,7 +22,7 @@ export default handler(async ({ req, body, query }) => {
   if (req.method === "DELETE") {
     const u = normUser(query.username);
     if (!(await getUser(u))) throw new HttpError(404, "That account was not found.");
-    await kv("DEL", "u:" + u); await kv("SREM", "users", u);
+    await kvPipe([["DEL", "u:" + u], ["SREM", "users", u]]);
     return { ok: true };
   }
   if (req.method !== "POST") throw new HttpError(405, "Use GET, POST or DELETE.");
