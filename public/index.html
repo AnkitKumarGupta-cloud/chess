@@ -762,7 +762,7 @@ let PRS=null;           // current session
 const prKey=(t,i)=>t.id+"/"+i;
 const prDone=t=>t.chapters.filter((c,i)=>S.practice&&S.practice[prKey(t,i)]).length;
 const prAll=()=>PR?PR.topics.reduce((a,t)=>a+prDone(t),0):Object.keys(S.practice||{}).length;
-async function prLoad(){if(PR)return PR;const r=await fetch("/practice.json",{cache:"force-cache"});if(!r.ok)throw new Error("load");PR=await r.json();return PR}
+async function prLoad(){if(PR)return PR;const r=await fetch("/practice.json?v=3",{cache:"no-cache"});if(!r.ok)throw new Error("load");PR=await r.json();return PR}
 
 /* Stockfish runs in the browser (Web Worker). One request at a time. */
 const SF={w:null,ready:null,busy:Promise.resolve()};
@@ -802,12 +802,12 @@ function vPractice(){
   ${PR_SEC_ORDER.map(sid=>{const sec=PR.sections[sid],ts=PR.topics.filter(t=>t.section===sid);return `<section class="stack view prsec" data-sec="${sid}">
     <div class="prsec-h"><div class="stack" style="gap:2px"><h2>${esc(sec.title)}</h2><span class="li-m">${esc(sec.blurb)}</span></div></div>
     <div class="prgrid">${ts.map(t=>{const d=prDone(t),n=t.chapters.length,c0=t.chapters.find(c=>c.goal)||t.chapters[0];return `<a class="prcard${d===n?" done":""}" href="#drill?t=${t.id}">
-      <span class="pricon" aria-hidden="true"><svg viewBox="0 0 24 24">${PR.icons[t.icon]||""}</svg></span>
+      <span class="pricon" aria-hidden="true"><svg viewBox="0 0 24 24">${(PR.icons||{})[t.icon]||""}</svg></span>
       <span class="prcard-body"><b>${esc(t.title)}</b><span class="prcard-tag">${esc(t.tag)}</span>
       <span class="prcard-foot"><span class="bar"><i style="width:${d/n*100}%"></i></span><span class="mono">${d}/${n}</span></span></span></a>`}).join("")}</div></section>`}).join("")}
   <p class="li-m view" style="font-size:.75rem">Positions from <a href="https://lichess.org/practice" target="_blank" rel="noopener">Lichess practice</a>. Engine: <a href="https://github.com/nmrugg/stockfish.js" target="_blank" rel="noopener">Stockfish</a> (GPLv3).</p>`;
 }
-function afterPractice(){document.querySelectorAll(".board.mini").forEach(el=>drawBoard(el,el.dataset.fen,{flip:!!el.dataset.flip}));if(!PR)prLoad().then(()=>{if(route()==="practice")render()}).catch(()=>{const a=$("#app");if(a)a.insertAdjacentHTML("beforeend",`<p class="feedback no">Couldn't load practice. Check your internet and try again.</p>`)})}
+function afterPractice(){if(!PR)prLoad().then(()=>{if(route()==="practice")try{render()}catch(e){console.error(e)}}).catch(()=>{const a=$("#app");if(a)a.insertAdjacentHTML("beforeend",`<p class="feedback no">Couldn't load practice. Check your internet and try again.</p>`)})}
 
 function prParam(){const m=location.hash.match(/[?&]t=([^&]+)/);return m?decodeURIComponent(m[1]):""}
 function prOpen(t,i){const c=t.chapters[i],g=new Chess(c.fen);PRS={tid:t.id,i,g,color:prColor(c),moves:0,ply:0,sel:null,state:"idle",msg:"",last:[],bad:[],hint:null,promo:null,anim:null,hist:[]};
