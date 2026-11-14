@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Chess Sathi</title>
 <link rel="manifest" href="/manifest.webmanifest">
+<script>/* Theme: "light" | "dark" | absent = follow the device. Set before first paint. */
+try{var th=localStorage.getItem("cs-theme");if(th==="light"||th==="dark")document.documentElement.dataset.theme=th}catch(e){}</script>
 <meta name="theme-color" content="#C8323C">
 <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
 <link rel="apple-touch-icon" href="/icons/icon-180.png">
@@ -751,6 +753,10 @@ main:has(> .drill){padding-top:12px!important}
 .ds-goal b.ds-pos{font-size:1.3rem;line-height:1.25;font-weight:800}
 .ds-goal span.ds-goal-t{display:block;font-size:.95rem;color:var(--ink);margin-top:2px}
 @media (max-width:600px){.ds-goal b.ds-pos{font-size:1.1rem}.ds-goal span.ds-goal-t{font-size:.86rem}}
+.menu-theme{display:flex;flex-direction:column;gap:6px;padding:8px 10px 10px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.menu-theme .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px}
+.menu .menu-theme .seg button{text-align:center;padding:7px 4px;border-radius:7px;font-size:.85rem;font-weight:700;color:var(--muted)}
+.menu .menu-theme .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
 </style>
 
 </head>
@@ -781,6 +787,11 @@ const KEY="targetchess.v2";
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
 let S=Object.assign({lessons:{},puzzles:{},tests:[],practice:{},sound:true,voice:true,liveToken:""},load());
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function themeGet(){const t=document.documentElement.dataset.theme;return t==="light"||t==="dark"?t:"auto"}
+function themeSet(t){const r=document.documentElement;if(t==="light"||t==="dark")r.dataset.theme=t;else delete r.dataset.theme;
+  try{t==="auto"?localStorage.removeItem("cs-theme"):localStorage.setItem("cs-theme",t)}catch(e){}
+  const dark=t==="dark"||(t==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);
+  const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=dark?"#0E1218":"#C8323C"}
 S.sound=true;S.voice=true; /* no on/off buttons any more: always on */
 
 /* ---------- Content ---------- */
@@ -1687,10 +1698,13 @@ function renderWho(){
   if(!u){w.innerHTML="";return}
   w.innerHTML=`<button class="chipbtn" id="whoBtn" aria-haspopup="menu" aria-expanded="false"><span class="avatar" aria-hidden="true">${esc(u.name.trim()[0]||"?").toUpperCase()}</span><span class="whoname">${esc(u.name.split(" ")[0])}</span></button>
     <div class="menu" id="whoMenu" role="menu" hidden><div class="menu-h"><b>${esc(u.name)}</b><span class="li-m">${ROLE_NAME[u.role]||""}${u.batchName?" · "+esc(u.batchName):""}</span></div>
+    <div class="menu-theme" role="group" aria-label="Theme"><span class="li-m">Theme</span><div class="seg">${[["auto","Auto"],["light","Light"],["dark","Dark"]].map(([k,l])=>`<button type="button" data-theme-pick="${k}" aria-pressed="${themeGet()===k}">${l}</button>`).join("")}</div></div>
     ${u.role==="teacher"?"":`<button role="menuitem" id="whoPw">Change password</button>`}<button role="menuitem" id="whoOut">Sign out</button></div>`;
   const btn=$("#whoBtn"),menu=$("#whoMenu");
   btn.onclick=e=>{e.stopPropagation();menu.hidden=!menu.hidden;btn.setAttribute("aria-expanded",!menu.hidden)};
   $("#whoOut").onclick=signOut;
+  menu.onclick=e=>e.stopPropagation();
+  menu.querySelectorAll("[data-theme-pick]").forEach(b=>b.onclick=()=>{themeSet(b.dataset.themePick);menu.querySelectorAll("[data-theme-pick]").forEach(x=>x.setAttribute("aria-pressed",x===b))});
   const pw=$("#whoPw");if(pw)pw.onclick=()=>{menu.hidden=true;openPwDialog()};
 }
 document.addEventListener("click",()=>{const m=$("#whoMenu");if(m&&!m.hidden){m.hidden=true;const b=$("#whoBtn");b&&b.setAttribute("aria-expanded","false")}});

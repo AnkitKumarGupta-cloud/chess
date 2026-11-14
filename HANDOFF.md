@@ -40,6 +40,7 @@ Vercel Deployment Protection must stay **off** for `chess-sathi-live`, or studen
 - **Tests:** a new 10-question test each time, matched to the student's puzzle level (the highest level unlocked): 3 knowledge questions from a 4-tier bank (Beginner ≤ level 5, Intermediate ≤ 20, Advanced ≤ 45, Expert above) + 7 "find the best move" positions from the levels at and just above theirs. Bank: `QBANK` in `public/index.html`.
 - **Progress** is saved in each browser (not visible to the teacher yet).
 - No Sound/Voice buttons: move sounds and lesson voice are always on.
+- **Theme switch** in the profile menu (Auto / Light / Dark). Saved per device in `localStorage` key `cs-theme`; Auto follows the device setting. Applied by a tiny script in `<head>` so there is no flash.
 - **Board pages** (practice, puzzle levels, classic puzzles) use a Lichess-style layout: on computers the board fills the screen height with a compact panel on its right (goal, status, Next, buttons, About, position list); on phones and narrow windows (under 900px) the panel moves below the board. No Full screen button any more.
 - **Phones:** on practice and puzzle boards the board, status and Next button fit on one screen (checked at 360×640 up to 412×915). Students can "Add to Home screen" (`public/manifest.webmanifest`, icons in `public/icons/`) and it opens like an app, without the browser bar.
 - **Puzzle levels save after every puzzle** (`S.lv.part`), so a reload mid-level keeps the solved puzzles and reopens at the first unsolved one.
