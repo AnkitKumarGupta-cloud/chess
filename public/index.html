@@ -532,7 +532,7 @@ a.back{text-decoration:none}
 .ds-goal span{font-size:.84rem;color:var(--muted)}
 .ds-goal span b{display:inline;font-size:inherit;color:var(--ink)}
 .ds-goal.ok{background:var(--good-soft);border-color:color-mix(in srgb,var(--good) 45%,transparent)}
-.ds-goal.ok .ds-goal-i{background:var(--good)}
+.ds-goal.ok .ds-goal-i{background:var(--good);color:#fff;font-size:1.3rem}
 .ds-status{font-weight:600;padding:10px 12px;border-radius:12px;background:var(--surface-2);display:flex;gap:8px;align-items:center;min-height:44px}
 .ds-status.ok{background:var(--good-soft);color:var(--good)}
 .ds-status.no{background:var(--accent-soft);color:var(--accent)}
@@ -585,6 +585,44 @@ body.present section.view:has(> .chips){display:none}
 @media (max-aspect-ratio:4/3){body.present .drill,body.present .pz{grid-template-columns:1fr}body.present .drill-board .board,body.present .pz .board{width:min(100vw - 32px,100vh - 260px);max-width:none}}
 
 .pc.w{color:#FFFFFF;text-shadow:0 0 1px #2A1A0C,0 0 1px #2A1A0C,0 0 2px #2A1A0C,0 1px 2px rgba(0,0,0,.55)}
+
+/* Puzzle levels */
+[data-sec="puzzles"]{--c1:#5BB548;--c2:#3C8E2E}
+.lvhero{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:22px;border-radius:24px;border:1px solid var(--line);box-shadow:var(--shadow);background:linear-gradient(130deg,color-mix(in srgb,var(--c1) 18%,var(--surface)),var(--surface))}
+.lvhero-l{display:flex;align-items:center;gap:16px}
+.lvhero h1{font-family:var(--f-body);font-weight:800}
+.lvhero .btn{background:linear-gradient(180deg,var(--c1),var(--c2));box-shadow:0 4px 0 color-mix(in srgb,var(--c2) 70%,#000),0 8px 20px color-mix(in srgb,var(--c2) 35%,transparent)}
+.lvstage{gap:14px}
+.lvstage-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;border-left:4px solid var(--c1,#5BB548);padding-left:12px}
+.lvstage-h h2{font-size:1.4rem;font-weight:400;letter-spacing:.06em;text-transform:uppercase}
+.lvpath{display:flex;flex-direction:column;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:18px 12px;box-shadow:var(--shadow)}
+.lvrow{display:grid;grid-template-columns:repeat(5,1fr);position:relative}
+.lvrow.rev{direction:rtl}
+.lvrow::before{content:"";position:absolute;left:10%;right:10%;top:34px;height:6px;border-radius:6px;background:var(--surface-2);z-index:0}
+.lvnode{direction:ltr;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:4px;color:var(--ink)}
+.lvn{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;font-weight:800;font-size:1.25rem;background:var(--surface-2);color:var(--muted);border:2px solid var(--line);box-shadow:0 5px 0 var(--line);transition:transform .12s ease}
+.lvnode.done .lvn{background:linear-gradient(145deg,var(--c1,#5BB548),var(--c2,#3C8E2E));color:#fff;border-color:transparent;box-shadow:0 5px 0 color-mix(in srgb,#3C8E2E 70%,#000)}
+.lvnode.cur .lvn{background:linear-gradient(145deg,#F7B23B,#E08A12);color:#2A1700;border-color:transparent;box-shadow:0 5px 0 #A86200,0 0 0 8px rgba(247,178,59,.18);animation:lvp 1.6s ease-in-out infinite}
+@keyframes lvp{50%{box-shadow:0 5px 0 #A86200,0 0 0 13px rgba(247,178,59,.10)}}
+@media (prefers-reduced-motion:reduce){.lvnode.cur .lvn{animation:none}}
+.lvnode.lock{cursor:default;opacity:.6}
+.lvnode.lock svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2}
+.lvnode .lvn{transform:none;border-radius:50%}
+.lvnode:not(.lock):hover .lvn{transform:translateY(-3px)}
+.lvtag{font-size:.75rem;font-weight:700;color:var(--ink)}
+.lvtag.dim{color:var(--muted);font-weight:600;font-family:var(--f-mono)}
+.stars{display:inline-flex;gap:1px;font-size:.9rem;line-height:1}
+.stars i{font-style:normal;color:var(--surface-2);text-shadow:0 0 1px rgba(0,0,0,.4)}
+.stars i.on{color:#F5B83A}
+.lvdots{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+.lvdots span{aspect-ratio:1;border-radius:8px;display:grid;place-items:center;font-size:.72rem;font-weight:700;font-family:var(--f-mono);background:var(--surface-2);color:var(--muted);border:1px solid transparent}
+.lvdots span.cur{border:2px solid var(--c1);color:var(--ink)}
+.lvdots span.ok{background:var(--good);color:#fff}
+.lvdots span.retry{background:#E7A33A;color:#2A1700}
+.tm{width:18px;height:18px;border-radius:50%;border:2px solid #fff;display:block}
+.tm.w{background:#fff}.tm.b{background:#111}
+.ds-status .stars{font-size:1.1rem;margin-left:6px}
+@media (max-width:640px){.lvn{width:50px;height:50px;font-size:1rem}.lvrow::before{top:27px}.lvpath{padding:14px 4px}.lvhero{padding:16px}.lvhero .btn{width:100%}}
 </style>
 
 </head>
@@ -734,7 +772,7 @@ const fmt=ms=>{const s=Math.round(ms/1000);return `${Math.floor(s/60)}:${String(
 const RANKS=[{n:"Pawn",xp:0,g:"♟"},{n:"Knight",xp:150,g:"♞"},{n:"Bishop",xp:450,g:"♝"},{n:"Rook",xp:1000,g:"♜"},{n:"Queen",xp:2000,g:"♛"},{n:"King",xp:3500,g:"♚"}];
 const DAILY_GOAL=30;
 const dayKey=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-const totalXP=()=>lessonsDone()*20+points()+(bestTest()||0)*5+Object.keys(S.practice||{}).length*10;
+const totalXP=()=>lessonsDone()*20+points()+(bestTest()||0)*5+Object.keys(S.practice||{}).length*10+Object.values((S.lv||{}).done||{}).reduce((a,d)=>a+d.stars*10,0);
 function rankOf(xp){let i=0;RANKS.forEach((r,j)=>{if(xp>=r.xp)i=j});const cur=RANKS[i],nxt=RANKS[i+1];return{cur,nxt,i,pct:nxt?Math.round((xp-cur.xp)/(nxt.xp-cur.xp)*100):100}}
 const todayXP=()=>(S.days&&S.days[dayKey()])||0;
 function streak(){const d=S.days||{};let n=0;const t=new Date();if(!d[dayKey(t)])t.setDate(t.getDate()-1);while(d[dayKey(t)]){n++;t.setDate(t.getDate()-1)}return n}
@@ -806,7 +844,7 @@ function vHome(){
 }
 function afterHome(){
   const d=PUZZLES.filter(p=>p.level==="Advanced")[new Date().getDate()%13];
-  const go=()=>{pzStart=d.id;location.hash="puzzles"};
+  const go=()=>{pzStart=d.id;location.hash="classic"};
   drawBoard($("#heroBoard"),d.fen,{flip:d.fen.split(" ")[1]==="b",onSquare:go});$("#dailyGo").onclick=go;
   const box=$("#homeLive");if(!box||!AUTH.user)return;
   liveApi("/classes").then(r=>{const cs=r.classes||[];const live=cs.find(c=>c.live),up=cs.filter(c=>!c.live&&!c.ended).sort((a,b)=>a.startsAt<b.startsAt?-1:1)[0];
@@ -1004,6 +1042,108 @@ function togglePresent(){const on=!document.body.classList.contains("present");d
 document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement&&document.body.classList.contains("present")){document.body.classList.remove("present");render()}});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.body.classList.contains("present")){document.body.classList.remove("present");render()}});
 const presentBtn=(id,cls="tbtn")=>`<button class="${cls}" id="${id}" title="Full screen board for screen sharing (Esc to exit)">${document.body.classList.contains("present")?`<svg viewBox="0 0 24 24"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg><span>Exit full screen</span>`:`<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>Full screen</span>`}</button>`;
+/* ---------- Puzzle levels (Lichess puzzle database, CC0). One path, 10 puzzles per level, getting harder. ---------- */
+let LVD=null, LVS=null;
+const LV_STAGES=[["Beginner",1,20],["Improver",21,40],["Intermediate",41,60],["Club player",61,80],["Advanced",81,100],["Expert",101,115]];
+const THEME_NAME={mateIn1:"Mate in 1",mateIn2:"Mate in 2",mateIn3:"Mate in 3",mateIn4:"Mate in 4",mateIn5:"Mate in 5+",fork:"Fork",pin:"Pin",skewer:"Skewer",sacrifice:"Sacrifice",attraction:"Attraction",deflection:"Deflection",discoveredAttack:"Discovered attack",discoveredCheck:"Discovered check",doubleCheck:"Double check",backRankMate:"Back-rank mate",hangingPiece:"Hanging piece",trappedPiece:"Trapped piece",clearance:"Clearance",quietMove:"Quiet move",defensiveMove:"Defensive move",advancedPawn:"Advanced pawn",promotion:"Promotion",exposedKing:"Exposed king",kingsideAttack:"Kingside attack",queensideAttack:"Queenside attack",attackingF2F7:"Attack on f2/f7",intermezzo:"In-between move",capturingDefender:"Remove the defender",zugzwang:"Zugzwang",xRayAttack:"X-ray",interference:"Interference",rookEndgame:"Rook endgame",pawnEndgame:"Pawn endgame",queenEndgame:"Queen endgame",bishopEndgame:"Bishop endgame",knightEndgame:"Knight endgame",queenRookEndgame:"Queen & rook endgame",anastasiaMate:"Anastasia's mate",arabianMate:"Arabian mate",smotheredMate:"Smothered mate",hookMate:"Hook mate",bodenMate:"Boden's mate",doubleBishopMate:"Two-bishop mate",dovetailMate:"Dovetail mate",operaMate:"Opera mate",epauletteMate:"Epaulette mate",enPassant:"En passant",castling:"Castling"};
+const themeLabel=ts=>(ts||"").split(" ").filter(Boolean).map(t=>THEME_NAME[t]||t.replace(/([A-Z])/g," $1").toLowerCase()).join(" · ");
+async function lvLoad(){if(LVD)return LVD;const r=await fetch("/levels.json?v=1",{cache:"no-cache"});if(!r.ok)throw new Error("load");LVD=(await r.json()).levels;return LVD}
+const lvState=()=>{S.lv=S.lv||{unlocked:1,done:{}};return S.lv};
+const lvStars=r=>{const ok=r.filter(x=>x==="ok").length;return ok>=9?3:ok>=7?2:1};
+const starsHtml=n=>`<span class="stars" aria-label="${n} of 3 stars">${[1,2,3].map(i=>`<i class="${i<=n?"on":""}">★</i>`).join("")}</span>`;
+const lvRating=l=>LVD&&LVD[l-1]?Math.round(LVD[l-1].reduce((a,p)=>a+p[3],0)/LVD[l-1].length):500+(l-1)*20;
+
+function vPuzzles(){
+  const st=lvState(),cur=st.unlocked,done=Object.keys(st.done).length,stars=Object.values(st.done).reduce((a,d)=>a+d.stars,0);
+  const total=LVD?LVD.length:115;
+  return `<section class="lvhero view" data-sec="puzzles">
+    <div class="lvhero-l"><span class="pricon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 3h4v3a2 2 0 1 0 4 0V3h3v7h-3a2 2 0 1 0 0 4h3v7h-7v-3a2 2 0 1 0-4 0v3H3v-7h3a2 2 0 1 0 0-4H3V3h7z"/></svg></span>
+      <div class="stack" style="gap:4px"><span class="eyebrow">Puzzles</span><h1>Level ${Math.min(cur,total)}</h1><span class="li-m">${done} of ${total} levels done · ${stars} ★ · about rating ${lvRating(Math.min(cur,total))}</span></div></div>
+    <button class="btn big" data-lv="${Math.min(cur,total)}">▶ ${done?"Continue":"Start"} Level ${Math.min(cur,total)}</button>
+  </section>
+  <p class="li-m view" style="max-width:66ch">Every level has 10 puzzles, a little harder than the last. Solve all 10 to unlock the next level. Get them right first time to earn 3 stars.</p>
+  ${LV_STAGES.map(([name,a,b])=>{if(a>total)return "";b=Math.min(b,total);const rows=[];for(let r=a;r<=b;r+=5)rows.push(Array.from({length:Math.min(5,b-r+1)},(_,i)=>r+i));
+    return `<section class="lvstage view"><div class="lvstage-h"><h2>${name}</h2><span class="li-m mono">Levels ${a}–${b} · rating ${lvRating(a)}–${lvRating(b)}</span></div>
+    <div class="lvpath">${rows.map((row,ri)=>`<div class="lvrow${ri%2?" rev":""}">${row.map(l=>{const d=st.done[l],isCur=l===cur,lock=l>cur;
+      return `<button class="lvnode${d?" done":""}${isCur?" cur":""}${lock?" lock":""}" ${lock?"disabled":""} data-lv="${l}" aria-label="Level ${l}${d?`, ${d.stars} stars`:lock?", locked":isCur?", next":""}">
+        <span class="lvn">${lock?`<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>`:d?"✓":l}</span>${d?starsHtml(d.stars):isCur?`<span class="lvtag">Level ${l}</span>`:`<span class="lvtag dim">${l}</span>`}</button>`}).join("")}</div>`).join("")}</div></section>`}).join("")}
+  <p class="li-m view" style="font-size:.75rem">Puzzles from the <a href="https://database.lichess.org/#puzzles" target="_blank" rel="noopener">Lichess puzzle database</a> (CC0).</p>`;
+}
+function afterPuzzles(){
+  document.querySelectorAll("[data-lv]").forEach(b=>b.onclick=()=>{LVS=null;location.hash="plevel?l="+b.dataset.lv});
+  if(!LVD)lvLoad().then(()=>{if(route()==="puzzles")render()}).catch(()=>{});
+  const c=document.querySelector(".lvnode.cur");if(c&&!window.__lvScrolled){window.__lvScrolled=1;setTimeout(()=>c.scrollIntoView({block:"center",behavior:"smooth"}),200)}
+}
+
+function lvParam(){const m=location.hash.match(/[?&]l=(\d+)/);return m?+m[1]:lvState().unlocked}
+function lvOpen(l,k){const p=LVD[l-1][k];const prev=LVS&&LVS.l===l?LVS.res:Array(LVD[l-1].length).fill(null);
+  LVS={l,k,res:prev,g:new Chess(p[1]),moves:p[2].split(" "),ply:0,sel:null,state:"think",msg:"",last:[],bad:[],hint:null,promo:null,anim:null,miss:false,shown:false};
+  LVS.color=LVS.g.turn()==="w"?"b":"w";const tok=LVS;
+  setTimeout(()=>{if(LVS!==tok)return;lvPlay(LVS.moves[0]);LVS.ply=1;LVS.state="idle";render()},650)}
+function lvPlay(u){const mv=LVS.g.move({from:u.slice(0,2),to:u.slice(2,4),promotion:u[4]});if(mv){moveSound(mv,LVS.g);LVS.anim=[mv.from,mv.to];LVS.last=[mv.from,mv.to]}return mv}
+function lvSolved(){const st=lvState();LVS.state="ok";if(LVS.res[LVS.k]==null)LVS.res[LVS.k]=LVS.miss?"retry":"ok";if(LVS.res[LVS.k]==="ok")award(5);setTimeout(()=>sfx("solved"),200);
+  if(LVS.res.every(x=>x)){const stars=lvStars(LVS.res),prev=st.done[LVS.l];st.done[LVS.l]={stars:Math.max(stars,prev?prev.stars:0)};if(st.unlocked<=LVS.l)st.unlocked=LVS.l+1;LVS.complete=stars;save()}
+  render()}
+function vPlevel(){
+  if(!LVD)return `<section class="stack view"><p class="li-m">Loading puzzles…</p></section>`;
+  const st=lvState(),l=Math.max(1,Math.min(lvParam(),st.unlocked,LVD.length)),list=LVD[l-1];
+  if(!LVS||LVS.l!==l){const first=0;LVS=null;lvOpen(l,first)}
+  const p=list[LVS.k],s=LVS.state,col=LVS.color==="w"?"White":"Black";
+  let stat="",scls="";
+  if(LVS.complete){stat=`<b>Level ${l} complete!</b> ${starsHtml(LVS.complete)}`;scls="ok"}
+  else if(s==="ok"){stat=LVS.res[LVS.k]==="ok"?"<b>Correct!</b> +5 XP":"<b>Solved.</b> Next time, first try!";scls="ok"}
+  else if(s==="no"){stat="Not the best move. Try again!";scls="no"}
+  else if(s==="think")stat=LVS.ply===0?"Watch your opponent's move…":`<span class="spin sm" aria-hidden="true"></span> Opponent is replying…`;
+  else stat=LVS.ply<=1?`Find the best move for ${col}.`:"Good! Keep going.";
+  const nextBtn=LVS.complete?(l<LVD.length?`Go to Level ${l+1} →`:"Back to the path"):LVS.k<list.length-1?"Next puzzle →":"Finish level";
+  const canNext=s==="ok"||LVS.complete;
+  return `<section class="drill view" data-sec="puzzles">
+  <div class="drill-board"><div class="board" id="lvBoard"></div>
+    ${LVS.promo?`<div class="promo" role="group" aria-label="Choose a piece"><span class="li-m">Promote to:</span>${["q","r","b","n"].map(x=>`<button class="chip" data-promo="${x}" aria-label="${NAMES[x]}">${GLYPH[x]}︎ ${NAMES[x]}</button>`).join("")}</div>`:""}</div>
+  <aside class="drill-side">
+    <header class="ds-head"><a class="ds-back" href="#puzzles" aria-label="Back to the level path">←</a><span class="pricon sm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 3h4v3a2 2 0 1 0 4 0V3h3v7h-3a2 2 0 1 0 0 4h3v7h-7v-3a2 2 0 1 0-4 0v3H3v-7h3a2 2 0 1 0 0-4H3V3h7z"/></svg></span>
+      <div class="ds-ht"><span class="eyebrow">Puzzles · rating ${p[3]}</span><h1>Level ${l}</h1></div></header>
+    <div class="lvdots" aria-label="Puzzles in this level">${list.map((_,i)=>`<span class="${LVS.res[i]||""}${i===LVS.k?" cur":""}" title="Puzzle ${i+1}">${LVS.res[i]==="ok"?"✓":LVS.res[i]==="retry"?"•":i+1}</span>`).join("")}</div>
+    <div class="ds-goal${s==="ok"?" ok":""}"><span class="ds-goal-i" aria-hidden="true">${s==="ok"?"✓":`<i class="tm ${LVS.color}"></i>`}</span>
+      <div><b>${s==="ok"&&p[4]?esc(themeLabel(p[4])):`${col} to move. Find the best move.`}</b><span>Puzzle ${LVS.k+1} of ${list.length}${s==="ok"?"":" · the theme is shown after you solve it"}</span></div></div>
+    <div class="ds-status ${scls}" role="status">${stat}</div>
+    <div class="ds-tools">
+      <button class="tbtn" id="lvHint" ${s==="idle"||s==="no"?"":"disabled"}><svg viewBox="0 0 24 24"><path d="M9 21h6M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5v1h6v-1c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span>Hint</span></button>
+      <button class="tbtn" id="lvShow" ${s==="idle"||s==="no"?"":"disabled"}><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span>Solution</span></button>
+      <button class="tbtn" id="lvRetry"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span>Retry</span></button>
+      ${presentBtn("lvFull")}
+    </div>
+    <button class="btn big ds-next${canNext?" pulse":""}" id="lvNext" ${canNext?"":"disabled"}>${nextBtn}</button>
+  </aside></section>`;
+}
+function afterPlevel(){
+  if(!LVD){lvLoad().then(()=>{if(route()==="plevel")render()}).catch(()=>{});return}
+  const l=LVS.l,list=LVD[l-1],g=LVS.g,flip=LVS.color==="b";
+  const live=(LVS.state==="idle"||LVS.state==="no")&&!LVS.promo&&g.turn()===LVS.color;
+  const dots=LVS.sel?g.moves({square:LVS.sel,verbose:true}).map(m=>m.to):[];const anim=LVS.anim;LVS.anim=null;
+  drawBoard($("#lvBoard"),g.fen(),{flip,anim,sel:LVS.sel,dots,bad:LVS.bad,hi:LVS.hint?[LVS.hint]:LVS.last,
+    onSquare:live?sq=>{const pc=g.get(sq);
+      if(pc&&pc.color===g.turn()){LVS.sel=LVS.sel===sq?null:sq;LVS.bad=[];if(LVS.state==="no")LVS.state="idle";return render()}
+      if(!LVS.sel)return;ac();const cand=g.moves({square:LVS.sel,verbose:true}).filter(m=>m.to===sq);if(!cand.length){LVS.sel=null;return render()}
+      if(cand.some(m=>m.promotion)){LVS.promo={from:LVS.sel,to:sq};LVS.sel=null;return render()}
+      lvUser({from:LVS.sel,to:sq})}:null});
+  function lvUser(m){const mv=g.move(m);LVS.sel=null;LVS.hint=null;if(!mv)return render();
+    const want=LVS.moves[LVS.ply],last=LVS.ply===LVS.moves.length-1;
+    if(mv.from+mv.to+(mv.promotion&&want[4]?mv.promotion:"")===want||(mv.from+mv.to===want.slice(0,4)&&!want[4])||(last&&g.in_checkmate())){
+      moveSound(mv,g);LVS.anim=[mv.from,mv.to];LVS.last=[mv.from,mv.to];LVS.bad=[];LVS.ply++;
+      if(LVS.ply>=LVS.moves.length)return lvSolved();
+      LVS.state="think";render();const tok=LVS;setTimeout(()=>{if(LVS!==tok)return;lvPlay(LVS.moves[LVS.ply]);LVS.ply++;LVS.state="idle";render()},500);return}
+    g.undo();LVS.miss=true;LVS.state="no";LVS.bad=[mv.from,mv.to];LVS.last=[];sfx("wrong");render()}
+  document.querySelectorAll("[data-promo]").forEach(b=>b.onclick=()=>{const p=LVS.promo;LVS.promo=null;lvUser({...p,promotion:b.dataset.promo})});
+  $("#lvHint").onclick=()=>{LVS.miss=true;LVS.hint=LVS.moves[LVS.ply].slice(0,2);render()};
+  $("#lvShow").onclick=()=>{LVS.miss=true;LVS.state="think";render();const tok=LVS;
+    const step=()=>{if(LVS!==tok)return;if(LVS.ply>=LVS.moves.length)return lvSolved();lvPlay(LVS.moves[LVS.ply]);LVS.ply++;render();setTimeout(step,700)};setTimeout(step,300)};
+  $("#lvRetry").onclick=()=>{const k=LVS.k;LVS.complete=null;lvOpen(l,k);render()};
+  $("#lvFull").onclick=togglePresent;
+  $("#lvNext").onclick=()=>{if(LVS.complete){LVS=null;if(l<LVD.length)location.hash="plevel?l="+(l+1);else location.hash="puzzles";return}
+    if(LVS.k<list.length-1){lvOpen(l,LVS.k+1);render()}else{const miss=LVS.res.findIndex(x=>!x);if(miss>=0){lvOpen(l,miss);render()}}};
+}
+
 /* ---------- Lesson video player ---------- */
 let curLesson=null, LP=null;
 function buildFrames(steps){
@@ -1139,7 +1279,7 @@ function afterLessonTTS(){
 let pzLevel="All", pzStart=null;
 let PZ=null; // {id, g, ply, sel, state:'idle'|'ok'|'no'|'wait', bad, last, hint}
 function pzLoad(id){const p=PUZZLES.find(x=>x.id===id)||PUZZLES[0];PZ={id:p.id,g:new Chess(p.fen),ply:0,sel:null,state:"idle",bad:[],last:[],hint:false}}
-function vPuzzles(){
+function vClassic(){
   if(pzStart){pzLoad(pzStart);pzStart=null}
   if(!PZ)pzLoad(PUZZLES.find(p=>!S.puzzles[p.id])?.id||PUZZLES[0].id);
   const p=PUZZLES.find(x=>x.id===PZ.id), turn=p.fen.split(" ")[1];
@@ -1172,7 +1312,7 @@ function vPuzzles(){
     </div>
   </section>`;
 }
-function afterPuzzles(){
+function afterClassic(){
   const p=PUZZLES.find(x=>x.id===PZ.id), g=PZ.g, flip=p.fen.split(" ")[1]==="b";
   const dots=PZ.sel?g.moves({square:PZ.sel,verbose:true}).map(m=>m.to):[];
   const live=PZ.state!=="ok"&&PZ.state!=="wait";
@@ -1444,7 +1584,7 @@ function liveHome(root){
 }
 
 /* ---------- Router ---------- */
-const VIEWS={practice:[vPractice,afterPractice],drill:[vDrill,afterDrill],live:[vLive,afterLive],home:[vHome,afterHome],courses:[vCourses],lesson:[vLesson,afterLesson],puzzles:[vPuzzles,afterPuzzles],tests:[vTests,afterTests],progress:[vProgress,afterProgress]};
+const VIEWS={plevel:[vPlevel,afterPlevel],classic:[vClassic,afterClassic],practice:[vPractice,afterPractice],drill:[vDrill,afterDrill],live:[vLive,afterLive],home:[vHome,afterHome],courses:[vCourses],lesson:[vLesson,afterLesson],puzzles:[vPuzzles,afterPuzzles],tests:[vTests,afterTests],progress:[vProgress,afterProgress]};
 function route(){const h=(location.hash||"#home").slice(1).split("?")[0];return VIEWS[h]?h:"home"}
 function render(){
   document.body.classList.toggle("gated",AUTH.state!=="in"&&AUTH.state!=="guest");renderWho();
@@ -1452,7 +1592,7 @@ function render(){
   if(!HAS_CHESS){$("#app").innerHTML=`<div class="card"><h2>The chess engine didn't load</h2><p class="li-m" style="margin-top:8px">Check your connection and reload the page.</p></div>`;return}
   const r=route();if(r!=="lesson")stopLesson();
   const [v,a]=VIEWS[r];$("#app").innerHTML=v();a&&a();
-  const tab=r==="lesson"?"courses":r==="drill"?"practice":r;
+  const tab=r==="lesson"?"courses":r==="drill"?"practice":(r==="plevel"||r==="classic")?"puzzles":r;
   document.querySelectorAll("#tabs a").forEach(x=>{if(x.getAttribute("href")==="#"+tab)x.setAttribute("aria-current","page");else x.removeAttribute("aria-current")});
   document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{curLesson=b.dataset.open;if(location.hash==="#lesson")render();else location.hash="lesson";window.scrollTo(0,0)});
   document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>location.hash=b.dataset.go);
