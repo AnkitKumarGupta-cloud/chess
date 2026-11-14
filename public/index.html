@@ -257,7 +257,7 @@ body.gated nav.tabs,body.gated .toggles{display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* Account menu */
-.who{position:relative;margin-left:8px}
+.who{position:relative;margin-left:auto}
 .chipbtn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:4px 12px 4px 4px;font-weight:600;font-size:.86rem}
 .avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;font-size:.85rem}
 .menu{position:absolute;right:0;top:calc(100% + 8px);min-width:210px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-up);padding:6px;z-index:30;display:flex;flex-direction:column}
@@ -265,7 +265,7 @@ body.gated nav.tabs,body.gated .toggles{display:none}
 .menu-h{padding:8px 10px 10px;border-bottom:1px solid var(--line);margin-bottom:4px;display:flex;flex-direction:column}
 .menu button{background:none;border:0;text-align:left;padding:9px 10px;border-radius:8px;color:var(--ink);font-weight:600}
 .menu button:hover{background:var(--bg)}
-@media (max-width:720px){.whoname{display:none}.chipbtn{padding:3px}.who{margin-left:6px}.topbar-in{gap:12px!important}}
+@media (max-width:720px){.whoname{display:none}.chipbtn{padding:3px}.who{margin-left:auto}.topbar-in{gap:12px!important}}
 body.gated .who{display:none}
 .overlay{position:fixed;inset:0;background:rgba(10,15,22,.55);display:grid;place-items:center;z-index:50;padding:16px}
 .dialog{width:min(420px,100%);box-shadow:var(--shadow-up)}
@@ -333,7 +333,7 @@ nav.tabs a[aria-current="page"]{background:var(--accent-soft);color:var(--accent
   nav.tabs a svg{width:21px;height:21px}
   nav.tabs + .toggles{margin:auto 0 0;padding:12px 4px 4px;border-top:1px solid var(--line)}
   .toggles{flex-wrap:wrap}
-  .who{margin:8px 0 0}
+  .who{margin:auto 0 0}
   .who .chipbtn{width:100%;justify-content:flex-start;border-radius:14px;padding:6px}
   .who .menu{top:auto;bottom:calc(100% + 8px);left:0;right:auto;width:100%}
   main{max-width:1120px;padding-inline:32px}
@@ -737,10 +737,6 @@ body[data-route="puzzles"] main{max-width:none!important;padding:0!important;gap
     <a href="#tests"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6v3H9zM6 6H5v15h14V6h-1M8 12l2 2 4-4"/></svg>Tests</a>
     <a href="#progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Progress</a>
   </nav>
-  <div class="toggles">
-    <button class="tog" id="togSound" aria-pressed="true" title="Move sounds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H3v6h3l5 4zM16 9a4 4 0 010 6M19 6a8 8 0 010 12"/></svg><span>Sound</span></button>
-    <button class="tog" id="togVoice" aria-pressed="true" title="Lesson voiceover"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg><span>Voice</span></button>
-  </div>
   <div class="who" id="who"></div>
 </div></header>
 
@@ -753,24 +749,45 @@ const KEY="targetchess.v2";
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
 let S=Object.assign({lessons:{},puzzles:{},tests:[],practice:{},sound:true,voice:true,liveToken:""},load());
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+S.sound=true;S.voice=true; /* no on/off buttons any more: always on */
 
 /* ---------- Content ---------- */
 const DATA={"puzzles":[{"id":"p1","fen":"6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1","line":["d1d8"],"mate":true,"theme":"Back-rank checkmate","level":"Beginner","hint":"Black's king is stuck behind its own pawns.","pts":10},{"id":"p2","fen":"6k1/5ppp/8/8/8/8/5PPP/4Q1K1 w - - 0 1","line":["e1e8"],"mate":true,"theme":"Queen to the back row","level":"Beginner","hint":"Your queen can reach Black's back row in one move.","pts":10},{"id":"p3","fen":"1r4k1/8/8/8/8/8/5PPP/6K1 b - - 0 1","line":["b8b1"],"mate":true,"theme":"Back-rank checkmate","level":"Beginner","hint":"White's king is stuck behind its own pawns too.","pts":10},{"id":"p4","fen":"r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 0 1","line":["h5f7"],"mate":true,"theme":"Attack the weak f7 pawn","level":"Beginner","hint":"Only the king guards f7, and your bishop on c4 helps your queen.","pts":10},{"id":"p5","fen":"rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 1","line":["d8h4"],"mate":true,"theme":"Fastest checkmate","level":"Beginner","hint":"White's pawn moves opened a path straight to the king.","pts":10},{"id":"p6","fen":"k7/8/1K6/8/8/8/7Q/8 w - - 0 1","line":["h2h8"],"mate":true,"theme":"King and queen team-up","level":"Beginner","hint":"Your king already guards a7 and b7. Give check on the back row.","pts":10},{"id":"p7","fen":"k7/2P5/1K6/8/8/8/8/8 w - - 0 1","line":["c7c8q"],"mate":true,"theme":"New queen, checkmate","level":"Beginner","hint":"Push the pawn and make a new queen.","pts":10},{"id":"p8","fen":"k7/7R/8/8/8/8/8/2R3K1 w - - 0 1","line":["c1c8"],"mate":true,"theme":"Two-rook ladder","level":"Beginner","hint":"One rook blocks the 7th row. Use the other rook on the 8th row.","pts":10},{"id":"p9","fen":"7k/8/6K1/8/8/8/Q7/8 w - - 0 1","line":["a2a8"],"mate":true,"theme":"Queen finishes the job","level":"Beginner","hint":"Your king guards g7 and h7. Slide the queen all the way up.","pts":10},{"id":"p10","fen":"2q3k1/5ppp/8/3N4/8/8/5PPP/6K1 w - - 0 1","line":["d5e7"],"mate":false,"theme":"Knight fork","level":"Intermediate","hint":"Find a knight move that attacks the king and the queen together.","pts":15},{"id":"p11","fen":"q7/8/2k5/8/8/8/8/1B4K1 w - - 0 1","line":["b1e4"],"mate":false,"theme":"Skewer: check, then win the queen","level":"Intermediate","hint":"Give check on the same diagonal as the queen.","pts":15},{"id":"p12","fen":"r3k3/8/8/8/8/8/8/1Q2K3 w - - 0 1","line":["b1e4"],"mate":false,"theme":"Queen fork: check and win the rook","level":"Intermediate","hint":"Give a check that also attacks the rook in the corner.","pts":15},{"id":"p13","fen":"6rk/6pp/8/4N3/8/8/8/6K1 w - - 0 1","line":["e5f7"],"mate":true,"theme":"Smothered mate (king boxed in)","level":"Intermediate","hint":"Black's king has no room. Its own pieces block it in.","pts":15},{"id":"p14","fen":"7k/4N1p1/8/8/8/2R5/8/6K1 w - - 0 1","line":["c3h3"],"mate":true,"theme":"Rook and knight team-up","level":"Intermediate","hint":"Your knight guards g8, and the h-file is open for your rook.","pts":15},{"id":"p15","fen":"7k/1R6/5N2/8/8/8/8/6K1 w - - 0 1","line":["b7h7"],"mate":true,"theme":"Rook and knight corner mate","level":"Intermediate","hint":"Your knight guards g8 and can protect a rook on h7.","pts":15},{"id":"p16","fen":"5rk1/5p2/6P1/8/8/8/8/6KQ w - - 0 1","line":["h1h7"],"mate":true,"theme":"Queen guarded by a pawn","level":"Intermediate","hint":"Your pawn on g6 can protect your queen right next to the king.","pts":15},{"id":"p17","fen":"6k1/8/8/8/8/5b1q/7P/6K1 b - - 0 1","line":["h3g2"],"mate":true,"theme":"Queen and bishop team-up","level":"Intermediate","hint":"Your bishop on f3 can protect your queen right next to the king.","pts":15},{"id":"p18","fen":"3rkr2/8/8/8/8/1Q6/8/6K1 w - - 0 1","line":["b3e6"],"mate":true,"theme":"King blocked by its own rooks","level":"Intermediate","hint":"Black's rooks block their own king on both sides.","pts":15},{"id":"p19","fen":"r6k/6pp/7N/8/8/1Q6/6PP/6K1 w - - 0 1","line":["b3g8","a8g8","h6f7"],"mate":true,"theme":"Smothered mate in 2 (king boxed in)","level":"Advanced","hint":"Start with a check. Your queen moves first.","pts":25},{"id":"p20","fen":"1r4k1/q4ppp/8/8/8/8/1Q3PPP/1R4K1 w - - 0 1","line":["b2b8","a7b8","b1b8"],"mate":true,"theme":"Pull the defender away","level":"Advanced","hint":"Start with a check. Your queen moves first.","pts":25},{"id":"p21","fen":"rn1qkbnr/ppp2p1p/3p2p1/4N3/2B1P3/2N5/PPPP1PPP/R1BbK2R w KQkq - 0 6","line":["c4f7","e8e7","c3d5"],"mate":true,"theme":"Opening trap: punish a greedy move","level":"Advanced","hint":"Start with a check. Your bishop moves first.","pts":25},{"id":"p22","fen":"2k5/ppp2R2/3q2Q1/7R/8/8/PPP5/2K5 w - - 0 1","line":["g6d6","c8b8","f7f8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"The first move is not a check, but it sets up a checkmate. Your queen moves first.","pts":25},{"id":"p23","fen":"7k/6p1/1p5p/6Q1/8/2R5/6PP/7K w - - 0 1","line":["g5g6","h8g8","c3c8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"The first move is not a check, but it sets up a checkmate. Your queen moves first.","pts":25},{"id":"p24","fen":"7k/n5pp/8/8/2R5/RQ6/5PPP/6K1 w - - 0 1","line":["b3b8","a7c8","b8c8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your queen moves first.","pts":25},{"id":"p25","fen":"6k1/6pp/Q4p2/2r5/3B4/1N6/6PP/7K w - - 0 1","line":["a6e6","g8h8","e6e8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your queen moves first.","pts":25},{"id":"p26","fen":"6k1/6pp/R4p1p/8/1B4B1/8/PPP5/2K5 w - - 0 1","line":["g4e6","g8h8","a6a8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your bishop moves first.","pts":25},{"id":"p27","fen":"2k5/ppp3r1/3Q4/1Br1q3/8/8/6PP/7K w - - 0 1","line":["d6f8","e5e8","f8e8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your queen moves first.","pts":25},{"id":"p28","fen":"1k6/ppp5/3R4/7R/2b1N3/8/3r1PPP/6K1 w - - 0 1","line":["h5h8","c4g8","h8g8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your rook moves first.","pts":25},{"id":"p29","fen":"2k5/ppp5/4r3/8/R7/7B/3R2PP/7K w - - 0 1","line":["h3e6","c8b8","d2d8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your bishop moves first.","pts":25},{"id":"p30","fen":"6k1/3N1ppp/4r3/rQ6/8/8/5PPP/6K1 w - - 0 1","line":["b5b8","e6e8","b8e8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your queen moves first.","pts":25},{"id":"p31","fen":"2k5/ppp2B2/3R4/8/1p6/R7/6PP/7K w - - 0 1","line":["f7e6","c8b8","d6d8"],"mate":true,"theme":"Mate in 2","level":"Advanced","hint":"Start with a check. Your bishop moves first.","pts":25},{"id":"p32","fen":"6k1/5pp1/8/2Q1B3/3R4/1r6/6PP/7K w - - 0 1","line":["c5c8","g8h7","d4h4","h7g6","c8g4"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"Start with a check. Your queen moves first.","pts":40},{"id":"p33","fen":"6kn/5p1p/6p1/8/5Q1p/3R4/6PP/7K w - - 0 1","line":["f4f6","h7h6","d3d8","g8h7","d8h8"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"The first move is not a check, but it sets up a checkmate. Your queen moves first.","pts":40},{"id":"p34","fen":"7k/6pp/4N3/3B4/8/1p1R4/PPP5/2K5 w - - 0 1","line":["d5e4","h8g8","d3f3","g8h8","f3f8"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"The first move is not a check, but it sets up a checkmate. Your bishop moves first.","pts":40},{"id":"p35","fen":"2k5/ppp5/2r3R1/b7/8/8/PP5R/1K6 w - - 0 1","line":["h2h8","c8d7","h8h7","d7e8","g6g8"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"Start with a check. Your rook moves first.","pts":40},{"id":"p36","fen":"6k1/5pp1/8/8/p1Q1N3/8/PPP5/2K5 w - - 0 1","line":["e4g5","g7g6","c4f7","g8h8","f7f8"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"The first move is not a check, but it sets up a checkmate. Your knight moves first.","pts":40},{"id":"p37","fen":"2k5/ppp5/1Q6/4b3/1N6/1N6/6PP/7K w - - 0 1","line":["b6e6","c8d8","b3c5","e5h8","e6d7"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"Start with a check. Your queen moves first.","pts":40},{"id":"p38","fen":"6k1/rRr2ppp/8/8/8/1N6/3q2PP/7K w - - 0 1","line":["b7b8","c7c8","b8c8","d2d8","c8d8"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"Start with a check. Your rook moves first.","pts":40},{"id":"p39","fen":"7k/6pp/4r3/1R6/8/6r1/B1q3PP/7K w - - 0 1","line":["b5b8","c2c8","b8c8","e6e8","c8e8"],"mate":true,"theme":"Mate in 3","level":"Expert","hint":"Start with a check. Your rook moves first.","pts":40}],"courses":[{"id":"found","title":"Chess Basics","level":"Beginner","blurb":"Learn how each piece moves, how to win a game, and three special moves.","lessons":[{"id":"f1","title":"Meet the Board and the Pieces","minutes":8,"videoUrl":null,"key":"Piece points to remember: pawn 1, knight 3, bishop 3, rook 5, queen 9. The king can never be traded, so keep it safe.","steps":[{"fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","say":"This is the starting position. White always moves first, and each player has a light square in the right-hand corner."},{"say":"Columns are called files, a to h. Rows are ranks, 1 to 8. Every square has a name, like e4."},{"move":"e4","say":"Pawns move straight forward. On its first move a pawn may go two squares."},{"move":"e5","say":"Black answers the same way. Both sides now have a pawn in the centre."},{"move":"Nf3","say":"The knight moves in an L shape and is the only piece that can jump over others."},{"move":"Nc6","say":"Black develops a knight too, defending the e5 pawn."},{"move":"Bb5","say":"Bishops move diagonally and stay on one colour for the whole game."},{"move":"a6","say":"Pawns capture diagonally, so this pawn now attacks the bishop."},{"move":"Ba4","say":"The bishop steps back but keeps its diagonal. Rooks, the queen and the king join the game soon."}]},{"id":"f2","title":"Check and Checkmate: How to Win","minutes":10,"videoUrl":null,"key":"Before every move, ask yourself two questions: Is my king safe? Can my opponent give check?","steps":[{"fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","say":"A king under attack is in check. You must escape by moving the king, blocking, or capturing the attacker."},{"move":"f3","say":"Watch the shortest possible game. White weakens the squares around the king."},{"move":"e5","say":"Black opens a path for the queen."},{"move":"g4","say":"Another weakening move. The diagonal from h4 to e1 is now wide open."},{"move":"Qh4#","say":"Checkmate. The king is attacked and has no way to escape, block or capture. The game is over."},{"fen":"6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1","say":"Here is a second pattern. Black's king is trapped behind its own pawns."},{"move":"Rd8#","say":"The rook reaches the back rank. This is called a back-rank mate."},{"say":"Stalemate is different: the side to move has no legal move but is not in check. Stalemate is a draw."}]},{"id":"f3","title":"3 Special Moves: Castling, En Passant, Promotion","minutes":12,"videoUrl":null,"key":"Castle early. It hides your king and brings your rook into the game.","steps":[{"fen":"r3k2r/pppq1ppp/2n2n2/2bpp3/2B1P3/2NP1N2/PPPQ1PPP/R3K2R w KQkq - 0 1","say":"Castling moves the king two squares toward a rook, and the rook jumps over to the other side."},{"move":"O-O","say":"White castles short. The king lands on g1 and the rook on f1."},{"move":"O-O-O","say":"Black castles long. The king goes to c8 and the rook to d8."},{"say":"You can't castle out of check, through an attacked square, or after the king or that rook has moved."},{"fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","say":"Now en passant, the rule most beginners have never heard of."},{"move":"e4","say":"White pushes the e-pawn."},{"move":"Nf6","say":"Black develops."},{"move":"e5","say":"The pawn advances to the fifth rank."},{"move":"d5","say":"Black's pawn jumps two squares and lands right beside White's pawn."},{"move":"exd6","say":"White captures en passant, as if the black pawn had moved only one square. This is only allowed immediately."},{"fen":"8/4P1k1/8/8/8/8/6K1/8 w - - 0 1","say":"Last, promotion. A pawn that reaches the final rank becomes a new piece."},{"move":"e8=Q","say":"White chooses a queen, which is almost always the best choice."}]}]},{"id":"tac","title":"Winning Tricks","level":"Intermediate","blurb":"Simple tricks to win your opponent's pieces: forks, pins and back-rank traps.","lessons":[{"id":"t1","title":"Knight Fork: Attack Two Pieces at Once","minutes":9,"videoUrl":null,"key":"Look for a square where your knight attacks the king and another piece at the same time.","steps":[{"fen":"2q3k1/5ppp/8/3N4/8/8/5PPP/6K1 w - - 0 1","say":"A fork is one piece attacking two targets at once. Look at the black king and queen."},{"move":"Ne7+","say":"The knight gives check and attacks the queen at the same time."},{"move":"Kf8","say":"Black must deal with the check first."},{"move":"Nxc8","say":"White collects the queen. That is a gain of nine points of material."}]},{"id":"t2","title":"Pins: Freeze a Piece in Place","minutes":8,"videoUrl":null,"key":"A pinned piece can't run away, so attack it with a pawn.","steps":[{"fen":"4k3/7p/2n5/1B6/8/8/3P4/4K3 w - - 0 1","say":"The bishop on b5, the knight on c6 and the king on e8 sit on one diagonal."},{"say":"The knight is pinned. Moving it would expose the king, so it is not allowed."},{"move":"d4","say":"White brings a pawn forward to attack the pinned piece."},{"move":"h6","say":"Black has nothing useful to do."},{"move":"d5","say":"The pawn attacks the knight, and the knight cannot step away."},{"move":"h5","say":"Black waits again."},{"move":"dxc6","say":"White wins the knight with a pawn."}]},{"id":"t3","title":"Back-Rank Mate: Trap the King at Home","minutes":7,"videoUrl":null,"key":"Push one pawn in front of your castled king (like h3) so your king has an escape square.","steps":[{"fen":"6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1","say":"Black's king is castled, but all three pawns in front of it are still at home."},{"move":"Rd8#","say":"The rook arrives and it is mate. The king has no breathing room."},{"fen":"6k1/5pp1/7p/8/8/8/5PPP/3R2K1 w - - 0 1","say":"Same position, but Black played h6 earlier. This escape square is called a luft."},{"move":"Rd8+","say":"Now the check is harmless."},{"move":"Kh7","say":"The king walks to safety through the luft."}]}]},{"id":"open","title":"Starting the Game","level":"Intermediate","blurb":"How to play your first 10 moves well, without memorising anything.","lessons":[{"id":"o1","title":"3 Golden Rules for the Start","minutes":10,"videoUrl":null,"key":"By move 10, check: are your knights and bishops out, and is your king castled?","steps":[{"fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","say":"Three principles: control the centre, develop your pieces, and castle early."},{"move":"e4","say":"A centre pawn takes space and opens lines for the queen and bishop."},{"move":"e5","say":"Black claims an equal share of the centre."},{"move":"Nf3","say":"Knights first. This one attacks e5 and prepares castling."},{"move":"Nc6","say":"Black defends e5 while developing."},{"move":"Bc4","say":"The bishop aims at f7, the weakest square near Black's king."},{"move":"Bc5","say":"Black mirrors the idea."},{"move":"c3","say":"A quiet pawn move that prepares d4 to take the centre."},{"move":"Nf6","say":"Black develops the last knight and hits e4."},{"move":"d3","say":"White calmly defends e4."},{"move":"d6","say":"Black does the same."},{"move":"O-O","say":"White castles. King safe, rook connected."},{"move":"O-O","say":"Black castles too. Both sides followed all three principles."}]},{"id":"o2","title":"Starting with the d-Pawn","minutes":9,"videoUrl":null,"key":"When you start with the d-pawn, push your c-pawn to c4 to fight for the centre.","steps":[{"fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","say":"Now a slower, more strategic start with the queen's pawn."},{"move":"d4","say":"The d-pawn is protected by the queen from the beginning."},{"move":"d5","say":"Black blocks the pawn's advance."},{"move":"c4","say":"White offers a wing pawn to pull Black's central pawn away."},{"move":"e6","say":"Black keeps the centre solid instead of taking."},{"move":"Nc3","say":"More pressure on d5."},{"move":"Nf6","say":"Black defends d5 again."},{"move":"Bg5","say":"The bishop pins the knight to the queen."},{"move":"Be7","say":"Black breaks the pin and gets ready to castle."}]},{"id":"o3","title":"Don't Bring Your Queen Out Too Early","minutes":8,"videoUrl":null,"key":"If your opponent brings out pieces while chasing your queen, she came out too early.","steps":[{"fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","say":"What happens when the queen comes out on move two?"},{"move":"e4","say":"A normal first move."},{"move":"e5","say":"Black mirrors it."},{"move":"Qh5","say":"White's queen jumps out and attacks e5, with ideas against f7."},{"move":"Nc6","say":"Black defends e5 and develops a piece."},{"move":"Bc4","say":"Now White threatens Qxf7, which would be checkmate."},{"move":"g6","say":"Black blocks the queen's path and attacks her at the same time."},{"move":"Qf3","say":"The queen moves again, renewing the threat on f7."},{"move":"Nf6","say":"Black blocks with a developing move. White's queen has made three moves while Black built a solid position."}]}]},{"id":"end","title":"Finishing the Game","level":"Advanced","blurb":"When only a few pieces are left, learn how to turn your advantage into a win.","lessons":[{"id":"e1","title":"Checkmate with King and Queen","minutes":11,"videoUrl":null,"key":"Before a quiet queen move, check the other king still has a move. If it doesn't, the game is a draw.","steps":[{"fen":"k7/8/2K5/8/8/8/8/1Q6 w - - 0 1","say":"The black king is on the edge, and the white king stands close by."},{"say":"Careful: Qb6 here would leave Black with no legal moves and no check. That is stalemate, a draw."},{"say":"Look for a check where your king protects the queen."},{"move":"Qb7#","say":"Checkmate. The white king defends the queen on b7, and every escape square is covered."}]},{"id":"e2","title":"King Face-Off (The Opposition)","minutes":9,"videoUrl":null,"key":"Keep your king in front of your pawn and win the face-off with the other king. Then your pawn can usually become a queen.","steps":[{"fen":"8/8/4k3/8/4K3/4P3/8/8 b - - 0 1","say":"The kings face each other with one square between. Black must move, so White holds the opposition."},{"move":"Kd6","say":"Black has to give way."},{"move":"Kf5","say":"White's king advances to the side."},{"move":"Ke7","say":"Black tries to stay in front of the pawn."},{"move":"Ke5","say":"White takes the opposition again."},{"move":"Kf7","say":"Black must step aside once more."},{"move":"Kd6","say":"White's king moves forward. The pawn will follow and promote."}]},{"id":"e3","title":"Rook Wall: Cut Off the King","minutes":10,"videoUrl":null,"key":"Use your rook from far away to block the enemy king's path. Don't put it in front of your own pawn.","steps":[{"fen":"8/8/2k5/8/8/4K3/4P3/7R w - - 0 1","say":"White has an extra pawn. Black's king wants to get in front of it."},{"move":"Rd1","say":"The rook slides to the d-file and builds a wall. Black's king cannot cross it."},{"move":"Kc5","say":"Black's king looks for a way around."},{"move":"Kf4","say":"White's king steps up first, making room for the pawn."},{"move":"Kc6","say":"Black has nothing better than to wait."},{"move":"e4","say":"The pawn advances behind its king."},{"move":"Kc5","say":"The black king is still stuck on the wrong side of the wall."},{"move":"e5","say":"King and pawn march on together. The rook keeps the door shut from far away."}]}]}]};
 const COURSES=DATA.courses, PUZZLES=DATA.puzzles;
-const QUIZ=[
+/* Test knowledge questions, 4 tiers (Beginner → Expert). Answer index a is for the order written here; options are shuffled per test. */
+const QBANK=[
+ [
  {q:"Which piece can jump over other pieces?",o:["Bishop","Knight","Rook","Queen"],a:1},
- {q:"It's your turn. You're not in check, but you have no legal move. What happens?",o:["Checkmate, you lose","You lose on time","Stalemate, it's a draw","You skip your turn"],a:2},
  {q:"How many points is a rook worth?",o:["3","5","9","1"],a:1},
  {q:"Which of these means you can't castle right now?",o:["Your rook is attacked","You moved your queen","Your king is in check","You castled in an earlier game"],a:2},
+ {q:"Which 4 squares are the centre of the board?",o:["a1, h1, a8, h8","c3, f3, c6, f6","d4, e4, d5, e5","e1, e8, d1, d8"],a:2},
+ {q:"A pawn reaches the last row. Which piece can it NOT become?",o:["Queen","Knight","King","Rook"],a:2},
+ {q:"Why is bringing your queen out early often a mistake?",o:["It is against the rules","Enemy pieces develop while chasing it","It can't capture yet","It blocks castling"],a:1}
+ ],[
+ {q:"It's your turn. You're not in check, but you have no legal move. What happens?",o:["Checkmate, you lose","You lose on time","Stalemate, it's a draw","You skip your turn"],a:2},
  {q:"When can you make an en passant capture?",o:["Any time later","Only on the very next move","Only in the endgame","Only by the king's pawn"],a:1},
  {q:"A piece can't move at all because it's pinned. Which piece is hiding behind it?",o:["Queen","Rook","King","Pawn"],a:2},
  {q:"Why push a pawn like h3 in front of your castled king?",o:["To give the king an escape square","To castle again","To protect the queen","To attack the other king"],a:0},
- {q:"Which 4 squares are the centre of the board?",o:["a1, h1, a8, h8","c3, f3, c6, f6","d4, e4, d5, e5","e1, e8, d1, d8"],a:2},
- {q:"A pawn reaches the last row. Which piece can it NOT become?",o:["Queen","Knight","King","Rook"],a:2},
- {q:"Why is bringing your queen out early often a mistake?",o:["It is against the rules","Enemy pieces develop while chasing it","It can't capture yet","It blocks castling"],a:1},
  {q:"Two kings face each other with one square between them. The player who does NOT have to move has…",o:["Zugzwang","The opposition","A fortress","The tempo"],a:1},
  {q:"In a rook ending, where does your rook usually work best?",o:["In front of your king","Cutting off the enemy king along a file","Next to the enemy king","On its starting square"],a:1}
-];
+ ],[
+ {q:"In the Lucena position, which idea wins for the side with the pawn?",o:["Building a bridge with the rook","Checking from behind forever","Trading rooks at once","Walking the king to a corner"],a:0},
+ {q:"In the Philidor defence, where does the defender first put the rook?",o:["On its own back rank","On its third rank, keeping the enemy king out","Behind its own king","In a corner"],a:1},
+ {q:"In king and pawn against king, what are the squares called that win if your king reaches them?",o:["Key squares","Dark squares","Outposts","Holes"],a:0},
+ {q:"What does zugzwang mean?",o:["Every move you make makes your position worse","A double attack","A pawn about to promote","A draw by repetition"],a:0},
+ {q:"Which of these can NOT force checkmate against a lone king?",o:["King and two knights","King and rook","King, bishop and knight","King and two bishops"],a:0},
+ {q:"What is an outpost?",o:["A square enemy pawns can't attack, supported by your own pawn","Any square in the enemy half","The square in front of a passed pawn","A corner square"],a:0},
+ {q:"In the classic 'Greek gift' sacrifice, White's bishop takes on…",o:["h7","f7","e6","g2"],a:0}
+ ],[
+ {q:"White has king, bishop and h-pawn. The bishop can't reach h8, and Black's king gets to h8. Result?",o:["Draw","White wins","Black wins","White wins only if it is White's move"],a:0},
+ {q:"What is triangulation used for?",o:["To lose a move and pass the turn to your opponent","To attack three pieces","To guard the king with three pawns","To trap a knight"],a:0},
+ {q:"Queen against a pawn on the 7th rank, enemy king far away. Which pawns can often hold a draw?",o:["Bishop and rook pawns (a, c, f, h)","Centre pawns (d, e)","Knight pawns (b, g)","None of them"],a:0},
+ {q:"Endings with bishops of opposite colours and only pawns are often…",o:["Drawn even a pawn or two down","Always won by the side with more pawns","Lost by the side to move","Won by trading the bishops"],a:0},
+ {q:"With rooks on the board, where does a rook usually belong next to a passed pawn?",o:["Behind the passed pawn","In front of the passed pawn","Beside the pawn","On the first rank"],a:0},
+ {q:"A minority attack means…",o:["Pushing two pawns against three to create a weak pawn","Attacking the king with fewer pieces","Giving a pawn for development","Pushing the e-pawn early"],a:0},
+ {q:"In chess, a fortress is…",o:["A setup the stronger side can't break, so the game is a draw","Castling on both sides","A king left in the centre","Two rooks on one file"],a:0}
+ ]];
+const TIERS=["Beginner","Intermediate","Advanced","Expert"];
 const ALL_LESSONS=COURSES.flatMap(c=>c.lessons.map(l=>({...l,course:c})));
 const LEVELS=["Beginner","Intermediate","Advanced","Expert"];
 const HAS_CHESS=typeof Chess==="function";
@@ -895,15 +912,15 @@ function vHome(){
     <article class="tile t-continue">
       ${next?`<div class="tile-top"><span class="pill level">${nc.level}</span><span class="li-m">${esc(nc.title)} · lesson ${ni+1} of ${nc.lessons.length}</span></div>
       <h2 class="tile-h">${lessonsDone()?"Continue":"Start"}: ${esc(next.title)}</h2>
-      <p class="li-m">${next.minutes} min video lesson with voiceover. +20 XP when you finish.</p>
+      <p class="li-m">${next.minutes} min · +20 XP</p>
       <div class="row" style="margin-top:auto"><button class="btn big" data-open="${next.id}">▶ ${lessonsDone()?"Continue lesson":"Start learning"}</button>
         <div class="minibar"><div class="bar"><i style="width:${courseProgress(nc)/nc.lessons.length*100}%"></i></div><span class="li-m mono">${courseProgress(nc)}/${nc.lessons.length}</span></div></div>`
-      :`<div class="tile-top"><span class="pill done">All lessons watched</span></div><h2 class="tile-h">Brilliant! Now test yourself.</h2><p class="li-m">Take the ${QUIZ.length}-question test or keep sharpening with puzzles.</p><div class="row" style="margin-top:auto"><a class="btn big" href="#tests">Take the test</a></div>`}
+      :`<div class="tile-top"><span class="pill done">All lessons watched</span></div><h2 class="tile-h">Brilliant! Now test yourself.</h2><p class="li-m">A new test each time, matched to your puzzle level.</p><div class="row" style="margin-top:auto"><a class="btn big" href="#tests">Take the test</a></div>`}
       <div class="tile-art" aria-hidden="true">${next?COURSE_ICON[nc.level]||"♞":"♛"}</div>
     </article>
     <article class="tile t-goal">
       <div class="goal">${ring(tx/DAILY_GOAL*100,72,8)}<div class="goal-n"><b class="mono">${Math.min(tx,DAILY_GOAL)}</b><span>/${DAILY_GOAL}</span></div></div>
-      <div class="stack" style="gap:4px"><h3>Daily goal</h3><p class="li-m">${tx>=DAILY_GOAL?"Done for today. Great work!":`${DAILY_GOAL-tx} XP to go. One lesson or a few puzzles.`}</p></div>
+      <div class="stack" style="gap:4px"><h3>Daily goal</h3><p class="li-m">${tx>=DAILY_GOAL?"Done for today. Great work!":`${DAILY_GOAL-tx} XP to go`}</p></div>
       <div class="week" aria-label="XP this week">${wk.map(w=>`<div class="wd${w.today?" today":""}${w.xp?" on":""}" title="${w.k}: ${w.xp} XP"><i style="height:${Math.max(6,w.xp/maxw*100)}%"></i><span>${w.d}</span></div>`).join("")}</div>
     </article>
     <article class="tile t-puzzle">
@@ -927,7 +944,7 @@ function vHome(){
     <article class="tile t-stats">
       <div class="kpi"><b class="mono">${lessonsDone()}<small>/${ALL_LESSONS.length}</small></b><span>Lessons</span></div>
       <div class="kpi"><b class="mono">${puzzlesDone()}<small>/${PUZZLES.length}</small></b><span>Puzzles</span></div>
-      <div class="kpi"><b class="mono">${bestTest()??"–"}${bestTest()!=null?`<small>/${QUIZ.length}</small>`:""}</b><span>Best test</span></div>
+      <div class="kpi"><b class="mono">${bestTest()??"–"}${bestTest()!=null?`<small>/${TEST_N}</small>`:""}</b><span>Best test</span></div>
     </article>
   </section>
   <section class="stack view">
@@ -953,8 +970,7 @@ function afterHome(){
 
 function vCourses(){
   const nextId=(ALL_LESSONS.find(l=>!S.lessons[l.id])||{}).id;
-  return `<section class="stack view"><div class="eyebrow">Learning path</div><h1>From first moves to checkmate</h1>
-  <p class="li-m" style="max-width:62ch">Follow the path from top to bottom. Each stop is a short video lesson with a teacher's voice. Finish a lesson to earn 20 XP.</p></section>
+  return `<section class="stack view"><div class="eyebrow">Learning path</div><h1>From first moves to checkmate</h1></section>
   <section class="path view">${COURSES.map((c,ci)=>{const d=courseProgress(c),n=c.lessons.length;return `<div class="unit${d===n?" unit-done":""}">
     <header class="unit-h"><span class="unit-icon" aria-hidden="true">${COURSE_ICON[c.level]||"♞"}</span><div class="stack" style="gap:2px;min-width:0"><span class="eyebrow">Unit ${ci+1} · ${c.level}</span><h2>${esc(c.title)}</h2><span class="li-m">${esc(c.blurb)}</span></div>
       <div class="unit-prog">${ring(d/n*100,44,5)}<span class="mono">${d}/${n}</span></div></header>
@@ -962,7 +978,7 @@ function vCourses(){
       <button data-open="${l.id}" aria-label="${esc(l.title)}${done?", watched":cur?", up next":""}"><span class="node" aria-hidden="true">${done?"✓":cur?"▶":i+1}</span>
       <span class="stop-t"><b>${esc(l.title)}</b><span class="li-m mono">${l.minutes} min${done?" · watched":cur?" · up next":""}</span></span></button></li>`}).join("")}</ol>
   </div>`}).join("")}
-  <div class="unit unit-end"><header class="unit-h"><span class="unit-icon" aria-hidden="true">🏆</span><div class="stack" style="gap:2px"><span class="eyebrow">Finish line</span><h2>Take the test</h2><span class="li-m">${QUIZ.length} questions to check everything you learned.</span></div><a class="btn" href="#tests">Start test</a></header></div>
+  <div class="unit unit-end"><header class="unit-h"><span class="unit-icon" aria-hidden="true">🏆</span><div class="stack" style="gap:2px"><span class="eyebrow">Finish line</span><h2>Take the test</h2></div><a class="btn" href="#tests">Start test</a></header></div>
   </section>`;
 }
 
@@ -1007,15 +1023,14 @@ const prColor=c=>c.goal||!c.line.length?c.fen.split(" ")[1]:(c.orient==="black"?
 function vPractice(){
   if(!PR)return `<section class="stack view"><div class="eyebrow">Practice</div><h1>Practice makes perfect</h1><p class="li-m">Loading practice…</p></section>`;
   const total=PR.topics.reduce((a,t)=>a+t.chapters.length,0);
-  return `<section class="stack view"><div class="eyebrow">Practice · ${prAll()}/${total} done</div><h1>Practice makes perfect</h1>
-    <p class="li-m" style="max-width:64ch">${PR.topics.length} topics and ${total} positions. Play each one against the computer until you reach the goal. Every position you solve gives 10 XP.</p></section>
+  return `<section class="stack view"><div class="eyebrow">Practice · ${prAll()}/${total} done</div><h1>Practice makes perfect</h1></section>
   ${PR_SEC_ORDER.map(sid=>{const sec=PR.sections[sid],ts=PR.topics.filter(t=>t.section===sid);return `<section class="stack view prsec" data-sec="${sid}">
     <div class="prsec-h"><div class="stack" style="gap:2px"><h2>${esc(sec.title)}</h2><span class="li-m">${esc(sec.blurb)}</span></div></div>
     <div class="prgrid">${ts.map(t=>{const d=prDone(t),n=t.chapters.length,c0=t.chapters.find(c=>c.goal)||t.chapters[0];return `<a class="prcard${d===n?" done":""}" href="#drill?t=${t.id}">
       <span class="pricon" aria-hidden="true"><svg viewBox="0 0 24 24">${(PR.icons||{})[t.icon]||""}</svg></span>
       <span class="prcard-body"><b>${esc(t.title)}</b><span class="prcard-tag">${esc(t.tag)}</span>
       <span class="prcard-foot"><span class="bar"><i style="width:${d/n*100}%"></i></span><span class="mono">${d}/${n}</span></span></span></a>`}).join("")}</div></section>`}).join("")}
-  <p class="li-m view" style="font-size:.75rem">Positions from <a href="https://lichess.org/practice" target="_blank" rel="noopener">Lichess practice</a>. Engine: <a href="https://github.com/nmrugg/stockfish.js" target="_blank" rel="noopener">Stockfish</a> (GPLv3). Pieces: "cburnett" by Colin M.L. Burnett (GPLv2+).</p>`;
+`;
 }
 function afterPractice(){if(!PR)prLoad().then(()=>{if(route()==="practice")try{render()}catch(e){console.error(e)}}).catch(()=>{const a=$("#app");if(a)a.insertAdjacentHTML("beforeend",`<p class="feedback no">Couldn't load practice. Check your internet and try again.</p>`)})}
 
@@ -1205,7 +1220,7 @@ function vPuzzles(){
   const st=lvState(),total=LVD?LVD.length:115,cur=Math.min(st.unlocked,total),done=Object.keys(st.done).length,stars=Object.values(st.done).reduce((a,d)=>a+d.stars,0);
   const ranges=LV_STAGES.map(([,a,b])=>[a,Math.min(b,total)]).filter(r=>r[0]<=total);
   return `<div class="pmap view">${ranges.map((r,i)=>worldScene(i,r[0],r[1],st)).reverse().join("")}
-    <p class="pmap-credit">Puzzles from the <a href="https://database.lichess.org/#puzzles" target="_blank" rel="noopener">Lichess puzzle database</a> (CC0)</p></div>
+    </div>
   <div class="pbar" data-sec="puzzles"><div class="pbar-l"><span class="pbar-lv">Level ${cur}</span><span class="li-m">${WORLDS[ranges.findIndex(r=>cur>=r[0]&&cur<=r[1])]?.name||""} · ${done}/${total} done · ${stars} ★</span></div>
     <button class="pbar-go" data-lv="${cur}">${done?"Solve puzzles":"Start puzzles"}</button></div>`;
 }
@@ -1237,7 +1252,7 @@ function vPlevel(){
   else if(s==="ok"){stat=LVS.res[LVS.k]==="ok"?"<b>Correct!</b> +5 XP":"<b>Solved.</b> Next time, first try!";scls="ok"}
   else if(s==="no"){stat="Not the best move. Try again!";scls="no"}
   else if(s==="think")stat=LVS.ply===0?"Watch your opponent's move…":`<span class="spin sm" aria-hidden="true"></span> Opponent is replying…`;
-  else stat=LVS.ply<=1?`Find the best move for ${col}.`:"Good! Keep going.";
+  else stat=LVS.ply<=1?"Your move.":"Good! Keep going.";
   const nextBtn=LVS.complete?(l<LVD.length?`Go to Level ${l+1} →`:"Back to the path"):LVS.k<list.length-1?"Next puzzle →":"Finish level";
   const canNext=s==="ok"||LVS.complete;
   return `<section class="drill view" data-sec="puzzles">
@@ -1248,7 +1263,7 @@ function vPlevel(){
       <div class="ds-ht"><span class="eyebrow">Puzzles · rating ${p[3]}</span><h1>Level ${l}</h1></div></header>
     <div class="lvdots" aria-label="Puzzles in this level">${list.map((_,i)=>`<span class="${LVS.res[i]||""}${i===LVS.k?" cur":""}" title="Puzzle ${i+1}">${LVS.res[i]==="ok"?"✓":LVS.res[i]==="retry"?"•":i+1}</span>`).join("")}</div>
     <div class="ds-goal${s==="ok"?" ok":""}"><span class="ds-goal-i" aria-hidden="true">${s==="ok"?"✓":`<i class="tm ${LVS.color}"></i>`}</span>
-      <div><b>${s==="ok"&&p[4]?esc(themeLabel(p[4])):`${col} to move. Find the best move.`}</b><span>Puzzle ${LVS.k+1} of ${list.length}${s==="ok"?"":" · the theme is shown after you solve it"}</span></div></div>
+      <div><b>${s==="ok"&&p[4]?esc(themeLabel(p[4])):`${col} to move. Find the best move.`}</b><span>Puzzle ${LVS.k+1} of ${list.length}</span></div></div>
     <div class="ds-status ${scls}" role="status">${stat}</div>
     <div class="ds-tools">
       <button class="tbtn" id="lvHint" ${s==="idle"||s==="no"?"":"disabled"}><svg viewBox="0 0 24 24"><path d="M9 21h6M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5v1h6v-1c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span>Hint</span></button>
@@ -1316,7 +1331,7 @@ function vLesson(){
         </div>
         <button class="ctl txt" id="lpSpeed" aria-label="Playback speed">1×</button>
       </div>
-      <p class="voice-note">${VOICE_T[l.id]?(S.voice?"Narrated by Tripti. Press play to start. Turn the voice off with Voice at the top.":"Voice is off, so the lesson plays silently with subtitles. Turn it on with Voice at the top."):!TTS?"Voiceover isn't supported in this browser. Subtitles are shown instead.":S.voice?"Press play to hear the voiceover.":"Voiceover is off. Turn it on with Voice at the top."}</p>
+      ${!VOICE_T[l.id]&&!TTS?`<p class="voice-note">No voice in this browser. Read the subtitles.</p>`:""}
     </div>
     <div class="stack">
       <div class="keypoint"><div class="eyebrow">Remember this</div><p style="margin-top:4px">${esc(l.key)}</p></div>
@@ -1488,29 +1503,60 @@ function afterClassic(){
   document.querySelectorAll("[data-lvl]").forEach(b=>b.onclick=()=>{pzLevel=b.dataset.lvl;const list=PUZZLES.filter(x=>pzLevel==="All"||x.level===pzLevel);if(!list.some(x=>x.id===PZ.id))pzLoad((list.find(x=>!S.puzzles[x.id])||list[0]).id);render()});
 }
 
-/* ---------- Tests ---------- */
-let tq=0,tAns=[],tDone=false;
+/* ---------- Tests ----------
+   Each test: 3 knowledge questions + 7 "find the best move" positions.
+   Difficulty follows the puzzle level the student has reached (more puzzles solved → harder test). */
+const TEST_N=10;
+const testTotal=t=>t.total||12;
+function testTier(){const L=lvState().unlocked;return L<=5?0:L<=20?1:L<=45?2:3}
+function lvSolvedCount(){const st=lvState();return Object.keys(st.done).length*10+Object.values(st.part||{}).reduce((a,r)=>a+r.filter(x=>x==="ok").length,0)}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function testPuzzleQ(p){const g=new Chess(p[1]),mv=p[2].split(" ");
+  const op=g.move({from:mv[0].slice(0,2),to:mv[0].slice(2,4),promotion:mv[0][4]});if(!op)return null;
+  const u=mv[1],legal=g.moves({verbose:true});
+  const right=legal.find(m=>m.from===u.slice(0,2)&&m.to===u.slice(2,4)&&(!u[4]||m.promotion===u[4]));if(!right)return null;
+  const mates=m=>{g.move(m.san);const x=g.in_checkmate();g.undo();return x};
+  const others=legal.filter(m=>m.san!==right.san&&!mates(m));
+  const forcing=shuffle(others.filter(m=>m.captured||m.san.includes("+"))),samePc=shuffle(others.filter(m=>m.piece===right.piece&&!forcing.includes(m)));
+  const pick=[];for(const m of [...forcing,...samePc,...shuffle(others)])if(pick.length<3&&!pick.includes(m.san))pick.push(m.san);
+  if(pick.length<3)return null;
+  const o=shuffle([right.san,...pick]);
+  return {kind:"pz",fen:g.fen(),last:[op.from,op.to],color:g.turn(),o,a:o.indexOf(right.san),rating:p[3]}}
+function buildTest(){const tier=testTier(),L=lvState().unlocked,max=LVD.length;
+  const kq=shuffle(QBANK[tier]).slice(0,3).map(q=>{const o=shuffle(q.o);return {kind:"q",q:q.q,o,a:o.indexOf(q.o[q.a])}});
+  const start=Math.max(1,Math.min(L,max-6)),pq=[];
+  for(let l=start;l<=max&&pq.length<TEST_N-3;l++){for(const p of shuffle(LVD[l-1])){const q=testPuzzleQ(p);if(q){pq.push(q);break}}}
+  return {tier,level:L,qs:[...kq,...pq]}}
+let TT=null,tq=0,tAns=[],tDone=false;
 function vTests(){
-  if(tDone){const sc=tAns.filter((a,i)=>a===QUIZ[i].a).length;
+  if(!LVD)return `<section class="stack view"><p class="li-m">Loading test…</p></section>`;
+  if(!TT){TT=buildTest();tq=0;tAns=[];tDone=false}
+  const Q=TT.qs,n=Q.length,tierName=TIERS[TT.tier];
+  if(tDone){const sc=tAns.filter((a,i)=>a===Q[i].a).length;
     return `<section class="card stack view" style="max-width:680px">
-      <div class="eyebrow">Chess quiz · result</div><div class="score">${sc}/${QUIZ.length}</div>
-      <p>${sc===QUIZ.length?"Perfect score! Try the Expert puzzles next.":sc>=9?"Good job! Look at the ones you missed below.":"Watch the Chess Basics lessons again, then try once more."}</p>
+      <div class="eyebrow">${tierName} test · result</div><div class="score">${sc}/${n}</div>
+      <p>${sc===n?"Perfect! Solve more puzzle levels to unlock a harder test.":sc>=7?"Good job! Check the ones you missed below.":"Keep solving puzzle levels, then try again."}</p>
       <div style="overflow-x:auto"><table><thead><tr><th>Question</th><th>Your answer</th></tr></thead><tbody>
-      ${QUIZ.map((q,i)=>`<tr><td>${esc(q.q)}</td><td style="color:${tAns[i]===q.a?"var(--good)":"var(--accent)"}">${esc(q.o[tAns[i]])}${tAns[i]!==q.a?`<br><span class="li-m">Answer: ${esc(q.o[q.a])}</span>`:""}</td></tr>`).join("")}
+      ${Q.map((q,i)=>`<tr><td>${q.kind==="pz"?`Best move · rating ${q.rating}`:esc(q.q)}</td><td style="color:${tAns[i]===q.a?"var(--good)":"var(--accent)"}">${esc(q.o[tAns[i]])}${tAns[i]!==q.a?`<br><span class="li-m">Answer: ${esc(q.o[q.a])}</span>`:""}</td></tr>`).join("")}
       </tbody></table></div>
-      <div class="row"><button class="btn" id="retry">Retake test</button><a class="btn ghost" href="#progress" style="text-decoration:none">See progress</a></div></section>`}
-  const q=QUIZ[tq],ans=tAns[tq];
-  return `<section class="stack view" style="max-width:640px"><div class="eyebrow">Chess quiz</div><h1>Question ${tq+1} of ${QUIZ.length}</h1>
-    <div class="bar"><i style="width:${tq/QUIZ.length*100}%"></i></div></section>
-  <section class="card q view" style="max-width:640px"><h2 style="font-family:var(--f-body);font-size:1.15rem">${esc(q.q)}</h2>
+      <div class="row"><button class="btn" id="retry">New test</button><a class="btn ghost" href="#puzzles" style="text-decoration:none">Puzzles</a></div></section>`}
+  const q=Q[tq],ans=tAns[tq];
+  return `<section class="stack view" style="max-width:640px"><div class="eyebrow">${tierName} test</div><h1>Question ${tq+1} of ${n}</h1>
+    <div class="bar"><i style="width:${tq/n*100}%"></i></div></section>
+  <section class="card q view" style="max-width:640px">
+    ${q.kind==="pz"?`<h2 style="font-family:var(--f-body);font-size:1.15rem">${q.color==="w"?"White":"Black"} to move. Find the best move.</h2><div class="board" id="tBoard" style="max-width:360px;margin:4px auto 8px"></div>`
+      :`<h2 style="font-family:var(--f-body);font-size:1.15rem">${esc(q.q)}</h2>`}
     ${q.o.map((o,i)=>`<button class="opt ${ans!=null?(i===q.a?"right":i===ans?"wrong":""):""}" data-opt="${i}" ${ans!=null?"disabled":""}>${String.fromCharCode(65+i)}. ${esc(o)}</button>`).join("")}
-    <div class="row" style="justify-content:flex-end"><button class="btn" id="tnext" ${ans==null?"disabled":""}>${tq===QUIZ.length-1?"See result":"Next question"}</button></div>
+    <div class="row" style="justify-content:flex-end"><button class="btn" id="tnext" ${ans==null?"disabled":""}>${tq===n-1?"See result":"Next question"}</button></div>
   </section>`;
 }
 function afterTests(){
-  if(tDone){$("#retry").onclick=()=>{tq=0;tAns=[];tDone=false;render()};return}
-  document.querySelectorAll("[data-opt]").forEach(b=>b.onclick=()=>{tAns[tq]=+b.dataset.opt;sfx(tAns[tq]===QUIZ[tq].a?"right":"wrong");render()});
-  $("#tnext").onclick=()=>{if(tq<QUIZ.length-1){tq++}else{tDone=true;const sc=tAns.filter((a,i)=>a===QUIZ[i].a).length;S.tests.push({score:sc,at:new Date().toISOString()});save();award(sc*5)}render()};
+  if(!LVD){lvLoad().then(()=>{if(route()==="tests")render()}).catch(()=>{});return}
+  if(tDone){$("#retry").onclick=()=>{TT=null;render();window.scrollTo(0,0)};return}
+  const Q=TT.qs,q=Q[tq];
+  if(q.kind==="pz")drawBoard($("#tBoard"),q.fen,{flip:q.color==="b",hi:q.last});
+  document.querySelectorAll("[data-opt]").forEach(b=>b.onclick=()=>{tAns[tq]=+b.dataset.opt;sfx(tAns[tq]===q.a?"right":"wrong");render()});
+  $("#tnext").onclick=()=>{if(tq<Q.length-1){tq++}else{tDone=true;const sc=tAns.filter((a,i)=>a===Q[i].a).length;S.tests.push({score:sc,total:Q.length,tier:TT.tier,level:TT.level,at:new Date().toISOString()});save();award(sc*5)}render();window.scrollTo(0,0)};
 }
 
 /* ---------- Progress ---------- */
@@ -1522,7 +1568,7 @@ function vProgress(){
       <div class="ranks">${RANKS.map((r,i)=>`<div class="rk${i<rk.i?" past":i===rk.i?" now":""}" title="${r.n}: ${r.xp} XP"><span>${r.g}</span><small>${r.n}</small></div>`).join("")}</div>
       <div class="row" style="justify-content:space-between"><h2>${rk.cur.g} ${rk.cur.n}</h2><span class="mono li-m">${xp} XP</span></div>
       <div class="bar gold"><i style="width:${rk.pct}%"></i></div>
-      <span class="li-m">${rk.nxt?`${rk.nxt.xp-xp} XP until ${rk.nxt.n}. Lessons give 20 XP, puzzles give their points, the test gives 5 XP per right answer.`:"You reached the top rank!"}</span>
+      <span class="li-m">${rk.nxt?`${rk.nxt.xp-xp} XP until ${rk.nxt.n}`:"You reached the top rank!"}</span>
     </article>
     <article class="tile">
       <div class="row" style="justify-content:space-between"><h3>This week</h3><span class="li-m mono">${wsum} XP · 🔥 ${streak()}</span></div>
@@ -1531,7 +1577,7 @@ function vProgress(){
     <article class="tile t-stats">
       <div class="kpi"><b class="mono">${lessonsDone()}<small>/${ALL_LESSONS.length}</small></b><span>Lessons</span></div>
       <div class="kpi"><b class="mono">${points()}</b><span>Puzzle points</span></div>
-      <div class="kpi"><b class="mono">${bestTest()??"–"}${bestTest()!=null?`<small>/${QUIZ.length}</small>`:""}</b><span>Best test · ${S.tests.length} tr${S.tests.length===1?"y":"ies"}</span></div>
+      <div class="kpi"><b class="mono">${bestTest()??"–"}${bestTest()!=null?`<small>/${TEST_N}</small>`:""}</b><span>Best test · ${S.tests.length} tr${S.tests.length===1?"y":"ies"}</span></div>
     </article>
   </section>
   <section class="grid g2 view">
@@ -1545,8 +1591,8 @@ function vProgress(){
       </tbody></table></div>
   </section>
   ${S.tests.length?`<section class="card view" style="overflow-x:auto"><h2 style="margin-bottom:8px">Test history</h2><table><thead><tr><th>Date</th><th style="text-align:right">Score</th></tr></thead><tbody>
-    ${S.tests.slice().reverse().map(t=>`<tr><td>${new Date(t.at).toLocaleString()}</td><td class="num">${t.score}/${QUIZ.length}</td></tr>`).join("")}</tbody></table></section>`:""}
-  <section class="row view"><button class="btn ghost" id="resetAll">Reset all progress</button><span class="li-m">Progress is saved in this browser only.</span></section>`;
+    ${S.tests.slice().reverse().map(t=>`<tr><td>${new Date(t.at).toLocaleString()}</td><td class="num">${t.score}/${testTotal(t)}${t.tier!=null?` · ${TIERS[t.tier]}`:""}</td></tr>`).join("")}</tbody></table></section>`:""}
+  <section class="row view"><button class="btn ghost" id="resetAll">Reset all progress</button></section>`;
 }
 function afterProgress(){let armed=false;$("#resetAll").onclick=e=>{if(!armed){armed=true;e.target.textContent="Tap again to erase everything";return}
   S={lessons:{},puzzles:{},tests:[],days:{},practice:{},sound:S.sound,voice:S.voice,liveToken:S.liveToken};save();PZ=null;toast("Progress reset");render()}}
@@ -1595,13 +1641,13 @@ function authView(){
     </div>
     <form class="card login-card stack" id="loginForm" novalidate>
       <svg width="40" height="40" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="var(--accent)"/><circle cx="14" cy="9.2" r="3.6" fill="#FFFFFF"/><path d="M10.4 20.6c0-3.3 1.6-5.7 3.6-7.3 2 1.6 3.6 4 3.6 7.3z" fill="#FFFFFF"/><rect x="8.4" y="20.2" width="11.2" height="2.8" rx="1.4" fill="#FFFFFF"/></svg>
-      <div><h2>Sign in to Chess Sathi</h2><p class="li-m" style="margin-top:4px">Use the username and password your teacher gave you.</p></div>
+      <div><h2>Sign in to Chess Sathi</h2></div>
       ${AUTH.msg?`<div class="feedback no" role="alert">${esc(AUTH.msg)}</div>`:""}
       <label class="fld"><span>Username</span><input id="lgUser" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" required></label>
       <label class="fld"><span>Password</span><span class="pwrow"><input id="lgPw" type="password" autocomplete="current-password" required><button type="button" class="pwtog" id="lgShow" aria-pressed="false">Show</button></span></label>
       <div class="feedback no" id="lgMsg" role="alert" hidden></div>
       <button class="btn" type="submit" id="lgGo">Sign in</button>
-      <p class="li-m">Teachers: your username is <b>teacher</b>. Forgot your password? Ask your teacher for a new one.</p>
+      <p class="li-m">Forgot your password? Ask your teacher.</p>
     </form></section>`;
 }
 function bindAuth(){
@@ -1696,7 +1742,6 @@ function liveHome(root){
       <label class="fld" style="flex:1;min-width:110px"><span>Minutes</span><input id="lvDur" type="number" min="15" max="240" step="5" value="60" required></label></div>
       <button class="btn" type="submit">Add class</button><p class="li-m" id="lvNewMsg" role="status"></p></form>
     <form class="card stack" id="lvInv"><h2>Add a student</h2>
-      <p class="li-m">This makes a username and password for the student. Send it to them on WhatsApp.</p>
       <label class="fld"><span>Student's name</span><input id="lvSName" required maxlength="40"></label>
       <label class="fld"><span>Batch</span><input id="lvSBatch" required maxlength="40" list="lvBatches"></label>
       <button class="btn" type="submit">Create logins</button><p class="li-m" id="lvInvMsg" role="status"></p>
@@ -1740,11 +1785,6 @@ function render(){
   document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{curLesson=b.dataset.open;if(location.hash==="#lesson")render();else location.hash="lesson";window.scrollTo(0,0)});
   document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>location.hash=b.dataset.go);
 }
-function setupToggles(){const sb=$("#togSound"),vb=$("#togVoice");
-  const sync=()=>{sb.setAttribute("aria-pressed",S.sound);vb.setAttribute("aria-pressed",S.voice&&TTS);vb.disabled=!TTS};
-  sb.onclick=()=>{S.sound=!S.sound;save();sync();if(S.sound)sfx("move");toast(S.sound?"Sound on":"Sound off")};
-  vb.onclick=()=>{S.voice=!S.voice;save();sync();if(!S.voice)hush();toast(S.voice?"Voiceover on":"Voiceover off");if(route()==="lesson")render()};sync()}
-setupToggles();
 window.addEventListener("hashchange",()=>{if(route()==="lesson"&&!curLesson)curLesson=ALL_LESSONS[0].id;render();window.scrollTo(0,0)});
 if(route()==="lesson")curLesson=ALL_LESSONS[0].id;
 authCheck();
