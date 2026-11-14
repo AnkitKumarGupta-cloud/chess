@@ -748,6 +748,9 @@ main:has(> .drill){padding-top:12px!important}
   .pz{grid-template-columns:min(calc(100svh - var(--topgap) - 190px),calc(100vw - var(--sidew) - 412px)) 340px!important;justify-content:center;justify-items:stretch;align-items:start}
   .pz>div:first-child,.pz>.stack{width:auto}
 }
+.ds-goal b.ds-pos{font-size:1.3rem;line-height:1.25;font-weight:800}
+.ds-goal span.ds-goal-t{display:block;font-size:.95rem;color:var(--ink);margin-top:2px}
+@media (max-width:600px){.ds-goal b.ds-pos{font-size:1.1rem}.ds-goal span.ds-goal-t{font-size:.86rem}}
 </style>
 
 </head>
@@ -1079,7 +1082,6 @@ function vDrill(){
   if(!PRS||PRS.tid!==t.id){const first=t.chapters.findIndex((c,i)=>!(S.practice||{})[prKey(t,i)]);prOpen(t,first<0?0:first)}
   const c=t.chapters[PRS.i],done=(S.practice||{})[prKey(t,PRS.i)],n=t.chapters.length;
   const st=PRS.state,col=PRS.color==="w"?"White":"Black",g=c.goal;
-  const left=g&&g.n&&g.n<99&&g.type!=="promote"?Math.max(0,g.n-PRS.moves):null;
   const ICON=k=>`<svg viewBox="0 0 24 24">${(PR.icons||{})[k]||""}</svg>`;
   let stat="",scls="";
   if(st==="ok"){stat=`<b>Goal reached!</b> ${done&&!PRS.fresh?"Well played again.":"+10 XP"}`;scls="ok"}
@@ -1098,7 +1100,7 @@ function vDrill(){
       <div class="ds-ht"><span class="eyebrow">${esc(PR.sections[t.section].title)}</span><h1>${esc(t.title)}</h1></div></header>
     <details class="ds-about"${window.innerWidth>900?" open":""}><summary><span class="ds-about-i" aria-hidden="true">i</span>About this topic</summary><p>${esc(t.intro)}</p></details>
     <div class="ds-goal${st==="ok"?" ok":""}"><span class="ds-goal-i" aria-hidden="true">${st==="ok"?"✓":ICON("target")}</span>
-      <div><b>${esc(goalText(c,PRS.color))}</b><span>${esc(c.name)} · You play ${col}${left!=null&&st!=="ok"?` · <b>${left}</b> move${left===1?"":"s"} left`:""}</span></div></div>
+      <div><b class="ds-pos">${esc(c.name)}</b><span class="ds-goal-t">${esc(goalText(c,PRS.color))}</span></div></div>
     <div class="ds-status ${scls}" role="status"${stat?"":" hidden"}>${stat}</div>
     <div class="ds-tools">
       <button class="tbtn" id="prHint" ${st==="idle"||st==="no"?"":"disabled"} title="Show a hint"><svg viewBox="0 0 24 24"><path d="M9 21h6M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5v1h6v-1c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span>Hint</span></button>
