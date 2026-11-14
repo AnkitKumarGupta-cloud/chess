@@ -39,6 +39,8 @@ Vercel Deployment Protection must stay **off** for `chess-sathi-live`, or studen
 - **Puzzles:** 115 levels × 10 puzzles (rating ~500 → ~2800) from the Lichess puzzle database (CC0) on an illustrated map of 6 worlds (Meadow, Forest, Desert, Snow, Fire, Castle; artwork made with ChatGPT). Stars, unlocks, full screen. Old 39 classic puzzles still open from the home "Puzzle of the day" tile.
 - **Tests, Progress.** Progress is saved in each browser (not visible to the teacher yet).
 - **Full screen** button on practice and puzzle boards for screen sharing.
+- **Phones:** on practice and puzzle boards the board, status and Next button fit on one screen (checked at 360×640 up to 412×915). Students can "Add to Home screen" (`public/manifest.webmanifest`, icons in `public/icons/`) and it opens like an app, without the browser bar.
+- **Puzzle levels save after every puzzle** (`S.lv.part`), so a reload mid-level keeps the solved puzzles and reopens at the first unsolved one.
 - Pieces: "cburnett" set (Colin M.L. Burnett, GPLv2+). Board: our own brown colours. Move sounds are generated in the browser (no sound files).
 
 ## How to change things

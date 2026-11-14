@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Chess Sathi</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#C8323C">
+<link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
+<link rel="apple-touch-icon" href="/icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Chess Sathi">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
@@ -685,6 +693,32 @@ body[data-route="puzzles"] main{max-width:none!important;padding:0!important;gap
 .pc.b.pk-k{background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0NSIgaGVpZ2h0PSI0NSI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yMi41IDExLjYzVjYiIHN0cm9rZS1saW5lam9pbj0ibWl0ZXIiLz48cGF0aCBkPSJNMjIuNSAyNXM0LjUtNy41IDMtMTAuNWMwIDAtMS0yLjUtMy0yLjVzLTMgMi41LTMgMi41Yy0xLjUgMyAzIDEwLjUgMyAxMC41IiBmaWxsPSIjMDAwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjxwYXRoIGQ9Ik0xMS41IDM3YzUuNSAzLjUgMTUuNSAzLjUgMjEgMHYtN3M5LTQuNSA2LTEwLjVjLTQtNi41LTEzLjUtMy41LTE2IDRWMjd2LTMuNWMtMy41LTcuNS0xMy0xMC41LTE2LTQtMyA2IDUgMTAgNSAxMFYzN3oiIGZpbGw9IiMwMDAiLz48cGF0aCBkPSJNMjAgOGg1IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIi8+PHBhdGggZD0iTTMyIDI5LjVzOC41LTQgNi4wMy05LjY1QzM0LjE1IDE0IDI1IDE4IDIyLjUgMjQuNWwuMDEgMi4xLS4wMS0yLjFDMjAgMTggOS45MDYgMTQgNi45OTcgMTkuODVjLTIuNDk3IDUuNjUgNC44NTMgOSA0Ljg1MyA5IiBzdHJva2U9IiNlY2VjZWMiLz48cGF0aCBkPSJNMTEuNSAzMGM1LjUtMyAxNS41LTMgMjEgMG0tMjEgMy41YzUuNS0zIDE1LjUtMyAyMSAwbS0yMSAzLjVjNS41LTMgMTUuNS0zIDIxIDAiIHN0cm9rZT0iI2VjZWNlYyIvPjwvZz48L3N2Zz4=')}
 .pc{width:100%;height:100%;display:block;background-repeat:no-repeat;background-position:center;background-size:90%;font-size:0!important;color:transparent!important;text-shadow:none!important;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}
 .pc.inline{display:inline-block;width:26px;height:26px;vertical-align:-8px;background-size:contain;filter:none}
+/* Phones: board pages fit on one screen (board, status and Next without scrolling) */
+@media (max-width:600px){
+  main:has(> .drill){padding-top:10px!important;gap:10px}
+  .drill{gap:8px!important}
+  .drill .ds-head{gap:10px}
+  .drill .ds-head .pricon{display:none}
+  .drill .ds-ht .eyebrow{font-size:.66rem}
+  .drill .ds-ht h1{font-size:1.12rem}
+  .drill .ds-about{padding:7px 10px;font-size:.82rem}
+  .drill .ds-goal{padding:8px 10px;gap:10px;border-radius:12px}
+  .drill .ds-goal-i{width:28px;height:28px;border-radius:8px;font-size:.95rem}
+  .drill .ds-goal-i svg{width:16px;height:16px}
+  .drill .ds-goal b{font-size:.92rem}
+  .drill .ds-goal span{font-size:.76rem}
+  .drill[data-sec="puzzles"] .ds-goal span{display:none}
+  .drill .lvdots{gap:4px}.drill .lvdots span{border-radius:6px;font-size:.66rem}
+  .drill-board{gap:8px}
+  .drill-board .board{width:min(100%,calc(100svh - 372px));min-width:220px;margin-inline:auto}
+  .drill:has(.ds-about) .drill-board .board{width:min(100%,calc(100svh - 400px))}
+  .drill .ds-status{order:5;min-height:38px;padding:7px 10px;font-size:.9rem}
+  .drill .ds-next{order:6;min-height:48px;padding-block:10px}
+  .drill .ds-tools{order:7;gap:6px}
+  .drill .tbtn{padding:7px 2px;font-size:.68rem;white-space:nowrap;gap:2px}
+  .drill .tbtn svg{width:18px;height:18px}
+  .coord{font-size:max(9px,2.2cqw)}
+}
 </style>
 
 </head>
@@ -1183,18 +1217,20 @@ function afterPuzzles(){__mapW=document.querySelector("main")?.clientWidth||0;
 }
 
 function lvParam(){const m=location.hash.match(/[?&]l=(\d+)/);return m?+m[1]:lvState().unlocked}
-function lvOpen(l,k){const p=LVD[l-1][k];const prev=LVS&&LVS.l===l?LVS.res:Array(LVD[l-1].length).fill(null);
+function lvPart(l){const st=lvState();st.part=st.part||{};const n=LVD[l-1].length,a=st.part[l];
+  if(Array.isArray(a)&&a.length===n)return a.slice();return Array(n).fill(null)}
+function lvOpen(l,k){const p=LVD[l-1][k];const prev=LVS&&LVS.l===l?LVS.res:lvPart(l);
   LVS={l,k,res:prev,g:new Chess(p[1]),moves:p[2].split(" "),ply:0,sel:null,state:"think",msg:"",last:[],bad:[],hint:null,promo:null,anim:null,miss:false,shown:false};
   LVS.color=LVS.g.turn()==="w"?"b":"w";const tok=LVS;
   setTimeout(()=>{if(LVS!==tok)return;lvPlay(LVS.moves[0]);LVS.ply=1;LVS.state="idle";render()},650)}
 function lvPlay(u){const mv=LVS.g.move({from:u.slice(0,2),to:u.slice(2,4),promotion:u[4]});if(mv){moveSound(mv,LVS.g);LVS.anim=[mv.from,mv.to];LVS.last=[mv.from,mv.to]}return mv}
-function lvSolved(){const st=lvState();LVS.state="ok";if(LVS.res[LVS.k]==null)LVS.res[LVS.k]=LVS.miss?"retry":"ok";if(LVS.res[LVS.k]==="ok")award(5);setTimeout(()=>sfx("solved"),200);
-  if(LVS.res.every(x=>x)){const stars=lvStars(LVS.res),prev=st.done[LVS.l];st.done[LVS.l]={stars:Math.max(stars,prev?prev.stars:0)};if(st.unlocked<=LVS.l)st.unlocked=LVS.l+1;LVS.complete=stars;save()}
+function lvSolved(){const st=lvState();LVS.state="ok";if(LVS.res[LVS.k]==null)LVS.res[LVS.k]=LVS.miss?"retry":"ok";st.part=st.part||{};st.part[LVS.l]=LVS.res.slice();save();if(LVS.res[LVS.k]==="ok")award(5);setTimeout(()=>sfx("solved"),200);
+  if(LVS.res.every(x=>x)){delete st.part[LVS.l];const stars=lvStars(LVS.res),prev=st.done[LVS.l];st.done[LVS.l]={stars:Math.max(stars,prev?prev.stars:0)};if(st.unlocked<=LVS.l)st.unlocked=LVS.l+1;LVS.complete=stars;save()}
   render()}
 function vPlevel(){
   if(!LVD)return `<section class="stack view"><p class="li-m">Loading puzzles…</p></section>`;
   const st=lvState(),l=Math.max(1,Math.min(lvParam(),st.unlocked,LVD.length)),list=LVD[l-1];
-  if(!LVS||LVS.l!==l){const first=0;LVS=null;lvOpen(l,first)}
+  if(!LVS||LVS.l!==l){const part=lvPart(l),first=Math.max(0,part.findIndex(x=>!x));LVS=null;lvOpen(l,first)}
   const p=list[LVS.k],s=LVS.state,col=LVS.color==="w"?"White":"Black";
   let stat="",scls="";
   if(LVS.complete){stat=`<b>Level ${l} complete!</b> ${starsHtml(LVS.complete)}`;scls="ok"}
@@ -1324,7 +1360,7 @@ function afterLesson(){
   const finish=()=>{LP.playing=false;LP.i=n-1;paint(false);document.querySelectorAll("#lpScrub button").forEach(b=>b.classList.add("on"));
     if(!S.lessons[l.id]){S.lessons[l.id]=true;save();award(20);toast("Lesson watched");const b=$("#doneBtn");b.textContent="Watched ✓";b.classList.add("ghost")}};
   audio.addEventListener("ended",finish);
-  audio.addEventListener("error",()=>{if(LP.audio!==audio||LP.failed)return;LP.failed=true;toast("Couldn't load the recorded voice. Using the browser voice instead.");stopLesson();afterLessonTTS()});
+  audio.addEventListener("error",()=>{if(LP.audio!==audio||LP.failed)return;LP.failed=true;if(!$("#lpTime")){stopLesson();return}toast("Couldn't load the recorded voice. Using the browser voice instead.");stopLesson();afterLessonTTS()});
   const play=()=>{ac();audio.playbackRate=LP.speed;const p=audio.play();LP.playing=true;paint(false);
     if(p&&p.catch)p.catch(()=>{LP.playing=false;paint(false)})};
   const pause=()=>{audio.pause();LP.playing=false;paint(false)};
