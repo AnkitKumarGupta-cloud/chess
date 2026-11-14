@@ -489,6 +489,26 @@ a.back{text-decoration:none}
 .board{box-shadow:0 0 0 1px rgba(0,0,0,.12),0 8px 24px rgba(0,0,0,.12)}
 .board.mini .pc{font-size:12.5cqw}
 .board.mini .pc.b{text-shadow:none}
+
+/* Practice v3: icon tiles */
+.prsec{--c1:#9B5DE5;--c2:#7B3FC4}
+.prsec[data-sec="checkmates"]{--c1:#E2565E;--c2:#B8323B}
+.prsec[data-sec="fundamental-tactics"]{--c1:#F0A43A;--c2:#D2801A}
+.prsec[data-sec="advanced-tactics"]{--c1:#9B6BEA;--c2:#7146C8}
+.prsec[data-sec="pawn-endgames"]{--c1:#3DB980;--c2:#22915F}
+.prsec[data-sec="rook-endgames"]{--c1:#4C8FE8;--c2:#2D6CC4}
+.prsec-h h2{font-size:1.5rem;font-weight:400;letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.prsec-h{border-left:4px solid var(--c1);padding-left:14px}
+.prcard{align-items:center;padding:14px;gap:16px}
+.pricon{width:72px;height:72px;flex:none;border-radius:16px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,var(--c1),var(--c2));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 16px color-mix(in srgb,var(--c2) 35%,transparent)}
+.pricon svg{width:38px;height:38px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.prcard-body b{font-size:1.15rem;font-weight:700}
+.prcard-tag{color:var(--muted);font-size:.92rem}
+.prcard-foot .bar i{background:var(--c1)}
+.prcard:hover{border-color:color-mix(in srgb,var(--c1) 50%,var(--line))}
+.prcard:hover .pricon{transform:rotate(-4deg) scale(1.04)}
+.pricon{transition:transform .18s ease}
+@media (max-width:640px){.pricon{width:60px;height:60px;border-radius:14px}.pricon svg{width:32px;height:32px}.prsec-h h2{font-size:1.2rem}}
 </style>
 
 </head>
@@ -779,11 +799,11 @@ function vPractice(){
   const total=PR.topics.reduce((a,t)=>a+t.chapters.length,0);
   return `<section class="stack view"><div class="eyebrow">Practice · ${prAll()}/${total} done</div><h1>Practice makes perfect</h1>
     <p class="li-m" style="max-width:64ch">${PR.topics.length} topics and ${total} positions. Play each one against the computer until you reach the goal. Every position you solve gives 10 XP.</p></section>
-  ${PR_SEC_ORDER.map(sid=>{const sec=PR.sections[sid],ts=PR.topics.filter(t=>t.section===sid);return `<section class="stack view prsec">
-    <div class="prsec-h"><span class="prsec-i" aria-hidden="true">${sec.icon}</span><div class="stack" style="gap:2px"><h2>${esc(sec.title)}</h2><span class="li-m">${esc(sec.blurb)}</span></div></div>
+  ${PR_SEC_ORDER.map(sid=>{const sec=PR.sections[sid],ts=PR.topics.filter(t=>t.section===sid);return `<section class="stack view prsec" data-sec="${sid}">
+    <div class="prsec-h"><div class="stack" style="gap:2px"><h2>${esc(sec.title)}</h2><span class="li-m">${esc(sec.blurb)}</span></div></div>
     <div class="prgrid">${ts.map(t=>{const d=prDone(t),n=t.chapters.length,c0=t.chapters.find(c=>c.goal)||t.chapters[0];return `<a class="prcard${d===n?" done":""}" href="#drill?t=${t.id}">
-      <div class="board mini" data-fen="${esc(c0.fen)}" data-flip="${prColor(c0)==="b"?1:""}" aria-hidden="true"></div>
-      <span class="prcard-body"><b>${esc(t.title)}</b><span class="li-m prcard-d">${esc(t.intro)}</span>
+      <span class="pricon" aria-hidden="true"><svg viewBox="0 0 24 24">${PR.icons[t.icon]||""}</svg></span>
+      <span class="prcard-body"><b>${esc(t.title)}</b><span class="prcard-tag">${esc(t.tag)}</span>
       <span class="prcard-foot"><span class="bar"><i style="width:${d/n*100}%"></i></span><span class="mono">${d}/${n}</span></span></span></a>`}).join("")}</div></section>`}).join("")}
   <p class="li-m view" style="font-size:.75rem">Positions from <a href="https://lichess.org/practice" target="_blank" rel="noopener">Lichess practice</a>. Engine: <a href="https://github.com/nmrugg/stockfish.js" target="_blank" rel="noopener">Stockfish</a> (GPLv3).</p>`;
 }
