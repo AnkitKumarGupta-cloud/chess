@@ -460,6 +460,35 @@ nav.tabs a[aria-current="page"]{background:var(--accent-soft);color:var(--accent
 .promo{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
 a.back{text-decoration:none}
 @media (max-width:720px){nav.tabs a{padding:6px 2px!important;font-size:.6rem!important}}
+
+/* Practice v2: board thumbnails, lighter type */
+.prsec{gap:16px}
+.prsec-h h2{font-family:var(--f-body);font-weight:800;font-size:1.3rem;letter-spacing:-.01em}
+.prsec-i{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.prgrid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.prcard{flex-direction:row;align-items:stretch;gap:14px;padding:12px;border-radius:18px}
+.prcard .board.mini{width:112px;min-width:112px;max-width:112px;height:112px;border-radius:10px;box-shadow:0 0 0 1px var(--line);pointer-events:none}
+.board.mini .coord{display:none}
+.prcard-body{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1;padding:2px 2px 0 0}
+.prcard-body b{font-family:var(--f-body);font-weight:800;font-size:1.02rem;letter-spacing:-.01em}
+.prcard-d{font-size:.84rem;line-height:1.4}
+.prcard-foot{display:flex;align-items:center;gap:8px;margin-top:auto;font-size:.75rem;color:var(--muted)}
+.prcard-foot .bar{flex:1;height:6px}
+.prcard.done .bar i{background:var(--good)}
+.prcard.done .prcard-body b::after{content:" ✓";color:var(--good)}
+.prcard:hover{border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
+@media (max-width:640px){.prgrid{grid-template-columns:1fr}.prcard .board.mini{width:84px;min-width:84px;height:84px}}
+/* lighter headings on cards everywhere */
+.tile h3,.ccard b,.unit-h h2,.course h2,.card h2{font-family:var(--f-body);font-weight:800;letter-spacing:-.01em}
+
+/* Classic wooden board (all boards) */
+:root{--sq-light:#F0DDBA;--sq-dark:#B98A61;--sq-hi:#E8C547;--sq-sel:#7FB1D8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--sq-light:#E3CDA6;--sq-dark:#A97C55;--sq-hi:#E0BB3E;--sq-sel:#5B9BCB}}
+:root[data-theme="dark"]{--sq-light:#E3CDA6;--sq-dark:#A97C55;--sq-hi:#E0BB3E;--sq-sel:#5B9BCB}
+.sq .coord{color:var(--sq-dark)} .sq.d .coord{color:var(--sq-light)}
+.board{box-shadow:0 0 0 1px rgba(0,0,0,.12),0 8px 24px rgba(0,0,0,.12)}
+.board.mini .pc{font-size:12.5cqw}
+.board.mini .pc.b{text-shadow:none}
 </style>
 
 </head>
@@ -752,11 +781,13 @@ function vPractice(){
     <p class="li-m" style="max-width:64ch">${PR.topics.length} topics and ${total} positions. Play each one against the computer until you reach the goal. Every position you solve gives 10 XP.</p></section>
   ${PR_SEC_ORDER.map(sid=>{const sec=PR.sections[sid],ts=PR.topics.filter(t=>t.section===sid);return `<section class="stack view prsec">
     <div class="prsec-h"><span class="prsec-i" aria-hidden="true">${sec.icon}</span><div class="stack" style="gap:2px"><h2>${esc(sec.title)}</h2><span class="li-m">${esc(sec.blurb)}</span></div></div>
-    <div class="prgrid">${ts.map(t=>{const d=prDone(t),n=t.chapters.length;return `<a class="prcard${d===n?" done":""}" href="#drill?t=${t.id}">
-      <span class="prcard-top"><b>${esc(t.title)}</b>${ring(d/n*100,30,4)}</span><span class="li-m prcard-d">${esc(t.intro)}</span><span class="li-m mono">${d}/${n} solved</span></a>`}).join("")}</div></section>`}).join("")}
+    <div class="prgrid">${ts.map(t=>{const d=prDone(t),n=t.chapters.length,c0=t.chapters.find(c=>c.goal)||t.chapters[0];return `<a class="prcard${d===n?" done":""}" href="#drill?t=${t.id}">
+      <div class="board mini" data-fen="${esc(c0.fen)}" data-flip="${prColor(c0)==="b"?1:""}" aria-hidden="true"></div>
+      <span class="prcard-body"><b>${esc(t.title)}</b><span class="li-m prcard-d">${esc(t.intro)}</span>
+      <span class="prcard-foot"><span class="bar"><i style="width:${d/n*100}%"></i></span><span class="mono">${d}/${n}</span></span></span></a>`}).join("")}</div></section>`}).join("")}
   <p class="li-m view" style="font-size:.75rem">Positions from <a href="https://lichess.org/practice" target="_blank" rel="noopener">Lichess practice</a>. Engine: <a href="https://github.com/nmrugg/stockfish.js" target="_blank" rel="noopener">Stockfish</a> (GPLv3).</p>`;
 }
-function afterPractice(){if(!PR)prLoad().then(()=>{if(route()==="practice")render()}).catch(()=>{const a=$("#app");if(a)a.insertAdjacentHTML("beforeend",`<p class="feedback no">Couldn't load practice. Check your internet and try again.</p>`)})}
+function afterPractice(){document.querySelectorAll(".board.mini").forEach(el=>drawBoard(el,el.dataset.fen,{flip:!!el.dataset.flip}));if(!PR)prLoad().then(()=>{if(route()==="practice")render()}).catch(()=>{const a=$("#app");if(a)a.insertAdjacentHTML("beforeend",`<p class="feedback no">Couldn't load practice. Check your internet and try again.</p>`)})}
 
 function prParam(){const m=location.hash.match(/[?&]t=([^&]+)/);return m?decodeURIComponent(m[1]):""}
 function prOpen(t,i){const c=t.chapters[i],g=new Chess(c.fen);PRS={tid:t.id,i,g,color:prColor(c),moves:0,ply:0,sel:null,state:"idle",msg:"",last:[],bad:[],hint:null,promo:null,anim:null,hist:[]};
