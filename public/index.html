@@ -847,11 +847,12 @@ function sfx(kind){if(!S.sound)return;const c=ac();if(!c)return;sndLoad();const 
   if(kind==="move")knock(t,"move");
   else if(kind==="capture")knock(t,"capture",1.1);
   else if(kind==="castle"){knock(t,"move");knock(t+.12,"move2")}
-  else if(kind==="check"){knock(t,"move");tone(t+.05,880,.16,.06,"sine");tone(t+.13,1175,.2,.05,"sine")}
-  else if(kind==="mate"){knock(t,"capture",1.1);[523,659,784,1047].forEach((f,i)=>tone(t+.1+i*.09,f,.35,.08,"sine"))}
+  else if(kind==="check")knock(t,"move");
+  else if(kind==="mate")knock(t,"capture",1.1);
   else if(kind==="wrong"){tone(t,330,.18,.08,"sine");tone(t+.1,262,.25,.07,"sine")}
   else if(kind==="right"){tone(t,784,.15,.08,"sine");tone(t+.09,1047,.25,.08,"sine")}
-  else if(kind==="solved"){[659,784,988,1319].forEach((f,i)=>tone(t+i*.08,f,.35,.08,"sine"))}}
+  else if(kind==="solved"){tone(t,784,.22,.045,"sine");tone(t+.11,1175,.4,.04,"sine")}}
+const SOLVED_DELAY=380; /* after the ~200ms knock has finished, so the two never overlap */
 function moveSound(m,g){if(!m)return;if(g&&g.in_checkmate())return sfx("mate");if(g&&g.in_check())return sfx("check");
   if(m.flags&&(m.flags.includes("k")||m.flags.includes("q")))return sfx("castle");sfx(m.captured?"capture":"move")}
 function sanSound(san){if(!san)return;if(san.includes("#"))sfx("mate");else if(san.includes("+"))sfx("check");else if(san.startsWith("O-O"))sfx("castle");else if(san.includes("x"))sfx("capture");else sfx("move")}
@@ -1112,7 +1113,7 @@ function vDrill(){
   </aside>
 </section>`;
 }
-function prSolved(){const t=PR.topics.find(x=>x.id===PRS.tid),k=prKey(t,PRS.i);PRS.state="ok";setTimeout(()=>sfx("solved"),200);
+function prSolved(){const t=PR.topics.find(x=>x.id===PRS.tid),k=prKey(t,PRS.i);PRS.state="ok";setTimeout(()=>sfx("solved"),SOLVED_DELAY);
   S.practice=S.practice||{};if(!S.practice[k]){S.practice[k]=true;PRS.fresh=true;save();award(10)}render()}
 function prFail(msg){PRS.state="fail";PRS.msg=msg;sfx("wrong");render()}
 function prPlay(m){const mv=PRS.g.move(m);if(!mv)return null;moveSound(mv,PRS.g);PRS.anim=[mv.from,mv.to];PRS.last=[mv.from,mv.to];return mv}
@@ -1265,7 +1266,7 @@ function lvOpen(l,k){const p=LVD[l-1][k];const prev=LVS&&LVS.l===l?LVS.res:lvPar
   LVS.color=LVS.g.turn()==="w"?"b":"w";const tok=LVS;
   setTimeout(()=>{if(LVS!==tok)return;lvPlay(LVS.moves[0]);LVS.ply=1;LVS.state="idle";render()},650)}
 function lvPlay(u){const mv=LVS.g.move({from:u.slice(0,2),to:u.slice(2,4),promotion:u[4]});if(mv){moveSound(mv,LVS.g);LVS.anim=[mv.from,mv.to];LVS.last=[mv.from,mv.to]}return mv}
-function lvSolved(){const st=lvState();LVS.state="ok";if(LVS.res[LVS.k]==null)LVS.res[LVS.k]=LVS.miss?"retry":"ok";st.part=st.part||{};st.part[LVS.l]=LVS.res.slice();save();if(LVS.res[LVS.k]==="ok")award(5);setTimeout(()=>sfx("solved"),200);
+function lvSolved(){const st=lvState();LVS.state="ok";if(LVS.res[LVS.k]==null)LVS.res[LVS.k]=LVS.miss?"retry":"ok";st.part=st.part||{};st.part[LVS.l]=LVS.res.slice();save();if(LVS.res[LVS.k]==="ok")award(5);setTimeout(()=>sfx("solved"),SOLVED_DELAY);
   if(LVS.res.every(x=>x)){delete st.part[LVS.l];const stars=lvStars(LVS.res),prev=st.done[LVS.l];st.done[LVS.l]={stars:Math.max(stars,prev?prev.stars:0)};if(st.unlocked<=LVS.l)st.unlocked=LVS.l+1;LVS.complete=stars;save()}
   render()}
 function vPlevel(){
@@ -1508,7 +1509,7 @@ function afterClassic(){
       if(!ok){g.undo();sfx("wrong");PZ.state="no";PZ.bad=[m.from,m.to];PZ.last=[];render();return}
       moveSound(m,g);PZ.anim=[m.from,m.to];
       PZ.bad=[];PZ.last=[m.from,m.to];PZ.ply++;
-      if(PZ.ply>=p.line.length){PZ.state="ok";setTimeout(()=>sfx("solved"),g.in_checkmate()?450:120);if(!S.puzzles[p.id]){S.puzzles[p.id]=true;save();award(p.pts)}render();return}
+      if(PZ.ply>=p.line.length){PZ.state="ok";setTimeout(()=>sfx("solved"),SOLVED_DELAY);if(!S.puzzles[p.id]){S.puzzles[p.id]=true;save();award(p.pts)}render();return}
       PZ.state="wait";render();
       setTimeout(()=>{const r=p.line[PZ.ply];const rm=g.move({from:r.slice(0,2),to:r.slice(2,4),promotion:"q"});moveSound(rm,g);PZ.anim=rm?[rm.from,rm.to]:null;PZ.last=rm?[rm.from,rm.to]:[];PZ.ply++;PZ.state="idle";render()},650);
     }:null});
