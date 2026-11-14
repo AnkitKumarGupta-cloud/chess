@@ -1,12 +1,12 @@
 import crypto from "node:crypto";
-import { handler, HttpError, whoIs, mustBeTeacher, listClasses, getClassFor, putClass, removeClass, liveRooms, slug, recordingReady, stopRecording } from "./_lib.js";
+import { sameBatch, handler, HttpError, whoIs, mustBeTeacher, listClasses, getClassFor, putClass, removeClass, liveRooms, slug, recordingReady, stopRecording } from "./_lib.js";
 
 export default handler(async ({ req, body, query }) => {
   const me = await whoIs(req);
   if (req.method === "GET") {
     // The class list and LiveKit's "who is in which room" are fetched at the same time.
     const [all, roomsOrErr] = await Promise.all([listClasses(), liveRooms().catch((e) => e)]);
-    const mine = all.filter((c) => me.role === "teacher" || c.batch === me.batch);
+    const mine = all.filter((c) => me.role === "teacher" || sameBatch(c.batch, me.batch));
     let rooms = {};
     if (roomsOrErr instanceof Error) { const e = roomsOrErr; if (!(e instanceof HttpError)) throw e; if (e.code === "setup" && me.role === "teacher") throw e; }
     else rooms = roomsOrErr;
