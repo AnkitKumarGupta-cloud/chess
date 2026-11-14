@@ -101,3 +101,14 @@ delete process.env.LIVEKIT_API_KEY;
 const noLive = await call("join", { method: "POST", auth: P, body: { classId: c1.id } });
 assert.equal(noLive.status, 503); assert.match(noLive.error, /LIVEKIT_API_KEY/);
 console.log("All API checks passed.");
+
+// Batches typed differently still match ("Batch 1" == "batch1").
+{
+  const lib = await import("../api/_lib.js");
+  assert.equal(lib.sameBatch("batch-1", "batch1"), true);
+  assert.equal(lib.sameBatch("Beginners Saturday", "beginners-saturday"), true);
+  assert.equal(lib.sameBatch("batch1", "batch2"), false);
+  assert.equal(lib.sameBatch("", ""), false);
+  assert.equal(lib.canSee({ role: "student", batch: "batch1" }, { batch: "batch-1" }), true);
+  console.log("Batch matching checks passed.");
+}

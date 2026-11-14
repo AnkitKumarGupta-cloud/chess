@@ -148,7 +148,10 @@ export async function whoIs(req) {
 export function mustBeTeacher(user) { if (user.role !== "teacher") throw new HttpError(403, "Only the teacher can do this."); }
 
 /* ---------- Classes ---------- */
-export const canSee = (user, cls) => user.role === "teacher" || user.batch === cls.batch;
+// Batches match even if typed differently: "Batch 1", "batch1" and "BATCH-1" are the same batch.
+export const batchKey = (b) => String(b || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+export const sameBatch = (a, b) => !!batchKey(a) && batchKey(a) === batchKey(b);
+export const canSee = (user, cls) => user.role === "teacher" || sameBatch(user.batch, cls.batch);
 export async function listClasses() {
   const ids = (await kv("SMEMBERS", "classes")) || [];
   if (!ids.length) return [];
