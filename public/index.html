@@ -445,6 +445,21 @@ nav.tabs a[aria-current="page"]{background:var(--accent-soft);color:var(--accent
 .chip{font-weight:700}
 .toast{border-radius:12px;box-shadow:var(--shadow-up)}
 .login-card{border-radius:24px}
+
+/* Practice */
+.prsec-h{display:flex;align-items:center;gap:14px}
+.prsec-i{width:48px;height:48px;border-radius:14px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;font-size:1.7rem;box-shadow:var(--shadow);flex:none}
+.prgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.prcard{display:flex;flex-direction:column;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:transform .15s ease,box-shadow .2s ease}
+.prcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
+.prcard.done{border-color:color-mix(in srgb,var(--good) 45%,var(--line))}
+.prcard.done .ring-fg{stroke:var(--good)}
+.prcard-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.prcard-top b{font-family:var(--f-display);font-size:.98rem}
+.prcard-d{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.promo{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+a.back{text-decoration:none}
+@media (max-width:720px){nav.tabs a{padding:6px 2px!important;font-size:.6rem!important}}
 </style>
 
 </head>
@@ -458,6 +473,7 @@ nav.tabs a[aria-current="page"]{background:var(--accent-soft);color:var(--accent
     <a href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>Home</a>
     <a href="#courses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h7a2 2 0 012 2v12a2 2 0 00-2-2H4zM20 5h-5a2 2 0 00-2 2v12a2 2 0 012-2h5z"/></svg>Courses</a>
     <a href="#live"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="12" height="12" rx="2"/><path d="M15 10l6-3v10l-6-3z"/></svg>Live</a>
+    <a href="#practice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21h6M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5v1h6v-1c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>Practice</a>
     <a href="#puzzles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>Puzzles</a>
     <a href="#tests"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6v3H9zM6 6H5v15h14V6h-1M8 12l2 2 4-4"/></svg>Tests</a>
     <a href="#progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Progress</a>
@@ -476,7 +492,7 @@ nav.tabs a[aria-current="page"]{background:var(--accent-soft);color:var(--accent
 /* ---------- Storage (safe) ---------- */
 const KEY="targetchess.v2";
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
-let S=Object.assign({lessons:{},puzzles:{},tests:[],sound:true,voice:true,liveToken:""},load());
+let S=Object.assign({lessons:{},puzzles:{},tests:[],practice:{},sound:true,voice:true,liveToken:""},load());
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
 /* ---------- Content ---------- */
@@ -590,10 +606,10 @@ const label=p=>p.line.length===1?(p.mate?"Checkmate in 1":"Win a piece"):`Checkm
 const fmt=ms=>{const s=Math.round(ms/1000);return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`};
 
 /* ---------- XP, rank and streak (Duolingo / Chess.com style) ---------- */
-const RANKS=[{n:"Pawn",xp:0,g:"♟"},{n:"Knight",xp:100,g:"♞"},{n:"Bishop",xp:250,g:"♝"},{n:"Rook",xp:450,g:"♜"},{n:"Queen",xp:700,g:"♛"},{n:"King",xp:1000,g:"♚"}];
+const RANKS=[{n:"Pawn",xp:0,g:"♟"},{n:"Knight",xp:150,g:"♞"},{n:"Bishop",xp:450,g:"♝"},{n:"Rook",xp:1000,g:"♜"},{n:"Queen",xp:2000,g:"♛"},{n:"King",xp:3500,g:"♚"}];
 const DAILY_GOAL=30;
 const dayKey=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-const totalXP=()=>lessonsDone()*20+points()+(bestTest()||0)*5;
+const totalXP=()=>lessonsDone()*20+points()+(bestTest()||0)*5+Object.keys(S.practice||{}).length*10;
 function rankOf(xp){let i=0;RANKS.forEach((r,j)=>{if(xp>=r.xp)i=j});const cur=RANKS[i],nxt=RANKS[i+1];return{cur,nxt,i,pct:nxt?Math.round((xp-cur.xp)/(nxt.xp-cur.xp)*100):100}}
 const todayXP=()=>(S.days&&S.days[dayKey()])||0;
 function streak(){const d=S.days||{};let n=0;const t=new Date();if(!d[dayKey(t)])t.setDate(t.getDate()-1);while(d[dayKey(t)]){n++;t.setDate(t.getDate()-1)}return n}
@@ -689,6 +705,157 @@ function vCourses(){
   </div>`}).join("")}
   <div class="unit unit-end"><header class="unit-h"><span class="unit-icon" aria-hidden="true">🏆</span><div class="stack" style="gap:2px"><span class="eyebrow">Finish line</span><h2>Take the test</h2><span class="li-m">${QUIZ.length} questions to check everything you learned.</span></div><a class="btn" href="#tests">Start test</a></header></div>
   </section>`;
+}
+
+/* ---------- Practice (positions from Lichess practice, CC0 database; explanations are our own) ---------- */
+let PR=null;            // loaded data {sections, topics:[{id,section,title,intro,chapters:[{name,fen,goal,line,orient}]}]}
+let PRS=null;           // current session
+const prKey=(t,i)=>t.id+"/"+i;
+const prDone=t=>t.chapters.filter((c,i)=>S.practice&&S.practice[prKey(t,i)]).length;
+const prAll=()=>PR?PR.topics.reduce((a,t)=>a+prDone(t),0):Object.keys(S.practice||{}).length;
+async function prLoad(){if(PR)return PR;const r=await fetch("/practice.json",{cache:"force-cache"});if(!r.ok)throw new Error("load");PR=await r.json();return PR}
+
+/* Stockfish runs in the browser (Web Worker). One request at a time. */
+const SF={w:null,ready:null,busy:Promise.resolve()};
+function sfStart(){if(SF.ready)return SF.ready;
+  SF.ready=new Promise((res,rej)=>{try{SF.w=new Worker("/stockfish/stockfish-18-lite-single.js")}catch(e){return rej(e)}
+    const t=setTimeout(()=>rej(new Error("engine timeout")),30000);
+    SF.w.onmessage=e=>{if(String(e.data).startsWith("uciok")){clearTimeout(t);SF.w.postMessage("setoption name Hash value 16");res()}};
+    SF.w.onerror=e=>{clearTimeout(t);rej(e)};SF.w.postMessage("uci")});
+  return SF.ready}
+function sfAsk(fen,{depth=12,movetime}={}){
+  const run=()=>new Promise(async(res,rej)=>{try{await sfStart()}catch(e){return rej(e)}
+    let last=null;SF.w.onmessage=e=>{const l=String(e.data);
+      if(l.startsWith("info")&&l.includes(" score ")&&l.includes(" pv "))last=l;
+      if(l.startsWith("bestmove")){const m=last&&last.match(/score (cp|mate) (-?\d+)/);const stm=fen.split(" ")[1]==="w"?1:-1;
+        const raw=m?(m[1]==="mate"?(+m[2]>0?100000-+m[2]:-100000-+m[2]):+m[2]):0;
+        res({best:l.split(" ")[1],white:raw*stm,mate:m&&m[1]==="mate"?+m[2]*stm:null})}};
+    SF.w.postMessage("position fen "+fen);SF.w.postMessage(movetime?"go movetime "+movetime:"go depth "+depth)});
+  const p=SF.busy.then(run,run);SF.busy=p.catch(()=>{});return p}
+
+const PR_SEC_ORDER=["checkmates","fundamental-tactics","advanced-tactics","pawn-endgames","rook-endgames"];
+function goalText(c,color){const g=c.goal,side=color==="w"?"White":"Black";
+  if(!g)return c.line.length?"Play the right moves. The computer answers.":"Checkmate the computer.";
+  if(g.type==="mate")return g.n>=99?"Checkmate the computer.":`Checkmate in ${g.n} move${g.n>1?"s":""}.`;
+  if(g.type==="eval"&&(color==="w"?g.cp<0:g.cp>0))return `Defend well: don't let your opponent get far ahead in the next ${g.n} moves.`;
+  if(g.type==="eval"){const amt=Math.abs(g.cp);const what=amt>=900?"a big advantage (like winning the queen)":amt>=450?"a piece or more":amt>=250?"a clear advantage (about a piece)":amt>=90?"an advantage (about a pawn)":"a small edge";return `Win ${what} in ${g.n} move${g.n>1?"s":""}.`}
+  if(g.type==="promote")return "Promote a pawn and keep the win.";
+  if(g.type==="draw")return `Hold the draw for ${g.n} moves.`;
+  if(g.type==="equalize")return `Defend and stay level for ${g.n} moves.`;
+  return "Find the best plan."}
+const prColor=c=>c.goal||!c.line.length?c.fen.split(" ")[1]:(c.orient==="black"?"b":"w");
+
+function vPractice(){
+  if(!PR)return `<section class="stack view"><div class="eyebrow">Practice</div><h1>Practice makes perfect</h1><p class="li-m">Loading practice…</p></section>`;
+  const total=PR.topics.reduce((a,t)=>a+t.chapters.length,0);
+  return `<section class="stack view"><div class="eyebrow">Practice · ${prAll()}/${total} done</div><h1>Practice makes perfect</h1>
+    <p class="li-m" style="max-width:64ch">${PR.topics.length} topics and ${total} positions. Play each one against the computer until you reach the goal. Every position you solve gives 10 XP.</p></section>
+  ${PR_SEC_ORDER.map(sid=>{const sec=PR.sections[sid],ts=PR.topics.filter(t=>t.section===sid);return `<section class="stack view prsec">
+    <div class="prsec-h"><span class="prsec-i" aria-hidden="true">${sec.icon}</span><div class="stack" style="gap:2px"><h2>${esc(sec.title)}</h2><span class="li-m">${esc(sec.blurb)}</span></div></div>
+    <div class="prgrid">${ts.map(t=>{const d=prDone(t),n=t.chapters.length;return `<a class="prcard${d===n?" done":""}" href="#drill?t=${t.id}">
+      <span class="prcard-top"><b>${esc(t.title)}</b>${ring(d/n*100,30,4)}</span><span class="li-m prcard-d">${esc(t.intro)}</span><span class="li-m mono">${d}/${n} solved</span></a>`}).join("")}</div></section>`}).join("")}
+  <p class="li-m view" style="font-size:.75rem">Positions from <a href="https://lichess.org/practice" target="_blank" rel="noopener">Lichess practice</a>. Engine: <a href="https://github.com/nmrugg/stockfish.js" target="_blank" rel="noopener">Stockfish</a> (GPLv3).</p>`;
+}
+function afterPractice(){if(!PR)prLoad().then(()=>{if(route()==="practice")render()}).catch(()=>{const a=$("#app");if(a)a.insertAdjacentHTML("beforeend",`<p class="feedback no">Couldn't load practice. Check your internet and try again.</p>`)})}
+
+function prParam(){const m=location.hash.match(/[?&]t=([^&]+)/);return m?decodeURIComponent(m[1]):""}
+function prOpen(t,i){const c=t.chapters[i],g=new Chess(c.fen);PRS={tid:t.id,i,g,color:prColor(c),moves:0,ply:0,sel:null,state:"idle",msg:"",last:[],bad:[],hint:null,promo:null,anim:null,hist:[]};
+  if(!c.goal&&c.line.length&&g.turn()!==PRS.color)prAuto()}
+function vDrill(){
+  if(!PR)return `<section class="stack view"><p class="li-m">Loading practice…</p></section>`;
+  const t=PR.topics.find(x=>x.id===prParam())||PR.topics[0];
+  if(!PRS||PRS.tid!==t.id){const first=t.chapters.findIndex((c,i)=>!(S.practice||{})[prKey(t,i)]);prOpen(t,first<0?0:first)}
+  const c=t.chapters[PRS.i],done=(S.practice||{})[prKey(t,PRS.i)];
+  const st=PRS.state,col=PRS.color==="w"?"White":"Black";
+  let fb=`<div class="feedback">${esc(goalText(c,PRS.color))} You play ${col}.</div>`;
+  if(st==="ok")fb=`<div class="feedback ok">Goal reached! ${done&&!PRS.fresh?"":"+10 XP"}</div>`;
+  else if(st==="fail")fb=`<div class="feedback no">${esc(PRS.msg||"Not quite. Try again!")}</div>`;
+  else if(st==="no")fb=`<div class="feedback no">Not this move. Try again!</div>`;
+  else if(st==="think")fb=`<div class="feedback"><span class="spin sm" aria-hidden="true"></span> ${esc(PRS.msg||"The computer is thinking…")}</div>`;
+  else if(PRS.moves>0)fb=`<div class="feedback">${esc(goalText(c,PRS.color))} ${c.goal&&c.goal.n&&c.goal.n<99&&c.goal.type!=="promote"?`<b>${Math.max(0,c.goal.n-PRS.moves)} move${c.goal.n-PRS.moves===1?"":"s"} left.</b>`:""}</div>`;
+  const ti=PR.topics.indexOf(t),nt=PR.topics[ti+1];
+  return `<section class="stack view"><a class="back" href="#practice">← Practice</a>
+    <div class="eyebrow">${esc(PR.sections[t.section].title)}</div><h1>${esc(t.title)}</h1><p class="li-m" style="max-width:66ch">${esc(t.intro)}</p></section>
+  <section class="pz view">
+    <div class="stack"><div class="board" id="prBoard"></div>
+      ${PRS.promo?`<div class="promo" role="group" aria-label="Choose a piece"><span class="li-m">Promote to:</span>${["q","r","b","n"].map(p=>`<button class="chip" data-promo="${p}" aria-label="${NAMES[p]}">${GLYPH[p]}︎ ${NAMES[p]}</button>`).join("")}</div>`:""}</div>
+    <div class="stack">
+      <div class="row"><span class="pill level">${esc(c.name)}</span><span class="pill mono">${PRS.i+1}/${t.chapters.length}</span>${done?`<span class="pill done">Solved</span>`:""}</div>
+      ${st==="ok"?"":`<span class="tomove"><i class="${PRS.g.turn()}"></i>${PRS.g.turn()==="w"?"White":"Black"} to move${PRS.g.turn()===PRS.color?" (you)":""}</span>`}
+      ${fb}
+      <div class="row">
+        <button class="btn ghost" id="prHint" ${st==="idle"||st==="no"?"":"disabled"}>Hint</button>
+        <button class="btn ghost" id="prUndo" ${PRS.hist.length&&st!=="think"?"":"disabled"}>Take back</button>
+        <button class="btn ghost" id="prReset">Restart</button>
+        <button class="btn" id="prNext">${PRS.i<t.chapters.length-1?"Next position":nt?"Next topic →":"Back to practice"}</button>
+      </div>
+      <div class="eyebrow" style="margin-top:10px">Positions in this topic</div>
+      <div class="pzlist">${t.chapters.map((x,i)=>`<button data-ch="${i}" class="${i===PRS.i?"cur ":""}${(S.practice||{})[prKey(t,i)]?"solved":""}" title="${esc(x.name)}" aria-label="Position ${i+1}: ${esc(x.name)}">${i+1}</button>`).join("")}</div>
+    </div>
+  </section>`;
+}
+function prSolved(){const t=PR.topics.find(x=>x.id===PRS.tid),k=prKey(t,PRS.i);PRS.state="ok";setTimeout(()=>sfx("solved"),200);
+  S.practice=S.practice||{};if(!S.practice[k]){S.practice[k]=true;PRS.fresh=true;save();award(10)}render()}
+function prFail(msg){PRS.state="fail";PRS.msg=msg;sfx("wrong");render()}
+function prPlay(m){const mv=PRS.g.move(m);if(!mv)return null;moveSound(mv,PRS.g);PRS.anim=[mv.from,mv.to];PRS.last=[mv.from,mv.to];return mv}
+function prAuto(){const t=PR.topics.find(x=>x.id===PRS.tid),c=t.chapters[PRS.i];const u=c.line[PRS.ply];if(!u)return;
+  PRS.state="think";PRS.msg="";setTimeout(()=>{if(!PRS||PRS.tid!==t.id)return;prPlay({from:u.slice(0,2),to:u.slice(2,4),promotion:u[4]});PRS.ply++;
+    PRS.state=PRS.ply>=c.line.length?"ok":"idle";if(PRS.state==="ok")return prSolved();render()},550)}
+const prEnd=g=>g.in_checkmate()||g.in_draw()||g.in_stalemate()||g.insufficient_material()||g.in_threefold_repetition();
+async function prAfterUser(mv){
+  const t=PR.topics.find(x=>x.id===PRS.tid),c=t.chapters[PRS.i],g=PRS.g,goal=c.goal,me=PRS.color,tok=PRS;
+  // Guided line: must match the next move of the line.
+  if(!goal&&c.line.length){const want=c.line[PRS.ply];
+    if(want&&mv.from+mv.to===want.slice(0,4)&&(!want[4]||mv.promotion===want[4])){PRS.ply++;if(PRS.ply>=c.line.length)return prSolved();PRS.state="idle";render();return prAuto()}
+    g.undo();PRS.hist.pop();PRS.moves--;PRS.state="no";PRS.bad=[mv.from,mv.to];PRS.last=[];sfx("wrong");return render()}
+  const type=goal?goal.type:"mate";
+  if(g.in_checkmate())return prSolved();   // you delivered mate: always a win
+  if(prEnd(g))return (type==="draw"||type==="equalize")?prSolved():prFail("That's a draw. You needed to win. Try again!");
+  const meets=w=>me==="w"?w>=goal.cp:w<=goal.cp;
+  PRS.state="think";PRS.msg="Checking your move…";render();
+  try{
+    if(type==="eval"&&PRS.moves>=goal.n){const r=await sfAsk(g.fen(),{depth:13});if(PRS!==tok)return;return meets(r.white)?prSolved():prFail("Good try, but that didn't win enough. Try again!")}
+    if(type==="promote"&&mv.promotion){const r=await sfAsk(g.fen(),{depth:13});if(PRS!==tok)return;return meets(r.white)?prSolved():prFail("You promoted, but the position isn't winning. Try again!")}
+    if(type==="mate"&&goal&&goal.n<99&&PRS.moves>=goal.n)return prFail(`Not checkmate in ${goal.n}. Try again!`);
+    if((type==="draw"||type==="equalize")&&PRS.moves>=goal.n){const r=await sfAsk(g.fen(),{depth:12});if(PRS!==tok)return;const mine=me==="w"?r.white:-r.white;return mine>-150?prSolved():prFail("You held on for a while, but the position slipped. Try again!")}
+    // The computer answers with its best move.
+    PRS.msg="The computer is thinking…";render();
+    const r=await sfAsk(g.fen(),{depth:type==="mate"?14:12,movetime:type==="mate"?undefined:700});if(PRS!==tok)return;
+    if(!r.best||r.best==="(none)")return prFail("No moves left. Try again!");
+    prPlay({from:r.best.slice(0,2),to:r.best.slice(2,4),promotion:r.best[4]});
+    if(g.in_checkmate())return prFail("You got checkmated. Try again!");
+    if(prEnd(g))return (type==="draw"||type==="equalize")?prSolved():prFail("That's a draw. You needed to win. Try again!");
+    if(type==="mate"&&goal&&goal.n<99){const left=goal.n-PRS.moves;if(left>0){const e=await sfAsk(g.fen(),{depth:Math.min(20,left*2+8)});if(PRS!==tok)return;
+      const mateFor=me==="w"?e.mate:(e.mate==null?null:-e.mate);if(!(mateFor>0&&mateFor<=left))return prFail(`That lets the king escape. Checkmate in ${goal.n} isn't possible any more. Try again!`)}}
+    PRS.state="idle";PRS.msg="";render();
+  }catch(e){PRS.state="fail";PRS.msg="The chess engine couldn't start on this device. Try reloading the page.";render()}
+}
+function afterDrill(){
+  if(!PR){prLoad().then(()=>{if(route()==="drill")render()}).catch(()=>{});return}
+  const t=PR.topics.find(x=>x.id===PRS.tid),c=t.chapters[PRS.i],g=PRS.g,flip=PRS.color==="b";
+  const live=(PRS.state==="idle"||PRS.state==="no")&&!PRS.promo&&g.turn()===PRS.color;
+  const dots=PRS.sel?g.moves({square:PRS.sel,verbose:true}).map(m=>m.to):[];
+  const anim=PRS.anim;PRS.anim=null;
+  drawBoard($("#prBoard"),g.fen(),{flip,anim,sel:PRS.sel,dots,bad:PRS.bad,hi:PRS.hint?[PRS.hint.slice(0,2),PRS.hint.slice(2,4)]:PRS.last,
+    onSquare:live?sq=>{const pc=g.get(sq);
+      if(pc&&pc.color===g.turn()){PRS.sel=PRS.sel===sq?null:sq;PRS.bad=[];if(PRS.state==="no")PRS.state="idle";return render()}
+      if(!PRS.sel)return;ac();
+      const cand=g.moves({square:PRS.sel,verbose:true}).filter(m=>m.to===sq);if(!cand.length){PRS.sel=null;return render()}
+      if(cand.some(m=>m.promotion)){PRS.promo={from:PRS.sel,to:sq};PRS.sel=null;return render()}
+      prMove({from:PRS.sel,to:sq})}:null});
+  function prMove(m){PRS.hist.push(g.fen());const mv=prPlay(m);PRS.sel=null;PRS.bad=[];PRS.hint=null;if(!mv){PRS.hist.pop();return render()}PRS.moves++;prAfterUser(mv)}
+  document.querySelectorAll("[data-promo]").forEach(b=>b.onclick=()=>{const p=PRS.promo;PRS.promo=null;prMove({...p,promotion:b.dataset.promo})});
+  $("#prHint").onclick=async()=>{
+    if(!c.goal&&c.line.length){PRS.hint=c.line[PRS.ply];return render()}
+    PRS.state="think";PRS.msg="Looking for a hint…";render();const tok=PRS;
+    try{const r=await sfAsk(g.fen(),{depth:14});if(PRS!==tok)return;PRS.hint=r.best;PRS.state="idle";PRS.msg="";render()}catch(e){PRS.state="idle";render()}};
+  $("#prUndo").onclick=()=>{const f=PRS.hist.pop();if(!f)return;PRS.g=new Chess(f);PRS.moves=Math.max(0,PRS.moves-1);
+    if(!c.goal&&c.line.length){const back=PRS.g.history().length;/* guided: recompute ply from line */let ply=0;const g2=new Chess(c.fen);while(ply<c.line.length&&g2.fen()!==PRS.g.fen()){const u=c.line[ply];g2.move({from:u.slice(0,2),to:u.slice(2,4),promotion:u[4]});ply++}PRS.ply=ply}
+    PRS.state="idle";PRS.msg="";PRS.last=[];PRS.hint=null;PRS.bad=[];render()};
+  $("#prReset").onclick=()=>{prOpen(t,PRS.i);render()};
+  $("#prNext").onclick=()=>{if(PRS.i<t.chapters.length-1){prOpen(t,PRS.i+1);render();window.scrollTo(0,0)}else{const nt=PR.topics[PR.topics.indexOf(t)+1];PRS=null;location.hash=nt?"drill?t="+nt.id:"practice"}};
+  document.querySelectorAll("[data-ch]").forEach(b=>b.onclick=()=>{prOpen(t,+b.dataset.ch);render()});
+  sfStart().catch(()=>{});
 }
 
 /* ---------- Lesson video player ---------- */
@@ -951,7 +1118,7 @@ function vProgress(){
   <section class="row view"><button class="btn ghost" id="resetAll">Reset all progress</button><span class="li-m">Progress is saved in this browser only.</span></section>`;
 }
 function afterProgress(){let armed=false;$("#resetAll").onclick=e=>{if(!armed){armed=true;e.target.textContent="Tap again to erase everything";return}
-  S={lessons:{},puzzles:{},tests:[],days:{},sound:S.sound,voice:S.voice,liveToken:S.liveToken};save();PZ=null;toast("Progress reset");render()}}
+  S={lessons:{},puzzles:{},tests:[],days:{},practice:{},sound:S.sound,voice:S.voice,liveToken:S.liveToken};save();PZ=null;toast("Progress reset");render()}}
 
 /* ---------- Sign-in and live classes (talk to the site's /api) ---------- */
 let AUTH={state:S.liveToken?"check":"out",user:null,msg:""};
@@ -1129,15 +1296,15 @@ function liveHome(root){
 }
 
 /* ---------- Router ---------- */
-const VIEWS={live:[vLive,afterLive],home:[vHome,afterHome],courses:[vCourses],lesson:[vLesson,afterLesson],puzzles:[vPuzzles,afterPuzzles],tests:[vTests,afterTests],progress:[vProgress,afterProgress]};
-function route(){const h=(location.hash||"#home").slice(1);return VIEWS[h]?h:"home"}
+const VIEWS={practice:[vPractice,afterPractice],drill:[vDrill,afterDrill],live:[vLive,afterLive],home:[vHome,afterHome],courses:[vCourses],lesson:[vLesson,afterLesson],puzzles:[vPuzzles,afterPuzzles],tests:[vTests,afterTests],progress:[vProgress,afterProgress]};
+function route(){const h=(location.hash||"#home").slice(1).split("?")[0];return VIEWS[h]?h:"home"}
 function render(){
   document.body.classList.toggle("gated",AUTH.state!=="in"&&AUTH.state!=="guest");renderWho();
   if(AUTH.state!=="in"&&AUTH.state!=="guest"){stopLesson();$("#app").innerHTML=authView();bindAuth();return}
   if(!HAS_CHESS){$("#app").innerHTML=`<div class="card"><h2>The chess engine didn't load</h2><p class="li-m" style="margin-top:8px">Check your connection and reload the page.</p></div>`;return}
   const r=route();if(r!=="lesson")stopLesson();
   const [v,a]=VIEWS[r];$("#app").innerHTML=v();a&&a();
-  const tab=r==="lesson"?"courses":r;
+  const tab=r==="lesson"?"courses":r==="drill"?"practice":r;
   document.querySelectorAll("#tabs a").forEach(x=>{if(x.getAttribute("href")==="#"+tab)x.setAttribute("aria-current","page");else x.removeAttribute("aria-current")});
   document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{curLesson=b.dataset.open;if(location.hash==="#lesson")render();else location.hash="lesson";window.scrollTo(0,0)});
   document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>location.hash=b.dataset.go);

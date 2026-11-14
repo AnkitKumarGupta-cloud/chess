@@ -4,7 +4,7 @@ import http from "node:http"; import fs from "node:fs"; import path from "node:p
 import { useEnv } from "./fakes.mjs";
 useEnv({ TEACHER_PASSWORD: "demo-teacher" });
 const dist = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "dist");
-const types = { ".html": "text/html", ".js": "text/javascript", ".mp3": "audio/mpeg", ".png": "image/png", ".jpg": "image/jpeg", ".svg": "image/svg+xml", ".css": "text/css" };
+const types = { ".html": "text/html", ".js": "text/javascript", ".mp3": "audio/mpeg", ".png": "image/png", ".jpg": "image/jpeg", ".svg": "image/svg+xml", ".css": "text/css", ".wasm": "application/wasm", ".json": "application/json" };
 http.createServer(async (req, res) => {
   const u = new URL(req.url, "http://x");
   if (u.pathname.startsWith("/api/")) {
