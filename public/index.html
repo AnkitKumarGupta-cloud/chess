@@ -757,6 +757,11 @@ main:has(> .drill){padding-top:12px!important}
 .menu-theme .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px}
 .menu .menu-theme .seg button{text-align:center;padding:7px 4px;border-radius:7px;font-size:.85rem;font-weight:700;color:var(--muted)}
 .menu .menu-theme .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+/* Side menu on computers: same soft tone as the page with a clear edge, instead of stark white */
+@media (min-width:1100px){
+  .topbar{background:color-mix(in srgb,var(--bg) 82%,var(--ink) 4%);border-right:1px solid color-mix(in srgb,var(--line) 70%,var(--ink) 12%);box-shadow:4px 0 18px rgba(0,0,0,.06)}
+  .who .chipbtn{background:var(--surface)}
+}
 </style>
 
 </head>
