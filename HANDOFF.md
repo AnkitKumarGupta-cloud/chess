@@ -40,7 +40,7 @@ Vercel Deployment Protection must stay **off** for `chess-sathi-live`, or studen
 - **Tests:** a new 10-question test each time, matched to the student's puzzle level (the highest level unlocked): 3 knowledge questions from a 4-tier bank (Beginner ≤ level 5, Intermediate ≤ 20, Advanced ≤ 45, Expert above) + 7 "find the best move" positions from the levels at and just above theirs. Bank: `QBANK` in `public/index.html`.
 - **Progress** is saved in each browser (not visible to the teacher yet).
 - No Sound/Voice buttons: move sounds and lesson voice are always on.
-- **Full screen** button on practice and puzzle boards for screen sharing.
+- **Board pages** (practice, puzzle levels, classic puzzles) use a Lichess-style layout: the board fills the screen height, and the goal, status, buttons, title and position list sit below it. No Full screen button any more.
 - **Phones:** on practice and puzzle boards the board, status and Next button fit on one screen (checked at 360×640 up to 412×915). Students can "Add to Home screen" (`public/manifest.webmanifest`, icons in `public/icons/`) and it opens like an app, without the browser bar.
 - **Puzzle levels save after every puzzle** (`S.lv.part`), so a reload mid-level keeps the solved puzzles and reopens at the first unsolved one.
 - Pieces: "cburnett" set (Colin M.L. Burnett, GPLv2+). Board: our own brown colours. Move sounds: wooden knocks from Kenney "Impact Sounds" (CC0) in `public/sounds/` (move, capture, castle = two knocks); the small chimes for check/right/wrong/solved are generated in the browser.
