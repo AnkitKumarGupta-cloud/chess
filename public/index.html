@@ -649,7 +649,7 @@ body[data-route="puzzles"] main{max-width:none!important;padding:0!important;gap
 .mtile:not(.lock):hover .mt-top{transform:translateY(-3px)}
 .mt-top{transition:transform .12s ease}
 .mt-stars{position:absolute;bottom:-14px;font-size:.8rem;color:#FFD54A;letter-spacing:1px;text-shadow:0 1px 2px rgba(0,0,0,.6);white-space:nowrap}
-.mpawn{position:absolute;top:-52px;font-size:46px;line-height:1;color:#fff;text-shadow:0 0 2px #333,0 3px 0 #555,0 8px 10px rgba(0,0,0,.35);animation:hop 1.2s ease-in-out infinite}
+.mpawn{position:absolute;top:-30px;left:-34px;z-index:7;font-size:46px;line-height:1;color:#fff;text-shadow:0 0 2px #333,0 3px 0 #555,0 8px 10px rgba(0,0,0,.35);animation:hop 1.2s ease-in-out infinite}
 @keyframes hop{50%{transform:translateY(-8px)}}
 @media (prefers-reduced-motion:reduce){.mpawn,.deco.twinkle{animation:none}}
 .pmap-credit{text-align:center;font-size:.75rem;color:var(--muted);padding:12px}
@@ -661,6 +661,15 @@ body[data-route="puzzles"] main{max-width:none!important;padding:0!important;gap
 .pbar-go:active{transform:translateY(3px);box-shadow:0 2px 0 #33711F}
 @media (max-width:1099px){.pbar{left:0}}
 @media (max-width:720px){.pbar{bottom:calc(58px + env(safe-area-inset-bottom));padding:10px 14px}.pbar-go{padding:13px 22px;font-size:1rem}.mtile,.mt-top,.mtile::before{width:66px}.mt-top,.mtile::before{height:58px}.mt-top{font-size:1.15rem}}
+
+/* Artwork backgrounds */
+.world{background-size:cover;background-position:center top;background-repeat:no-repeat}
+.world::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.18),transparent 90px,transparent calc(100% - 90px),rgba(0,0,0,.22))}
+.world::after{display:none}
+.trail{filter:drop-shadow(0 6px 6px rgba(0,0,0,.25))}
+.mtile{filter:drop-shadow(0 6px 8px rgba(0,0,0,.35))}
+.mtile.cur{z-index:6}
+.mt-stars{background:rgba(0,0,0,.45);padding:1px 6px;border-radius:99px}
 </style>
 
 </head>
@@ -1093,12 +1102,12 @@ const lvRating=l=>LVD&&LVD[l-1]?Math.round(LVD[l-1].reduce((a,p)=>a+p[3],0)/LVD[
 
 /* ---------- Puzzle map: six illustrated worlds, levels on a winding trail (our own artwork) ---------- */
 const WORLDS=[
- {name:"Green Meadow",sky:["#9BE07A","#5DBB4F"],ground:"#4FA845",trail:"#E8D29A",edge:"#C9A964",deco:["tree","bush","flower","rock","tree","house"]},
- {name:"Whispering Forest",sky:["#4E9A5B","#2D6B3E"],ground:"#2E6A3C",trail:"#C9A46A",edge:"#9C7A44",deco:["pine","pine","tree","bush","mushroom","rock"]},
- {name:"Golden Desert",sky:["#F7D98B","#E9B65A"],ground:"#E2A84C",trail:"#FBEBC0",edge:"#D3A55B",deco:["cactus","rock","dune","cactus","palm","pyramid"]},
- {name:"Snow Peaks",sky:["#DDEFFC","#A8CDEB"],ground:"#C3DDF0",trail:"#FFFFFF",edge:"#9EC0DC",deco:["snowpine","snowpine","rock","snowman","peak","snowpine"]},
- {name:"Fire Mountain",sky:["#5A2430","#2A1218"],ground:"#3A1A20",trail:"#6E3B2E",edge:"#E2683A",deco:["lava","rockd","volcano","rockd","ember","lava"]},
- {name:"Royal Castle",sky:["#3C2A6E","#1B1440"],ground:"#2A1F55",trail:"#B9A4E8",edge:"#7E66C8",deco:["tower","star","flag","tower","star","crown"]},
+ {name:"Green Meadow",sky:["#9BE07A","#5DBB4F"],ground:"#4FA845",trail:"#EAD7A4",edge:"#B8925A",deco:["tree","bush","flower","rock","tree","house"]},
+ {name:"Whispering Forest",sky:["#4E9A5B","#2D6B3E"],ground:"#2E6A3C",trail:"#D9BE86",edge:"#8E6B3A",deco:["pine","pine","tree","bush","mushroom","rock"]},
+ {name:"Golden Desert",sky:["#F7D98B","#E9B65A"],ground:"#E2A84C",trail:"#F7E2B0",edge:"#C08A3E",deco:["cactus","rock","dune","cactus","palm","pyramid"]},
+ {name:"Snow Peaks",sky:["#DDEFFC","#A8CDEB"],ground:"#C3DDF0",trail:"#F4FAFF",edge:"#8FB6D8",deco:["snowpine","snowpine","rock","snowman","peak","snowpine"]},
+ {name:"Fire Mountain",sky:["#5A2430","#2A1218"],ground:"#3A1A20",trail:"#5A3A33",edge:"#FF8A3D",deco:["lava","rockd","volcano","rockd","ember","lava"]},
+ {name:"Royal Castle",sky:["#3C2A6E","#1B1440"],ground:"#2A1F55",trail:"#E9D59A",edge:"#9A7A3A",deco:["tower","star","flag","tower","star","crown"]},
 ];
 const SPRITE={
  tree:'<svg viewBox="0 0 60 70"><rect x="26" y="40" width="8" height="26" rx="2" fill="#7A4E2A"/><circle cx="30" cy="30" r="20" fill="#3E9A3A"/><circle cx="18" cy="38" r="13" fill="#358A33"/><circle cx="42" cy="38" r="13" fill="#2F7E2E"/><circle cx="24" cy="22" r="6" fill="#5DB55A" opacity=".7"/></svg>',
@@ -1128,18 +1137,17 @@ const SPRITE={
 // Small seeded random so the scenery never jumps around.
 const rnd=s=>{let x=Math.sin(s*999.13)*10000;return x-Math.floor(x)};
 function worldScene(wi,from,to,st){
-  const W=WORLDS[wi],n=to-from+1,STEP=118,PAD=150,H=n*STEP+PAD*2,pts=[];
-  for(let j=0;j<n;j++){const x=50+30*Math.sin(j*0.85+wi*1.7),y=H-PAD-j*STEP;pts.push([x,y])}
+  // Height follows the artwork (2:3 portrait) on wide screens; phones get extra room so tiles never crowd.
+  const mw=document.querySelector("main")?.clientWidth||window.innerWidth;
+  const W=WORLDS[wi],n=to-from+1,PAD=150,STEP=Math.max(98,Math.round((1.5*mw-2*PAD)/Math.max(1,n-1))),H=(n-1)*STEP+PAD*2,pts=[];
+  for(let j=0;j<n;j++){const x=50+24*Math.sin(j*0.85+wi*1.7),y=H-PAD-j*STEP;pts.push([x,y])}
   const path=pts.map((p,i)=>(i?"L":"M")+(p[0]*10).toFixed(1)+" "+p[1]).join(" ");
   // scenery: place on the side away from the trail
-  let deco="";for(let k=0;k<n*2+3;k++){const y=PAD/2+rnd(wi*100+k)*(H-PAD);const fj=Math.max(0,Math.min(n-1,(H-PAD-y)/STEP)),j0=Math.floor(fj),j1=Math.min(n-1,j0+1),tx=pts[j0][0]+(pts[j1][0]-pts[j0][0])*(fj-j0);
-    let x=tx<50?Math.min(96,tx+20)+rnd(k+7)*Math.max(0,96-Math.min(96,tx+20)):4+rnd(k+3)*Math.max(0,tx-20-4);const kind=W.deco[k%W.deco.length];const big=/house|pyramid|volcano|peak|tower/.test(kind);const sz=big?90:kind==="ember"||kind==="star"?22:kind==="flower"||kind==="mushroom"?32:56;
-    deco+=`<span class="deco${kind==="ember"||kind==="star"?" twinkle":""}" style="left:${x.toFixed(1)}%;top:${Math.round(y)}px;width:${sz}px">${SPRITE[kind]}</span>`}
-  for(let k=0;k<3;k++)if(wi!==4)deco+=`<span class="deco cloud" style="left:${(rnd(wi*7+k)*80).toFixed(0)}%;top:${Math.round(40+rnd(wi*9+k)*(H-200))}px;width:${90+Math.round(rnd(k+wi)*50)}px;opacity:${wi===5?.15:.75}">${SPRITE.cloud}</span>`;
+  const deco="";
   const nodes=pts.map((p,j)=>{const l=from+j,d=st.done[l],cur=l===st.unlocked,lock=l>st.unlocked;
     return `<button class="mtile${d?" done":""}${cur?" cur":""}${lock?" lock":""}" style="left:${p[0]}%;top:${p[1]}px" ${lock?"disabled":""} data-lv="${l}" aria-label="Level ${l}${d?`, ${d.stars} stars`:lock?", locked":cur?", your next level":""}">
       ${cur?`<span class="mpawn" aria-hidden="true">♟</span>`:""}<span class="mt-top">${d?"✓":l}</span>${d?`<span class="mt-stars">${"★".repeat(d.stars)}${"☆".repeat(3-d.stars)}</span>`:""}</button>`}).join("");
-  return `<section class="world" data-w="${wi}" style="--sky1:${W.sky[0]};--sky2:${W.sky[1]};--trail:${W.trail};--edge:${W.edge};height:${H}px">
+  return `<section class="world" data-w="${wi}" style="--sky1:${W.sky[0]};--sky2:${W.sky[1]};--trail:${W.trail};--edge:${W.edge};height:${H}px;background-image:url(/worlds/w${wi}.webp)">
     <div class="world-sign"><b>${W.name}</b><span>Levels ${from}–${to} · rating ${lvRating(from)}–${lvRating(to)}</span></div>
     <svg class="trail" viewBox="0 0 1000 ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${path}" stroke="var(--edge)" stroke-width="46" fill="none" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="${path}" stroke="var(--trail)" stroke-width="34" fill="none" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/><path d="${path}" stroke="rgba(0,0,0,.12)" stroke-width="3" stroke-dasharray="2 16" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>
     ${deco}${nodes}</section>`;
@@ -1152,7 +1160,8 @@ function vPuzzles(){
   <div class="pbar" data-sec="puzzles"><div class="pbar-l"><span class="pbar-lv">Level ${cur}</span><span class="li-m">${WORLDS[ranges.findIndex(r=>cur>=r[0]&&cur<=r[1])]?.name||""} · ${done}/${total} done · ${stars} ★</span></div>
     <button class="pbar-go" data-lv="${cur}">${done?"Solve puzzles":"Start puzzles"}</button></div>`;
 }
-function afterPuzzles(){
+let __mapW=0;window.addEventListener("resize",()=>{clearTimeout(window.__mapT);window.__mapT=setTimeout(()=>{const w=document.querySelector("main")?.clientWidth||0;if(route()==="puzzles"&&Math.abs(w-__mapW)>40){__mapW=w;render()}},250)});
+function afterPuzzles(){__mapW=document.querySelector("main")?.clientWidth||0;
   document.querySelectorAll("[data-lv]").forEach(b=>b.onclick=()=>{LVS=null;location.hash="plevel?l="+b.dataset.lv});
   if(!LVD)lvLoad().then(()=>{if(route()==="puzzles")render()}).catch(()=>{});
   const c=document.querySelector(".mtile.cur");if(c)setTimeout(()=>c.scrollIntoView({block:"center"}),30);
