@@ -221,7 +221,7 @@ function Classroom({ pass, notify, recording }) {
   const clock = useClock(true);
   const isTeacher = pass.isTeacher;
   const canPub = (s) => perms && perms.canPublish && (!perms.canPublishSources.length || perms.canPublishSources.includes(s));
-  const shareAllowed = isTeacher || canPub(3); // 3 = screen share in LiveKit's permission list
+  const shareAllowed = isTeacher || canPub(3); // 3 = screen share in LiveKit's permission list (students may share too)
   const shareSupported = canShareScreen();
   const handsUp = Object.keys(hands).length;
 

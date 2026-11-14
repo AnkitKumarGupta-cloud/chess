@@ -69,7 +69,7 @@ assert.equal((await call("join", { method: "POST", auth: S, body: { classId: c2.
 assert.equal((await call("join", { method: "POST", auth: S, body: { classId: "../etc" } })).status, 400);
 const js = await call("join", { method: "POST", auth: S, body: { classId: c1.id } });
 assert.equal(js.serverUrl, "wss://demo.livekit.cloud"); assert.equal(js.isTeacher, false);
-const sg = decodeLk(js.token); assert.equal(sg.video.room, c1.roomName); assert.equal(sg.video.roomAdmin, undefined); assert.deepEqual(sg.video.canPublishSources, ["camera", "microphone"]); assert.equal(sg.sub, "rohangupta");
+const sg = decodeLk(js.token); assert.equal(sg.video.room, c1.roomName); assert.equal(sg.video.roomAdmin, undefined); assert.deepEqual(sg.video.canPublishSources, ["camera", "microphone", "screen_share", "screen_share_audio"]); assert.equal(sg.sub, "rohangupta");
 const jt = await call("join", { method: "POST", auth: T, body: { classId: c1.id } });
 const tg = decodeLk(jt.token); assert.equal(tg.video.roomAdmin, true); assert.equal(tg.video.canPublishSources, undefined); assert.equal(jt.isTeacher, true);
 

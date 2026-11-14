@@ -164,7 +164,7 @@ function lkToken(identity, grant, ttl, extra = {}) {
 export function joinToken(user, cls) {
   const teacher = user.role === "teacher";
   const grant = { room: cls.roomName, roomJoin: true, canSubscribe: true, canPublish: true, canPublishData: true };
-  if (teacher) grant.roomAdmin = true; else grant.canPublishSources = ["camera", "microphone"];
+  if (teacher) grant.roomAdmin = true; else grant.canPublishSources = ["camera", "microphone", "screen_share", "screen_share_audio"];
   return lkToken(user.id, grant, 6 * 3600, { name: user.role === "parent" ? user.name + " (parent)" : user.name, metadata: JSON.stringify({ role: user.role }) });
 }
 async function twirp(service, method, grant, body) {

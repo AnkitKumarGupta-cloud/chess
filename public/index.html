@@ -270,6 +270,181 @@ body.gated .who{display:none}
 .tablewrap{overflow-x:auto}
 td.acts{white-space:nowrap;text-align:right}
 td.acts .btn{margin-left:6px}
+
+/* =====================================================================
+   Chess Sathi 2026 design: calm warm surfaces, bento dashboard,
+   learning path, XP + streak + chess-piece ranks, sidebar on computers.
+   ===================================================================== */
+:root{
+  --bg:#F6F4EF; --surface:#FFFFFF; --surface-2:#F1EEE7; --ink:#1B1E25; --muted:#646B77; --line:#E5E1D7;
+  --accent:#D2373F; --accent-ink:#FFFFFF; --accent-soft:#FBE8E6;
+  --gold:#D99520; --gold-soft:#FCF1DC; --good:#2E8B57; --good-soft:#E2F3E8; --warn:#B26B00;
+  --sq-light:#E9E4D8; --sq-dark:#8FA3B5; --sq-hi:#F0C25A; --sq-sel:#6AAED9;
+  --shadow:0 1px 2px rgba(27,30,37,.05),0 6px 20px rgba(27,30,37,.05);
+  --shadow-up:0 2px 6px rgba(27,30,37,.07),0 16px 40px rgba(27,30,37,.10);
+  --glow:rgba(210,55,63,.10); --radius:20px; --side:248px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1218; --surface:#161C24; --surface-2:#1C242F; --ink:#ECEFF3; --muted:#9AA4B2; --line:#26303C;
+  --accent:#EF5A62; --accent-soft:#3A1D22; --gold:#F2B544; --gold-soft:#3A2E17; --good:#4CC27F; --good-soft:#15301F;
+  --sq-light:#A9B7C4; --sq-dark:#55697D; --sq-hi:#D9A93A; --sq-sel:#3F8FC0;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.25); --shadow-up:0 2px 6px rgba(0,0,0,.45),0 18px 40px rgba(0,0,0,.4); --glow:rgba(239,90,98,.10)}}
+:root[data-theme="dark"]{
+  --bg:#0E1218; --surface:#161C24; --surface-2:#1C242F; --ink:#ECEFF3; --muted:#9AA4B2; --line:#26303C;
+  --accent:#EF5A62; --accent-soft:#3A1D22; --gold:#F2B544; --gold-soft:#3A2E17; --good:#4CC27F; --good-soft:#15301F;
+  --sq-light:#A9B7C4; --sq-dark:#55697D; --sq-hi:#D9A93A; --sq-sel:#3F8FC0;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.25); --shadow-up:0 2px 6px rgba(0,0,0,.45),0 18px 40px rgba(0,0,0,.4); --glow:rgba(239,90,98,.10)}
+body{background:radial-gradient(1000px 520px at 100% -120px,var(--glow),transparent 70%),var(--bg);font-size:15.5px}
+h1{font-size:clamp(1.55rem,3.6vw,2.25rem);letter-spacing:-.01em}
+h2{font-size:1.12rem}
+.eyebrow{color:var(--muted);letter-spacing:.1em}
+.card{border-radius:var(--radius);border-color:var(--line);box-shadow:var(--shadow)}
+.btn{border-radius:12px;font-weight:700;padding:11px 18px}
+.btn.big{padding:14px 22px;font-size:1rem;border-radius:14px}
+.btn.ghost{background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+.link{color:var(--accent);font-weight:700;text-decoration:none}
+.link:hover{text-decoration:underline}
+.pill{border-radius:99px;font-weight:700}
+.bar{height:8px;background:var(--surface-2);border:0}
+.bar.gold i{background:linear-gradient(90deg,var(--gold),#F7CD6B)}
+.ring-bg{fill:none;stroke:var(--surface-2)}
+.ring-fg{fill:none;stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+main{gap:26px;padding-block:28px 72px}
+
+/* --- Navigation: sidebar on computers, bottom tabs on phones --- */
+.topbar{box-shadow:none;background:color-mix(in srgb,var(--surface) 92%,transparent)}
+nav.tabs a{border-radius:12px;font-weight:600}
+nav.tabs a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+@media (min-width:1100px){
+  body{padding-left:var(--side)}
+  .topbar{position:fixed;left:0;top:0;bottom:0;width:var(--side);border-bottom:0;border-right:1px solid var(--line);background:var(--surface)}
+  .topbar-in{height:100%;flex-direction:column;align-items:stretch;gap:6px;padding:22px 14px 16px;max-width:none}
+  .logo{padding:4px 10px 18px;font-size:1.12rem}
+  nav.tabs{flex-direction:column;margin:0;gap:4px}
+  nav.tabs a{padding:12px 14px;font-size:.98rem;gap:12px}
+  nav.tabs a svg{width:21px;height:21px}
+  nav.tabs + .toggles{margin:auto 0 0;padding:12px 4px 4px;border-top:1px solid var(--line)}
+  .toggles{flex-wrap:wrap}
+  .who{margin:8px 0 0}
+  .who .chipbtn{width:100%;justify-content:flex-start;border-radius:14px;padding:6px}
+  .who .menu{top:auto;bottom:calc(100% + 8px);left:0;right:auto;width:100%}
+  main{max-width:1120px;padding-inline:32px}
+}
+@media (max-width:720px){
+  nav.tabs{background:color-mix(in srgb,var(--surface) 96%,transparent);box-shadow:0 -6px 24px rgba(0,0,0,.08);border-top:1px solid var(--line)}
+  nav.tabs a{border-radius:12px}
+  nav.tabs a[aria-current="page"]{background:var(--accent-soft)}
+}
+
+/* --- Greeting row --- */
+.hello{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.hello h1{max-width:24ch;margin-top:6px}
+.hello-chips{display:flex;gap:8px;flex-wrap:wrap}
+.hchip{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:7px 13px;font-size:.84rem;color:var(--muted);box-shadow:var(--shadow)}
+.hchip b{color:var(--ink);font-size:.95rem}
+.hchip.streak.lit{background:var(--gold-soft);border-color:color-mix(in srgb,var(--gold) 40%,transparent)}
+.hchip.rank b{font-size:1.1rem;line-height:1}
+
+/* --- Bento dashboard --- */
+.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;grid-auto-flow:dense}
+.tile{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;min-width:0;overflow:hidden;transition:box-shadow .2s ease,transform .2s ease}
+.tile:hover{box-shadow:var(--shadow-up)}
+.tile h3{font-family:var(--f-display);font-size:1rem}
+.tile-top{display:flex;align-items:center;gap:8px;justify-content:space-between;flex-wrap:wrap}
+.tile-h{font-size:clamp(1.25rem,2.4vw,1.65rem);max-width:20ch;position:relative;z-index:1}
+.t-continue{grid-column:span 4;min-height:250px;padding:26px;background:linear-gradient(140deg,var(--surface) 30%,color-mix(in srgb,var(--accent-soft) 70%,var(--surface)))}
+.t-continue .row{position:relative;z-index:1}
+.tile-art{position:absolute;right:-10px;bottom:-34px;font-size:13rem;line-height:1;color:var(--accent);opacity:.12;pointer-events:none;transform:rotate(-8deg)}
+.minibar{display:flex;align-items:center;gap:8px;min-width:140px;flex:1;max-width:220px}
+.minibar .bar{flex:1}
+.t-goal{grid-column:span 2}
+.goal{position:relative;width:72px;height:72px}
+.goal-n{position:absolute;inset:0;display:grid;place-items:center;align-content:center;line-height:1}
+.goal-n b{font-size:1.15rem}.goal-n span{font-size:.7rem;color:var(--muted)}
+.t-goal .ring-fg{stroke:var(--gold)}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;height:64px;margin-top:auto}
+.wd{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%;position:relative}
+.wd i{width:100%;max-width:22px;border-radius:6px;background:var(--surface-2)}
+.wd.on i{background:var(--gold)}
+.wd span{font-size:.68rem;color:var(--muted);font-weight:700}
+.wd.today span{color:var(--ink)}
+.wd.today i{outline:2px solid color-mix(in srgb,var(--gold) 60%,transparent);outline-offset:1px}
+.week.big{height:150px}
+.week.big .wd i{max-width:34px}
+.wd em{font-style:normal;font-size:.68rem;color:var(--muted)}
+.t-puzzle{grid-column:5/span 2;grid-row:span 2}
+.t-puzzle .board{max-width:none;border-radius:12px}
+.t-rank{grid-column:span 2;flex-direction:row;align-items:center;gap:14px}
+.rank-g{font-size:3rem;line-height:1;width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:var(--gold-soft);color:var(--gold);flex:none}
+.t-live{grid-column:span 2}
+.t-live.is-live{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft),var(--shadow)}
+.t-stats{grid-column:span 4;flex-direction:row;justify-content:space-between;align-items:center;gap:8px}
+.kpi{display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi b{font-size:1.45rem;font-family:var(--f-display);font-weight:700}
+.kpi b small{font-size:.75rem;color:var(--muted);font-family:var(--f-body)}
+.kpi span{font-size:.75rem;color:var(--muted);font-weight:600}
+@media (max-width:1000px){.bento{grid-template-columns:repeat(4,minmax(0,1fr))}.t-continue{grid-column:span 4;min-height:230px}.t-puzzle{grid-column:span 2;grid-row:span 2}.t-stats{grid-column:span 4}}
+@media (max-width:640px){.bento{grid-template-columns:1fr 1fr;gap:12px}.tile{padding:16px}.t-continue,.t-puzzle,.t-goal,.t-stats,.t-rank,.t-live{grid-column:span 2}.t-continue{padding:20px}.tile-art{font-size:9rem}}
+
+/* course cards row */
+.cards-x{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.ccard{position:relative;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:8px;color:var(--ink);box-shadow:var(--shadow);overflow:hidden;transition:transform .15s ease,box-shadow .2s ease}
+.ccard:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
+.ccard .pill{align-self:flex-start}
+.ccard b{font-family:var(--f-display);font-size:1rem}
+.ccard-icon{position:absolute;right:12px;top:6px;font-size:3.2rem;opacity:.16;color:var(--accent)}
+.ccard-foot{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:6px}
+@media (max-width:640px){.cards-x{grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:78%;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;margin-inline:-16px;padding-inline:16px}.ccard{scroll-snap-align:start}}
+
+/* --- Learning path (courses) --- */
+.path{display:flex;flex-direction:column;gap:18px;max-width:760px}
+.unit{background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+.unit-h{display:flex;align-items:center;gap:14px;padding:18px 20px;background:linear-gradient(120deg,color-mix(in srgb,var(--accent-soft) 70%,var(--surface)),var(--surface));border-bottom:1px solid var(--line)}
+.unit-done .unit-h{background:linear-gradient(120deg,var(--good-soft),var(--surface))}
+.unit-end .unit-h{border-bottom:0;background:linear-gradient(120deg,var(--gold-soft),var(--surface))}
+.unit-icon{width:52px;height:52px;border-radius:16px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;font-size:1.9rem;flex:none}
+.unit-h .stack{flex:1}
+.unit-prog{position:relative;width:44px;height:44px;flex:none;display:grid;place-items:center}
+.unit-prog svg{position:absolute;inset:0}
+.unit-prog span{font-size:.66rem;font-weight:700}
+.unit-done .ring-fg{stroke:var(--good)}
+.stops{list-style:none;margin:0;padding:22px 16px 26px;display:flex;flex-direction:column;align-items:center;gap:18px;position:relative}
+.stop{transform:translateX(calc(var(--x) * 56px));position:relative}
+.stop button{display:flex;align-items:center;gap:14px;background:none;border:0;color:var(--ink);text-align:left;padding:0}
+.node{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:1.2rem;background:var(--surface-2);color:var(--muted);border:2px solid var(--line);box-shadow:0 5px 0 var(--line);transition:transform .12s ease}
+.stop button:hover .node{transform:translateY(-2px)}
+.stop button:active .node{transform:translateY(3px);box-shadow:0 2px 0 var(--line)}
+.stop.done .node{background:var(--good);color:#fff;border-color:var(--good);box-shadow:0 5px 0 color-mix(in srgb,var(--good) 60%,#000)}
+.stop.cur .node{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 5px 0 color-mix(in srgb,var(--accent) 60%,#000),0 0 0 8px var(--accent-soft)}
+.stop-t{display:flex;flex-direction:column;gap:2px;width:220px}
+.stop-t b{font-size:.98rem}
+@media (max-width:640px){.stop{transform:translateX(calc(var(--x) * 22px))}.stop-t{width:170px}.unit-h{padding:16px}.unit-h .li-m{display:none}}
+
+/* --- Progress page --- */
+.bento-p .tile{grid-column:span 3}
+.bento-p .t-rankbig{grid-column:span 6;padding:24px}
+.ranks{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.rk{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:14px;background:var(--surface-2);color:var(--muted)}
+.rk span{font-size:2rem;line-height:1;opacity:.5}
+.rk small{font-size:.7rem;font-weight:700}
+.rk.past{background:var(--gold-soft);color:var(--gold)}.rk.past span{opacity:.9}
+.rk.now{background:var(--gold);color:#2A1D00;box-shadow:0 6px 18px color-mix(in srgb,var(--gold) 40%,transparent)}.rk.now span{opacity:1}
+@media (max-width:640px){.bento-p .tile{grid-column:span 2}.bento-p .t-rankbig{grid-column:span 2}.rk span{font-size:1.4rem}.rk small{font-size:.58rem}}
+
+/* XP pop */
+.xppop{position:fixed;left:50%;top:22%;transform:translateX(-50%);z-index:60;background:var(--gold);color:#2A1D00;font-weight:800;font-family:var(--f-display);padding:10px 18px;border-radius:99px;box-shadow:0 10px 30px rgba(0,0,0,.2);pointer-events:none;animation:xp 1.6s ease forwards}
+@keyframes xp{0%{opacity:0;transform:translate(-50%,10px) scale(.9)}15%{opacity:1;transform:translate(-50%,0) scale(1.05)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-18px)}}
+@media (prefers-reduced-motion:reduce){.xppop{animation:none}.ccard:hover,.stop button:hover .node{transform:none}}
+
+/* small refinements on existing screens */
+.player{border-radius:var(--radius);box-shadow:var(--shadow)}
+.board{border-radius:10px}
+.pzlist button{border-radius:10px}
+.opt{border-radius:12px;padding:14px 16px;font-weight:600}
+.feedback{border-radius:12px}
+.chip{font-weight:700}
+.toast{border-radius:12px;box-shadow:var(--shadow-up)}
+.login-card{border-radius:24px}
 </style>
 
 </head>
@@ -414,51 +589,106 @@ const movesLeft=p=>Math.ceil(p.line.length/2);
 const label=p=>p.line.length===1?(p.mate?"Checkmate in 1":"Win a piece"):`Checkmate in ${movesLeft(p)}`;
 const fmt=ms=>{const s=Math.round(ms/1000);return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`};
 
+/* ---------- XP, rank and streak (Duolingo / Chess.com style) ---------- */
+const RANKS=[{n:"Pawn",xp:0,g:"♟"},{n:"Knight",xp:100,g:"♞"},{n:"Bishop",xp:250,g:"♝"},{n:"Rook",xp:450,g:"♜"},{n:"Queen",xp:700,g:"♛"},{n:"King",xp:1000,g:"♚"}];
+const DAILY_GOAL=30;
+const dayKey=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const totalXP=()=>lessonsDone()*20+points()+(bestTest()||0)*5;
+function rankOf(xp){let i=0;RANKS.forEach((r,j)=>{if(xp>=r.xp)i=j});const cur=RANKS[i],nxt=RANKS[i+1];return{cur,nxt,i,pct:nxt?Math.round((xp-cur.xp)/(nxt.xp-cur.xp)*100):100}}
+const todayXP=()=>(S.days&&S.days[dayKey()])||0;
+function streak(){const d=S.days||{};let n=0;const t=new Date();if(!d[dayKey(t)])t.setDate(t.getDate()-1);while(d[dayKey(t)]){n++;t.setDate(t.getDate()-1)}return n}
+function award(x){if(!x)return;S.days=S.days||{};const k=dayKey(),before=S.days[k]||0;S.days[k]=before+x;save();
+  const p=document.createElement("div");p.className="xppop";p.textContent="+"+x+" XP";document.body.appendChild(p);setTimeout(()=>p.remove(),1600);
+  if(before<DAILY_GOAL&&before+x>=DAILY_GOAL)setTimeout(()=>toast("🔥 Daily goal done! Streak: "+streak()+" day"+(streak()===1?"":"s")),900)}
+function week(){const out=[],t=new Date();t.setDate(t.getDate()-6);for(let i=0;i<7;i++){out.push({k:dayKey(t),d:t.toLocaleDateString([], {weekday:"narrow"}),xp:(S.days||{})[dayKey(t)]||0,today:i===6});t.setDate(t.getDate()+1)}return out}
+const ring=(pct,size=56,stroke=6)=>{const r=(size-stroke)/2,c=2*Math.PI*r;return `<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${size/2}" cy="${size/2}" r="${r}" stroke-width="${stroke}" class="ring-bg"/><circle cx="${size/2}" cy="${size/2}" r="${r}" stroke-width="${stroke}" class="ring-fg" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-Math.min(1,pct/100))}" transform="rotate(-90 ${size/2} ${size/2})"/></svg>`};
+const COURSE_ICON={"Beginner":"♙","Intermediate":"♘","Advanced":"♖","Expert":"♕"};
+
 /* ---------- Views ---------- */
 function vHome(){
   const next=ALL_LESSONS.find(l=>!S.lessons[l.id]);
-  const pct=Math.round(lessonsDone()/ALL_LESSONS.length*100);
+  const xp=totalXP(),rk=rankOf(xp),st=streak(),tx=todayXP(),wk=week(),maxw=Math.max(DAILY_GOAL,...wk.map(w=>w.xp));
   const daily=PUZZLES.filter(p=>p.level==="Advanced")[new Date().getDate()%13];
-  return `<section class="hero view">
-    <div>
-      <div class="eyebrow">${AUTH.user?`Hi ${esc(AUTH.user.name.split(" ")[0])}, learn chess step by step`:"Learn chess step by step"}</div>
-      <h1 style="margin-top:8px">Learn one chess idea a day.</h1>
-      <p class="lead">${ALL_LESSONS.length} short video lessons, ${PUZZLES.length} puzzles from easy to hard, and a test to check what you learned.</p>
-      <div class="row" style="margin-top:20px">
-        ${next?`<button class="btn" data-open="${next.id}">▶ ${lessonsDone()?"Continue":"Start"}: ${esc(next.title)}</button>`:`<a class="btn" href="#tests" style="text-decoration:none">All lessons done. Take the test</a>`}
-        <a class="btn ghost" href="#puzzles" style="text-decoration:none">Solve puzzles</a>
-      </div>
-      <div class="stats">
-        <div class="stat"><div class="n">${lessonsDone()}/${ALL_LESSONS.length}</div><div class="l">Lessons watched</div></div>
-        <div class="stat"><div class="n">${puzzlesDone()}/${PUZZLES.length}</div><div class="l">Puzzles solved</div></div>
-        <div class="stat"><div class="n">${bestTest()??"–"}${bestTest()!=null?"/"+QUIZ.length:""}</div><div class="l">Best test</div></div>
-      </div>
-      <div style="margin-top:16px" class="stack"><div class="bar" aria-label="Course progress ${pct}%"><i style="width:${pct}%"></i></div><span class="li-m">${pct}% of all courses complete</span></div>
-    </div>
-    <div><div class="board" id="heroBoard"></div><p class="caption">Puzzle of the day: ${label(daily)}. ${daily.fen.split(" ")[1]==="w"?"White":"Black"} to move. Tap the board to solve it.</p></div>
+  const name=AUTH.user&&AUTH.user.role!=="teacher"?AUTH.user.name.split(" ")[0]:"";
+  const hr=new Date().getHours(),greet=hr<12?"Good morning":hr<17?"Good afternoon":"Good evening";
+  const nc=next&&next.course, ni=next?nc.lessons.findIndex(l=>l.id===next.id):0;
+  return `<section class="hello view">
+    <div><div class="eyebrow">${greet}${name?", "+esc(name):""}</div><h1>${st?`You're on a ${st}-day streak. Keep it going!`:"Let's learn one chess idea today."}</h1></div>
+    <div class="hello-chips"><span class="hchip streak${tx>0?" lit":""}" title="Days in a row you practised"><b>🔥 ${st}</b> day streak</span><span class="hchip xp" title="Total experience points"><b>⚡ ${xp}</b> XP</span><span class="hchip rank" title="Your rank"><b>${rk.cur.g}</b> ${rk.cur.n}</span></div>
+  </section>
+  <section class="bento view">
+    <article class="tile t-continue">
+      ${next?`<div class="tile-top"><span class="pill level">${nc.level}</span><span class="li-m">${esc(nc.title)} · lesson ${ni+1} of ${nc.lessons.length}</span></div>
+      <h2 class="tile-h">${lessonsDone()?"Continue":"Start"}: ${esc(next.title)}</h2>
+      <p class="li-m">${next.minutes} min video lesson with voiceover. +20 XP when you finish.</p>
+      <div class="row" style="margin-top:auto"><button class="btn big" data-open="${next.id}">▶ ${lessonsDone()?"Continue lesson":"Start learning"}</button>
+        <div class="minibar"><div class="bar"><i style="width:${courseProgress(nc)/nc.lessons.length*100}%"></i></div><span class="li-m mono">${courseProgress(nc)}/${nc.lessons.length}</span></div></div>`
+      :`<div class="tile-top"><span class="pill done">All lessons watched</span></div><h2 class="tile-h">Brilliant! Now test yourself.</h2><p class="li-m">Take the ${QUIZ.length}-question test or keep sharpening with puzzles.</p><div class="row" style="margin-top:auto"><a class="btn big" href="#tests">Take the test</a></div>`}
+      <div class="tile-art" aria-hidden="true">${next?COURSE_ICON[nc.level]||"♞":"♛"}</div>
+    </article>
+    <article class="tile t-goal">
+      <div class="goal">${ring(tx/DAILY_GOAL*100,72,8)}<div class="goal-n"><b class="mono">${Math.min(tx,DAILY_GOAL)}</b><span>/${DAILY_GOAL}</span></div></div>
+      <div class="stack" style="gap:4px"><h3>Daily goal</h3><p class="li-m">${tx>=DAILY_GOAL?"Done for today. Great work!":`${DAILY_GOAL-tx} XP to go. One lesson or a few puzzles.`}</p></div>
+      <div class="week" aria-label="XP this week">${wk.map(w=>`<div class="wd${w.today?" today":""}${w.xp?" on":""}" title="${w.k}: ${w.xp} XP"><i style="height:${Math.max(6,w.xp/maxw*100)}%"></i><span>${w.d}</span></div>`).join("")}</div>
+    </article>
+    <article class="tile t-puzzle">
+      <div class="tile-top"><span class="eyebrow">Puzzle of the day</span><span class="pill mono">${daily.pts} pts</span></div>
+      <div class="board" id="heroBoard"></div>
+      <p class="li-m">${label(daily)} · ${daily.fen.split(" ")[1]==="w"?"White":"Black"} to move</p>
+      <button class="btn ghost" id="dailyGo">${S.puzzles[daily.id]?"Solved ✓ · Try more":"Solve it"}</button>
+    </article>
+    <article class="tile t-rank">
+      <div class="rank-g" aria-hidden="true">${rk.cur.g}</div>
+      <div class="stack" style="gap:6px;min-width:0;flex:1"><span class="eyebrow">Your rank</span><h3>${rk.cur.n}</h3>
+        <div class="bar gold"><i style="width:${rk.pct}%"></i></div>
+        <span class="li-m">${rk.nxt?`${rk.nxt.xp-xp} XP to become a ${rk.nxt.n} ${rk.nxt.g}`:"Top rank reached. You're the King!"}</span></div>
+    </article>
+    <article class="tile t-live" id="homeLive">
+      <span class="eyebrow">Live class</span>
+      <h3>${AUTH.user?"Checking your classes…":"Live classes"}</h3>
+      <p class="li-m">${AUTH.user?"":"Join your teacher's live class from the Live tab."}</p>
+      <a class="btn ghost" href="#live" style="margin-top:auto">Open Live</a>
+    </article>
+    <article class="tile t-stats">
+      <div class="kpi"><b class="mono">${lessonsDone()}<small>/${ALL_LESSONS.length}</small></b><span>Lessons</span></div>
+      <div class="kpi"><b class="mono">${puzzlesDone()}<small>/${PUZZLES.length}</small></b><span>Puzzles</span></div>
+      <div class="kpi"><b class="mono">${bestTest()??"–"}${bestTest()!=null?`<small>/${QUIZ.length}</small>`:""}</b><span>Best test</span></div>
+    </article>
   </section>
   <section class="stack view">
-    <div class="row" style="justify-content:space-between"><h2>Courses</h2><a href="#courses" style="color:var(--accent);font-weight:600">See all</a></div>
-    <div class="grid g3">${COURSES.map(c=>`<div class="card stack">
-      <span class="pill level" style="align-self:flex-start">${c.level}</span>
-      <h3>${esc(c.title)}</h3><p class="li-m">${esc(c.blurb)}</p>
-      <div class="bar"><i style="width:${courseProgress(c)/c.lessons.length*100}%"></i></div>
-      <span class="li-m mono">${courseProgress(c)}/${c.lessons.length} video lessons</span>
-      <button class="btn ghost" data-open="${c.lessons[0].id}">▶ Start course</button></div>`).join("")}</div>
+    <div class="row" style="justify-content:space-between"><h2>Your courses</h2><a class="link" href="#courses">See the path →</a></div>
+    <div class="cards-x">${COURSES.map(c=>{const d=courseProgress(c),n=c.lessons.length;return `<button class="ccard" data-open="${(c.lessons.find(l=>!S.lessons[l.id])||c.lessons[0]).id}">
+      <span class="ccard-icon" aria-hidden="true">${COURSE_ICON[c.level]||"♞"}</span>
+      <span class="pill level">${c.level}</span><b>${esc(c.title)}</b><span class="li-m">${esc(c.blurb)}</span>
+      <span class="ccard-foot">${ring(d/n*100,30,4)}<span class="li-m mono">${d}/${n} lessons</span></span></button>`}).join("")}</div>
   </section>`;
 }
-function afterHome(){const d=PUZZLES.filter(p=>p.level==="Advanced")[new Date().getDate()%13];drawBoard($("#heroBoard"),d.fen,{flip:d.fen.split(" ")[1]==="b",onSquare:()=>{pzStart=d.id;location.hash="puzzles"}})}
+function afterHome(){
+  const d=PUZZLES.filter(p=>p.level==="Advanced")[new Date().getDate()%13];
+  const go=()=>{pzStart=d.id;location.hash="puzzles"};
+  drawBoard($("#heroBoard"),d.fen,{flip:d.fen.split(" ")[1]==="b",onSquare:go});$("#dailyGo").onclick=go;
+  const box=$("#homeLive");if(!box||!AUTH.user)return;
+  liveApi("/classes").then(r=>{const cs=r.classes||[];const live=cs.find(c=>c.live),up=cs.filter(c=>!c.live&&!c.ended).sort((a,b)=>a.startsAt<b.startsAt?-1:1)[0];
+    if(!$("#homeLive"))return;
+    if(live)box.innerHTML=`<span class="eyebrow">Live class</span><span class="pill live" style="align-self:flex-start">● Live now</span><h3>${esc(live.title)}</h3><a class="btn" href="/class.html?c=${encodeURIComponent(live.id)}" style="margin-top:auto">${AUTH.user.role==="teacher"?"Rejoin class":"Join now"}</a>`,box.classList.add("is-live");
+    else if(up)box.innerHTML=`<span class="eyebrow">Next live class</span><h3>${esc(up.title)}</h3><p class="li-m">${esc(whenText(up.startsAt))}</p><a class="btn ghost" href="#live" style="margin-top:auto">See schedule</a>`;
+    else box.innerHTML=`<span class="eyebrow">Live class</span><h3>No class scheduled</h3><p class="li-m">${AUTH.user.role==="teacher"?"Schedule one from the Live tab.":"Your teacher will add the next class soon."}</p><a class="btn ghost" href="#live" style="margin-top:auto">Open Live</a>`;
+  }).catch(()=>{const b=$("#homeLive");if(b)b.querySelector("h3").textContent="Live classes"});
+}
 
 function vCourses(){
-  return `<section class="stack view"><div class="eyebrow">Courses</div><h1>Pick a course</h1>
-  <p class="li-m" style="max-width:60ch">Each lesson is a short video with a teacher's voice. You can pause, go back, or speed it up.</p></section>
-  <section class="grid g2 view">${COURSES.map(c=>`<div class="card course">
-    <div class="meta"><span class="pill level">${c.level}</span><span class="pill">${c.lessons.length} video lessons</span>
-    ${courseProgress(c)===c.lessons.length?`<span class="pill done">Complete</span>`:""}</div>
-    <h2>${esc(c.title)}</h2><p class="li-m">${esc(c.blurb)}</p>
-    <ul>${c.lessons.map((l,i)=>`<li><button data-open="${l.id}"><span class="tick ${S.lessons[l.id]?"on":"play"}" aria-hidden="true"></span>
-      <span class="li-t">${i+1}. ${esc(l.title)}</span><span class="li-m mono">${l.minutes} min</span></button></li>`).join("")}</ul>
-  </div>`).join("")}</section>`;
+  const nextId=(ALL_LESSONS.find(l=>!S.lessons[l.id])||{}).id;
+  return `<section class="stack view"><div class="eyebrow">Learning path</div><h1>From first moves to checkmate</h1>
+  <p class="li-m" style="max-width:62ch">Follow the path from top to bottom. Each stop is a short video lesson with a teacher's voice. Finish a lesson to earn 20 XP.</p></section>
+  <section class="path view">${COURSES.map((c,ci)=>{const d=courseProgress(c),n=c.lessons.length;return `<div class="unit${d===n?" unit-done":""}">
+    <header class="unit-h"><span class="unit-icon" aria-hidden="true">${COURSE_ICON[c.level]||"♞"}</span><div class="stack" style="gap:2px;min-width:0"><span class="eyebrow">Unit ${ci+1} · ${c.level}</span><h2>${esc(c.title)}</h2><span class="li-m">${esc(c.blurb)}</span></div>
+      <div class="unit-prog">${ring(d/n*100,44,5)}<span class="mono">${d}/${n}</span></div></header>
+    <ol class="stops">${c.lessons.map((l,i)=>{const done=S.lessons[l.id],cur=l.id===nextId;return `<li class="stop${done?" done":""}${cur?" cur":""}" style="--x:${[0,1,0,-1][i%4]}">
+      <button data-open="${l.id}" aria-label="${esc(l.title)}${done?", watched":cur?", up next":""}"><span class="node" aria-hidden="true">${done?"✓":cur?"▶":i+1}</span>
+      <span class="stop-t"><b>${esc(l.title)}</b><span class="li-m mono">${l.minutes} min${done?" · watched":cur?" · up next":""}</span></span></button></li>`}).join("")}</ol>
+  </div>`}).join("")}
+  <div class="unit unit-end"><header class="unit-h"><span class="unit-icon" aria-hidden="true">🏆</span><div class="stack" style="gap:2px"><span class="eyebrow">Finish line</span><h2>Take the test</h2><span class="li-m">${QUIZ.length} questions to check everything you learned.</span></div><a class="btn" href="#tests">Start test</a></header></div>
+  </section>`;
 }
 
 /* ---------- Lesson video player ---------- */
@@ -532,7 +762,7 @@ function afterLesson(){
   LP.clockTimer=setInterval(()=>{if(!$("#lpTime"))return stopLesson();
     const k=stepAt(audio.currentTime);if(k!==LP.i){const fwd=k===LP.i+1;LP.i=k;paint(fwd)}else drawClock()},100);
   const finish=()=>{LP.playing=false;LP.i=n-1;paint(false);document.querySelectorAll("#lpScrub button").forEach(b=>b.classList.add("on"));
-    if(!S.lessons[l.id]){S.lessons[l.id]=true;save();toast("Lesson watched");const b=$("#doneBtn");b.textContent="Watched ✓";b.classList.add("ghost")}};
+    if(!S.lessons[l.id]){S.lessons[l.id]=true;save();award(20);toast("Lesson watched");const b=$("#doneBtn");b.textContent="Watched ✓";b.classList.add("ghost")}};
   audio.addEventListener("ended",finish);
   audio.addEventListener("error",()=>{if(LP.audio!==audio||LP.failed)return;LP.failed=true;toast("Couldn't load the recorded voice. Using the browser voice instead.");stopLesson();afterLessonTTS()});
   const play=()=>{ac();audio.playbackRate=LP.speed;const p=audio.play();LP.playing=true;paint(false);
@@ -545,7 +775,7 @@ function afterLesson(){
   $("#lpSpeed").onclick=e=>{LP.speed=LP.speed===1?1.5:LP.speed===1.5?2:1;e.target.textContent=LP.speed+"×";audio.playbackRate=LP.speed};
   document.querySelectorAll("[data-seg]").forEach(b=>b.onclick=()=>go(+b.dataset.seg));
   document.querySelectorAll("[data-step]").forEach(b=>b.onclick=()=>go(+b.dataset.step));
-  $("#doneBtn").onclick=()=>{S.lessons[l.id]=!S.lessons[l.id];save();toast(S.lessons[l.id]?"Marked as watched":"Marked as not watched");render()};
+  $("#doneBtn").onclick=()=>{S.lessons[l.id]=!S.lessons[l.id];save();if(S.lessons[l.id])award(20);toast(S.lessons[l.id]?"Marked as watched":"Marked as not watched");render()};
   paint(false);
 }
 function stopLesson(){if(!LP)return;clearTimeout(LP.timer);clearInterval(LP.clockTimer);LP.token++;LP.playing=false;if(LP.audio){LP.audio.pause();LP.audio.src=""}hush()}
@@ -574,7 +804,7 @@ function afterLessonTTS(){
     const cur=document.querySelector("#lpTx button.cur");if(cur&&LP.playing)cur.scrollIntoView({block:"nearest"});
     LP.clock=Math.max(starts[LP.i],Math.min(LP.clock,starts[LP.i]+frames[LP.i].ms-1));if(LP.clock<starts[LP.i]||LP.clock>=starts[LP.i]+frames[LP.i].ms)LP.clock=starts[LP.i];LP.lastT=performance.now();drawClock();
     $("#lpPlay").textContent=LP.playing?"❚❚":"▶";$("#lpPlay").setAttribute("aria-label",LP.playing?"Pause":"Play");};
-  const finish=()=>{LP.playing=false;LP.clock=total;paint(false);$("#lpTime").textContent=`${fmt(total)} / ${fmt(total)}`;if(!S.lessons[l.id]){S.lessons[l.id]=true;save();toast("Lesson watched");const b=$("#doneBtn");b.textContent="Watched ✓";b.classList.add("ghost")}};
+  const finish=()=>{LP.playing=false;LP.clock=total;paint(false);$("#lpTime").textContent=`${fmt(total)} / ${fmt(total)}`;if(!S.lessons[l.id]){S.lessons[l.id]=true;save();award(20);toast("Lesson watched");const b=$("#doneBtn");b.textContent="Watched ✓";b.classList.add("ghost")}};
   // Narrate the current step, then advance when the voice finishes (or after a timer when voice is off).
   const run=()=>{clearTimeout(LP.timer);const tok=++LP.token;if(!LP.playing){hush();return}
     const f=frames[LP.i];
@@ -588,7 +818,7 @@ function afterLessonTTS(){
   $("#lpSpeed").onclick=e=>{LP.speed=LP.speed===1?1.5:LP.speed===1.5?2:1;e.target.textContent=LP.speed+"×";run()};
   document.querySelectorAll("[data-seg]").forEach(b=>b.onclick=()=>go(+b.dataset.seg));
   document.querySelectorAll("[data-step]").forEach(b=>b.onclick=()=>go(+b.dataset.step));
-  $("#doneBtn").onclick=()=>{S.lessons[l.id]=!S.lessons[l.id];save();toast(S.lessons[l.id]?"Marked as watched":"Marked as not watched");render()};
+  $("#doneBtn").onclick=()=>{S.lessons[l.id]=!S.lessons[l.id];save();if(S.lessons[l.id])award(20);toast(S.lessons[l.id]?"Marked as watched":"Marked as not watched");render()};
   paint(false);
 }
 
@@ -645,7 +875,7 @@ function afterPuzzles(){
       if(!ok){g.undo();sfx("wrong");PZ.state="no";PZ.bad=[m.from,m.to];PZ.last=[];render();return}
       moveSound(m,g);PZ.anim=[m.from,m.to];
       PZ.bad=[];PZ.last=[m.from,m.to];PZ.ply++;
-      if(PZ.ply>=p.line.length){PZ.state="ok";setTimeout(()=>sfx("solved"),g.in_checkmate()?450:120);if(!S.puzzles[p.id]){S.puzzles[p.id]=true;save()}render();return}
+      if(PZ.ply>=p.line.length){PZ.state="ok";setTimeout(()=>sfx("solved"),g.in_checkmate()?450:120);if(!S.puzzles[p.id]){S.puzzles[p.id]=true;save();award(p.pts)}render();return}
       PZ.state="wait";render();
       setTimeout(()=>{const r=p.line[PZ.ply];const rm=g.move({from:r.slice(0,2),to:r.slice(2,4),promotion:"q"});moveSound(rm,g);PZ.anim=rm?[rm.from,rm.to]:null;PZ.last=rm?[rm.from,rm.to]:[];PZ.ply++;PZ.state="idle";render()},650);
     }:null});
@@ -682,16 +912,29 @@ function vTests(){
 function afterTests(){
   if(tDone){$("#retry").onclick=()=>{tq=0;tAns=[];tDone=false;render()};return}
   document.querySelectorAll("[data-opt]").forEach(b=>b.onclick=()=>{tAns[tq]=+b.dataset.opt;sfx(tAns[tq]===QUIZ[tq].a?"right":"wrong");render()});
-  $("#tnext").onclick=()=>{if(tq<QUIZ.length-1){tq++}else{tDone=true;S.tests.push({score:tAns.filter((a,i)=>a===QUIZ[i].a).length,at:new Date().toISOString()});save()}render()};
+  $("#tnext").onclick=()=>{if(tq<QUIZ.length-1){tq++}else{tDone=true;const sc=tAns.filter((a,i)=>a===QUIZ[i].a).length;S.tests.push({score:sc,at:new Date().toISOString()});save();award(sc*5)}render()};
 }
 
 /* ---------- Progress ---------- */
 function vProgress(){
+  const xp=totalXP(),rk=rankOf(xp),wk=week(),maxw=Math.max(DAILY_GOAL,...wk.map(w=>w.xp)),wsum=wk.reduce((a,w)=>a+w.xp,0);
   return `<section class="stack view"><div class="eyebrow">Progress</div><h1>Your report card</h1></section>
-  <section class="grid g3 view">
-    <div class="card stack"><span class="eyebrow">Lessons watched</span><div class="score" style="font-size:2rem">${lessonsDone()}<span class="li-m">/${ALL_LESSONS.length}</span></div><div class="bar"><i style="width:${lessonsDone()/ALL_LESSONS.length*100}%"></i></div></div>
-    <div class="card stack"><span class="eyebrow">Puzzle points</span><div class="score" style="font-size:2rem">${points()}</div><span class="li-m">${puzzlesDone()} of ${PUZZLES.length} puzzles solved</span></div>
-    <div class="card stack"><span class="eyebrow">Best test</span><div class="score" style="font-size:2rem">${bestTest()??"–"}<span class="li-m">${bestTest()!=null?"/"+QUIZ.length:""}</span></div><span class="li-m">${S.tests.length} attempt${S.tests.length===1?"":"s"}</span></div>
+  <section class="bento bento-p view">
+    <article class="tile t-rankbig">
+      <div class="ranks">${RANKS.map((r,i)=>`<div class="rk${i<rk.i?" past":i===rk.i?" now":""}" title="${r.n}: ${r.xp} XP"><span>${r.g}</span><small>${r.n}</small></div>`).join("")}</div>
+      <div class="row" style="justify-content:space-between"><h2>${rk.cur.g} ${rk.cur.n}</h2><span class="mono li-m">${xp} XP</span></div>
+      <div class="bar gold"><i style="width:${rk.pct}%"></i></div>
+      <span class="li-m">${rk.nxt?`${rk.nxt.xp-xp} XP until ${rk.nxt.n}. Lessons give 20 XP, puzzles give their points, the test gives 5 XP per right answer.`:"You reached the top rank!"}</span>
+    </article>
+    <article class="tile">
+      <div class="row" style="justify-content:space-between"><h3>This week</h3><span class="li-m mono">${wsum} XP · 🔥 ${streak()}</span></div>
+      <div class="week big">${wk.map(w=>`<div class="wd${w.today?" today":""}${w.xp?" on":""}" title="${w.k}: ${w.xp} XP"><em class="mono">${w.xp||""}</em><i style="height:${Math.max(4,w.xp/maxw*100)}%"></i><span>${w.d}</span></div>`).join("")}</div>
+    </article>
+    <article class="tile t-stats">
+      <div class="kpi"><b class="mono">${lessonsDone()}<small>/${ALL_LESSONS.length}</small></b><span>Lessons</span></div>
+      <div class="kpi"><b class="mono">${points()}</b><span>Puzzle points</span></div>
+      <div class="kpi"><b class="mono">${bestTest()??"–"}${bestTest()!=null?`<small>/${QUIZ.length}</small>`:""}</b><span>Best test · ${S.tests.length} tr${S.tests.length===1?"y":"ies"}</span></div>
+    </article>
   </section>
   <section class="grid g2 view">
     <div class="card" style="overflow-x:auto"><h2 style="margin-bottom:8px">By course</h2>
@@ -708,7 +951,7 @@ function vProgress(){
   <section class="row view"><button class="btn ghost" id="resetAll">Reset all progress</button><span class="li-m">Progress is saved in this browser only.</span></section>`;
 }
 function afterProgress(){let armed=false;$("#resetAll").onclick=e=>{if(!armed){armed=true;e.target.textContent="Tap again to erase everything";return}
-  S={lessons:{},puzzles:{},tests:[],sound:S.sound,voice:S.voice,liveToken:S.liveToken};save();PZ=null;toast("Progress reset");render()}}
+  S={lessons:{},puzzles:{},tests:[],days:{},sound:S.sound,voice:S.voice,liveToken:S.liveToken};save();PZ=null;toast("Progress reset");render()}}
 
 /* ---------- Sign-in and live classes (talk to the site's /api) ---------- */
 let AUTH={state:S.liveToken?"check":"out",user:null,msg:""};
