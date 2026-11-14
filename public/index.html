@@ -733,6 +733,21 @@ main:has(> .pmap){padding-bottom:0!important}
 @media (max-width:720px){main:has(> .drill){padding-inline:6px!important}.drill.view{--bw:min(100%,calc(100svh - 290px))}.drill.view .drill-board .board{min-width:240px}main:has(> .drill){padding-top:6px!important}}
 main:has(> .drill){padding-top:12px!important}
 @media (max-width:720px){main:has(> .drill){padding-top:6px!important}}
+/* Computers (Lichess-style): big board filling the height, compact panel on its right */
+:root{--sidew:0px;--topgap:90px}
+@media (min-width:1100px){:root{--sidew:var(--side);--topgap:24px}}
+@media (min-width:900px){
+  .drill.view{--panel:340px;--bw:min(calc(100svh - var(--topgap)),calc(100vw - var(--sidew) - var(--panel) - 72px));
+    display:grid!important;grid-template-columns:var(--bw) var(--panel);gap:20px!important;align-items:start;justify-content:center;width:auto}
+  .drill.view .drill-board{grid-column:1;grid-row:1;width:var(--bw)}
+  .drill.view .drill-side{display:flex;flex-direction:column;gap:10px;grid-column:2;grid-row:1;width:var(--panel);max-width:none;
+    background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px;position:sticky;top:12px}
+  .drill.view .drill-side>*{width:auto;max-width:none}
+  .drill.view .ds-head{order:1;margin-top:0}.drill.view .lvdots{order:2}.drill.view .ds-goal{order:3}.drill.view .ds-status{order:4}
+  .drill.view .ds-next{order:5}.drill.view .ds-tools{order:6}.drill.view .ds-about{order:7}.drill.view .ds-dots{order:8}
+  .pz{grid-template-columns:min(calc(100svh - var(--topgap) - 190px),calc(100vw - var(--sidew) - 412px)) 340px!important;justify-content:center;justify-items:stretch;align-items:start}
+  .pz>div:first-child,.pz>.stack{width:auto}
+}
 </style>
 
 </head>
