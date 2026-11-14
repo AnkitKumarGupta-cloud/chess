@@ -720,6 +720,17 @@ main:has(> .pmap){padding-bottom:0!important}
   .drill .tbtn svg{width:18px;height:18px}
   .coord{font-size:max(9px,2.2cqw)}
 }
+/* Practice side panel: clear "About this topic" box */
+.ds-status[hidden]{display:none}
+.drill .ds-about{background:color-mix(in srgb,var(--c1) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--c1) 28%,transparent);border-radius:14px;padding:12px 14px;font-size:.95rem}
+.drill .ds-about summary{list-style:none;display:flex;align-items:center;gap:8px;color:var(--ink);font-weight:800;font-size:.95rem}
+.drill .ds-about summary::-webkit-details-marker{display:none}
+.drill .ds-about summary::after{content:"▾";margin-left:auto;color:var(--muted);transition:transform .15s}
+.drill .ds-about:not([open]) summary::after{transform:rotate(-90deg)}
+.ds-about-i{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--c1);color:#fff;font:800 .75rem/1 var(--f-body);font-style:italic;flex:none}
+.drill .ds-about p{margin-top:8px;font-size:1rem;line-height:1.55;color:var(--ink)}
+.ds-dots button{width:30px;height:30px;font-size:.74rem}
+@media (max-width:600px){.drill .ds-about{padding:8px 10px}.drill .ds-about summary{font-size:.85rem}.drill .ds-about p{font-size:.92rem}}
 </style>
 
 </head>
@@ -1049,7 +1060,7 @@ function vDrill(){
   if(!PR)return `<section class="stack view"><p class="li-m">Loading practice…</p></section>`;
   const t=PR.topics.find(x=>x.id===prParam())||PR.topics[0];
   if(!PRS||PRS.tid!==t.id){const first=t.chapters.findIndex((c,i)=>!(S.practice||{})[prKey(t,i)]);prOpen(t,first<0?0:first)}
-  const c=t.chapters[PRS.i],done=(S.practice||{})[prKey(t,PRS.i)],n=t.chapters.length,solved=prDone(t);
+  const c=t.chapters[PRS.i],done=(S.practice||{})[prKey(t,PRS.i)],n=t.chapters.length;
   const st=PRS.state,col=PRS.color==="w"?"White":"Black",g=c.goal;
   const left=g&&g.n&&g.n<99&&g.type!=="promote"?Math.max(0,g.n-PRS.moves):null;
   const ICON=k=>`<svg viewBox="0 0 24 24">${(PR.icons||{})[k]||""}</svg>`;
@@ -1058,10 +1069,7 @@ function vDrill(){
   else if(st==="fail"){stat=esc(PRS.msg||"Not quite. Try again!");scls="no"}
   else if(st==="no"){stat="Not this move. Try again!";scls="no"}
   else if(st==="think"){stat=`<span class="spin sm" aria-hidden="true"></span> ${esc(PRS.msg||"The computer is thinking…")}`;scls="think"}
-  else stat=PRS.g.turn()===PRS.color?(PRS.moves?"Your move.":"Your move. Take your time."):"Waiting for the computer…";
-  // Move list in pairs, numbered from the position's own move number.
-  const hist=PRS.g.history(),startNo=+c.fen.split(" ")[5]||1,blackFirst=c.fen.split(" ")[1]==="b";
-  const cells=(blackFirst?["…"]:[]).concat(hist),rows=[];for(let k=0;k<cells.length;k+=2)rows.push([startNo+k/2,cells[k],cells[k+1]]);
+  else stat=PRS.g.turn()===PRS.color?"":"Waiting for the computer…";
   const ti=PR.topics.indexOf(t),nt=PR.topics[ti+1];
   return `<section class="drill view" data-sec="${t.section}">
   <div class="drill-board">
@@ -1069,14 +1077,12 @@ function vDrill(){
     ${PRS.promo?`<div class="promo" role="group" aria-label="Choose a piece"><span class="li-m">Promote to:</span>${["q","r","b","n"].map(p=>`<button class="chip" data-promo="${p}" aria-label="${NAMES[p]}"><i class="pc inline ${PRS.color} pk-${p}" aria-hidden="true"></i> ${NAMES[p]}</button>`).join("")}</div>`:""}
   </div>
   <aside class="drill-side">
-    <header class="ds-head"><a class="ds-back" href="#practice" aria-label="Back to practice">←</a><span class="pricon sm" aria-hidden="true">${ICON(t.icon)}</span>
+    <header class="ds-head"><a class="ds-back" href="#practice" aria-label="Back to practice">←</a>
       <div class="ds-ht"><span class="eyebrow">${esc(PR.sections[t.section].title)}</span><h1>${esc(t.title)}</h1></div></header>
-    <details class="ds-about"><summary>About this topic</summary><p>${esc(t.intro)}</p></details>
-    <div class="ds-prog"><div class="row" style="justify-content:space-between"><span><b>${esc(c.name)}</b></span><span class="mono li-m">${PRS.i+1} / ${n}</span></div><div class="bar"><i style="width:${solved/n*100}%"></i></div><span class="li-m">${solved} of ${n} solved in this topic</span></div>
+    <details class="ds-about"${window.innerWidth>900?" open":""}><summary><span class="ds-about-i" aria-hidden="true">i</span>About this topic</summary><p>${esc(t.intro)}</p></details>
     <div class="ds-goal${st==="ok"?" ok":""}"><span class="ds-goal-i" aria-hidden="true">${st==="ok"?"✓":ICON("target")}</span>
-      <div><b>${esc(goalText(c,PRS.color))}</b><span>You play ${col}${left!=null&&st!=="ok"?` · <b>${left}</b> move${left===1?"":"s"} left`:""}</span></div></div>
-    <div class="ds-status ${scls}" role="status">${stat}</div>
-    <div class="ds-moves" aria-label="Moves">${rows.length?`<ol>${rows.map(r=>`<li><span class="mn">${r[0]}.</span><span>${esc(r[1]||"")}</span><span>${esc(r[2]||"")}</span></li>`).join("")}</ol>`:`<span class="li-m">Moves will show here.</span>`}</div>
+      <div><b>${esc(goalText(c,PRS.color))}</b><span>${esc(c.name)} · You play ${col}${left!=null&&st!=="ok"?` · <b>${left}</b> move${left===1?"":"s"} left`:""}</span></div></div>
+    <div class="ds-status ${scls}" role="status"${stat?"":" hidden"}>${stat}</div>
     <div class="ds-tools">
       <button class="tbtn" id="prHint" ${st==="idle"||st==="no"?"":"disabled"} title="Show a hint"><svg viewBox="0 0 24 24"><path d="M9 21h6M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5v1h6v-1c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span>Hint</span></button>
       <button class="tbtn" id="prUndo" ${PRS.hist.length&&st!=="think"?"":"disabled"} title="Take back your last move"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span>Take back</span></button>
